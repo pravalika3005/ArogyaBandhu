@@ -103,6 +103,10 @@
             background: #00897b;
             color: white;
             padding: 18px 22px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
         }
 
         .chat-header h2 {
@@ -204,6 +208,35 @@
             color: #333;
         }
 
+        .send-btn:disabled,
+        .voice-btn:disabled,
+        .new-chat-btn:disabled {
+            opacity: .6;
+            cursor: not-allowed;
+        }
+
+        .new-chat-btn {
+            min-height: 42px;
+            padding: 8px 12px;
+            border: 1px solid white;
+            border-radius: 4px;
+            color: white;
+            background: transparent;
+            cursor: pointer;
+        }
+
+        .service-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px 18px;
+            margin: 0 0 18px;
+        }
+
+        .service-links a {
+            color: #105b49;
+            font-weight: bold;
+        }
+
         .send-btn:hover {
             background: #00695c;
         }
@@ -266,6 +299,11 @@
                 max-width: 90%;
             }
 
+            .chat-header {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
         }
 
     </style>
@@ -285,7 +323,7 @@
     </div>
 
     <a
-        href="patient-dashboard.html"
+        href="patient-dashbord.html"
         class="back"
     >
         ← Dashboard
@@ -318,13 +356,16 @@
     <div class="notice">
 
         <strong>Important:</strong>
-        This assistant provides preliminary health
-        information and does not diagnose diseases.
-        For severe or emergency symptoms, contact a
-        qualified healthcare professional or emergency
-        service immediately.
+        This assistant gives general information, not a diagnosis, and does not read your health records. Messages are saved with your account in this prototype. Do not share personal identifiers. For severe or emergency symptoms, contact a healthcare professional or emergency service immediately.
 
     </div>
+
+    <nav class="service-links" aria-label="Other healthcare services">
+        <a href="health-record.html">My health records</a>
+        <a href="appintment.html">Book a doctor visit</a>
+        <a href="medicine.html">Check medicine stock</a>
+        <a href="emergency.html">Emergency help</a>
+    </nav>
 
 
     <!-- ================= CHAT ================= -->
@@ -333,21 +374,20 @@
 
 
         <div class="chat-header">
-
-            <h2>
-                ArogyaBandhu Health Assistant
-            </h2>
-
-            <p>
-                Ask your health question below
-            </p>
-
+            <div>
+                <h2>ArogyaBandhu Health Assistant</h2>
+                <p>General health information. Not a diagnosis.</p>
+            </div>
+            <button class="new-chat-btn" id="newChatButton" type="button">New chat</button>
         </div>
 
 
         <div
             class="messages"
             id="messages"
+            role="log"
+            aria-live="polite"
+            aria-label="Conversation messages"
         >
 
             <div class="message bot">
@@ -433,7 +473,7 @@
 
         <div class="quick">
 
-            <h3>
+            <h3 id="quickHeading">
                 Quick Questions
             </h3>
 
@@ -441,35 +481,45 @@
 
                 <button
                     class="quick-btn"
-                    onclick="quickQuestion('I have fever')"
+                    data-topic="fever"
+                    data-icon="🌡️"
+                    onclick="quickQuestion('fever')"
                 >
                     🌡️ Fever
                 </button>
 
                 <button
                     class="quick-btn"
-                    onclick="quickQuestion('I have a headache')"
+                    data-topic="headache"
+                    data-icon="🤕"
+                    onclick="quickQuestion('headache')"
                 >
                     🤕 Headache
                 </button>
 
                 <button
                     class="quick-btn"
-                    onclick="quickQuestion('I have a cough')"
+                    data-topic="cough"
+                    data-icon="😷"
+                    onclick="quickQuestion('cough')"
                 >
                     😷 Cough
                 </button>
 
                 <button
                     class="quick-btn"
-                    onclick="quickQuestion('I have stomach pain')"
+                    data-topic="stomach"
+                    data-icon="🤢"
+                    onclick="quickQuestion('stomach')"
                 >
                     🤢 Stomach Pain
                 </button>
 
                 <button
                     class="quick-btn"
-                    onclick="quickQuestion('Give me healthy food tips')"
+                    data-topic="food"
+                    data-icon="🥗"
+                    onclick="quickQuestion('food')"
                 >
                     🥗 Healthy Food
                 </button>
@@ -491,6 +541,9 @@
    ELEMENTS
    ===================================================== */
 
+const storedUser = JSON.parse(
+    localStorage.getItem("arogyabandhuUser") || "null"
+);
 const messages =
     document.getElementById("messages");
 
@@ -499,6 +552,29 @@ const userInput =
 
 const language =
     document.getElementById("language");
+
+const sendButton =
+    document.querySelector(".send-btn");
+
+const newChatButton =
+    document.getElementById("newChatButton");
+
+let conversationId = null;
+let isSending = false;
+
+if (!storedUser || storedUser.role !== "patient") {
+    window.location.href = "login.html";
+}
+
+function requestJson(url, options) {
+    return fetch(url, options).then(async (response) => {
+        const data = await response.json().catch(() => ({
+            detail: "The server returned an invalid response. Please try again."
+        }));
+        if (!response.ok) throw new Error(data.detail || "Request failed.");
+        return data;
+    });
+}
 
 
 
@@ -524,6 +600,43 @@ function addMessage(
 
     messages.scrollTop =
         messages.scrollHeight;
+
+    return message;
+}
+
+function greetingForLanguage() {
+    const greetings = {
+        english: "Hello! I can share general health information. I cannot diagnose a condition.",
+        telugu: "నమస్కారం! నేను సాధారణ ఆరోగ్య సమాచారాన్ని అందించగలను. వ్యాధిని నిర్ధారించలేను.",
+        hindi: "नमस्ते! मैं सामान्य स्वास्थ्य जानकारी दे सकता हूँ। मैं बीमारी का निदान नहीं कर सकता।"
+    };
+    return greetings[language.value] || greetings.english;
+}
+
+function applyLanguage() {
+    const languageData = {
+        english: {
+            page: "en", placeholder: "Describe your symptoms...", heading: "Quick Questions",
+            questions: { fever: "Fever", headache: "Headache", cough: "Cough", stomach: "Stomach Pain", food: "Healthy Food" }
+        },
+        telugu: {
+            page: "te", placeholder: "మీ లక్షణాలను వివరించండి...", heading: "త్వరిత ప్రశ్నలు",
+            questions: { fever: "జ్వరం", headache: "తలనొప్పి", cough: "దగ్గు", stomach: "కడుపు నొప్పి", food: "ఆరోగ్యకరమైన ఆహారం" }
+        },
+        hindi: {
+            page: "hi", placeholder: "अपने लक्षण बताएं...", heading: "जल्दी पूछें",
+            questions: { fever: "बुखार", headache: "सिरदर्द", cough: "खांसी", stomach: "पेट दर्द", food: "स्वस्थ भोजन" }
+        }
+    }[language.value] || {
+        page: "en", placeholder: "Describe your symptoms...", heading: "Quick Questions",
+        questions: { fever: "Fever", headache: "Headache", cough: "Cough", stomach: "Stomach Pain", food: "Healthy Food" }
+    };
+    document.documentElement.lang = languageData.page;
+    userInput.placeholder = languageData.placeholder;
+    document.getElementById("quickHeading").textContent = languageData.heading;
+    document.querySelectorAll(".quick-btn").forEach((button) => {
+        button.textContent = `${button.dataset.icon} ${languageData.questions[button.dataset.topic]}`;
+    });
 }
 
 
@@ -532,12 +645,23 @@ function addMessage(
    QUICK QUESTION
    ===================================================== */
 
-function quickQuestion(text) {
-
-    userInput.value = text;
-
+function quickQuestion(topic) {
+    const questions = {
+        english: {
+            fever: "I have a fever", headache: "I have a headache", cough: "I have a cough",
+            stomach: "I have stomach pain", food: "Give me healthy food tips"
+        },
+        telugu: {
+            fever: "నాకు జ్వరం ఉంది", headache: "నాకు తలనొప్పి ఉంది", cough: "నాకు దగ్గు ఉంది",
+            stomach: "నాకు కడుపు నొప్పి ఉంది", food: "ఆరోగ్యకరమైన ఆహార సూచనలు చెప్పండి"
+        },
+        hindi: {
+            fever: "मुझे बुखार है", headache: "मुझे सिरदर्द है", cough: "मुझे खांसी है",
+            stomach: "मुझे पेट दर्द है", food: "स्वस्थ भोजन के सुझाव दें"
+        }
+    };
+    userInput.value = questions[language.value][topic] || questions.english[topic];
     sendMessage();
-
 }
 
 
@@ -552,269 +676,115 @@ async function sendMessage() {
         userInput.value.trim();
 
 
-    if (!text) {
+    if (!text || isSending) return;
 
-        return;
-
-    }
-
-
-    addMessage(
-        text,
-        "user"
-    );
-
-
+    isSending = true;
+    sendButton.disabled = true;
+    addMessage(text, "user");
     userInput.value = "";
-
-
-    /*
-     * Temporary response while the backend
-     * AI endpoint is being connected.
-     */
-
-    addMessage(
-        "Please wait... I am preparing your health guidance.",
-        "bot"
-    );
-
+    const pendingMessage = addMessage("Preparing general health information…", "bot");
 
     try {
-
-        const response =
-            await fetch(
-                "http://127.0.0.1:8000/api/chat",
-                {
-                    method: "POST",
-
-                    headers: {
-                        "Content-Type":
-                            "application/json"
-                    },
-
-                    body: JSON.stringify({
-
-                        message: text,
-
-                        language:
-                            language.value
-
-                    })
-
-                }
-            );
-
-
-        const data =
-            await response.json();
-
-
-        /*
-         * Remove temporary message.
-         */
-
-        const botMessages =
-            messages.querySelectorAll(".bot");
-
-        const lastBot =
-            botMessages[
-                botMessages.length - 1
-            ];
-
-        if (
-            lastBot &&
-            lastBot.textContent.includes(
-                "Please wait"
-            )
-        ) {
-
-            lastBot.remove();
-
-        }
-
-
-        if (!response.ok) {
-
-            throw new Error(
-                data.detail ||
-                "Unable to get a response."
-            );
-
-        }
-
-
-        addMessage(
-            data.response,
-            "bot"
-        );
-
-    }
-
-
-    catch (error) {
-
-
-        const botMessages =
-            messages.querySelectorAll(".bot");
-
-        const lastBot =
-            botMessages[
-                botMessages.length - 1
-            ];
-
-        if (
-            lastBot &&
-            lastBot.textContent.includes(
-                "Please wait"
-            )
-        ) {
-
-            lastBot.remove();
-
-        }
-
-
-        /*
-         * Temporary demo fallback.
-         * The real backend AI endpoint will be
-         * added during the backend replacement phase.
-         */
-
-        addMessage(
-            getDemoResponse(
-                text,
-                language.value
-            ),
-            "bot"
-        );
-
+        const data = await requestJson("/api/chatbot/message", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                user_id: storedUser.id,
+                conversation_id: conversationId,
+                message: text,
+                language: language.value
+            })
+        });
+        conversationId = data.conversation_id;
+        pendingMessage.remove();
+        addMessage(data.message, "bot");
+    } catch (error) {
+        pendingMessage.remove();
+        addMessage(`${error.message} Please try again or contact a healthcare professional.`, "bot");
+    } finally {
+        isSending = false;
+        sendButton.disabled = false;
+        userInput.focus();
     }
 
 }
 
-
-
-/* =====================================================
-   DEMO RESPONSE
-   ===================================================== */
-
-function getDemoResponse(
-    text,
-    selectedLanguage
-) {
-
-    const message =
-        text.toLowerCase();
-
-
-    if (
-        message.includes("fever") ||
-        message.includes("temperature")
-    ) {
-
-        if (selectedLanguage === "telugu") {
-
-            return "జ్వరం ఉంటే తగినంత నీరు త్రాగండి, విశ్రాంతి తీసుకోండి మరియు మీ ఉష్ణోగ్రతను గమనించండి. జ్వరం ఎక్కువగా ఉంటే లేదా కొనసాగితే వైద్యుడిని సంప్రదించండి.";
-
+async function loadConversation() {
+    if (!storedUser || storedUser.role !== "patient") return;
+    try {
+        const data = await requestJson(`/api/chatbot/user/${storedUser.id}`);
+        const activeConversation = (data.conversations || []).find((item) => item.status === "active");
+        if (!activeConversation) {
+            messages.replaceChildren();
+            addMessage(greetingForLanguage(), "bot");
+            return;
         }
-
-        if (selectedLanguage === "hindi") {
-
-            return "बुखार होने पर पर्याप्त पानी पिएं, आराम करें और तापमान पर नजर रखें। बुखार अधिक हो या बना रहे तो डॉक्टर से संपर्क करें।";
-
-        }
-
-        return "If you have a fever, stay hydrated, rest, and monitor your temperature. If the fever is high, persistent, or accompanied by concerning symptoms, contact a healthcare professional.";
-
+        const history = await requestJson(`/api/chatbot/conversation/${activeConversation.id}?user_id=${storedUser.id}`);
+        conversationId = history.conversation.id;
+        messages.replaceChildren();
+        history.messages.forEach((item) => {
+            addMessage(item.message, item.sender_type === "user" ? "user" : "bot");
+        });
+    } catch (error) {
+        addMessage("Saved chat history could not be loaded. You can still start a new message.", "bot");
     }
-
-
-
-    if (
-        message.includes("headache")
-    ) {
-
-        return selectedLanguage === "telugu"
-
-            ? "తలనొప్పి ఉంటే విశ్రాంతి తీసుకోండి, నీరు త్రాగండి మరియు ఎక్కువ వెలుతురు లేదా శబ్దాన్ని తగ్గించండి. నొప్పి తీవ్రమైనదిగా లేదా అసాధారణంగా ఉంటే వైద్యుడిని సంప్రదించండి."
-
-            : selectedLanguage === "hindi"
-
-            ? "सिरदर्द होने पर आराम करें, पानी पिएं और तेज रोशनी या शोर से बचें। दर्द बहुत तेज या असामान्य हो तो डॉक्टर से संपर्क करें।"
-
-            : "For a headache, rest, drink enough water, and reduce exposure to strong light or noise. If the headache is severe, sudden, or unusual for you, seek medical attention.";
-
-    }
-
-
-
-    if (
-        message.includes("cough")
-    ) {
-
-        return selectedLanguage === "telugu"
-
-            ? "దగ్గు ఉంటే నీరు లేదా వెచ్చని ద్రవాలు తీసుకోండి మరియు విశ్రాంతి తీసుకోండి. శ్వాస తీసుకోవడంలో ఇబ్బంది లేదా ఛాతి నొప్పి ఉంటే వెంటనే వైద్య సహాయం పొందండి."
-
-            : selectedLanguage === "hindi"
-
-            ? "खांसी होने पर पानी या गर्म तरल पदार्थ लें और आराम करें। सांस लेने में परेशानी या सीने में दर्द हो तो तुरंत चिकित्सा सहायता लें।"
-
-            : "For a cough, stay hydrated and rest. If you have difficulty breathing, chest pain, or other severe symptoms, seek medical attention promptly.";
-
-    }
-
-
-
-    if (
-        message.includes("stomach") ||
-        message.includes("abdominal")
-    ) {
-
-        return selectedLanguage === "telugu"
-
-            ? "కడుపు నొప్పికి తేలికపాటి ఆహారం తీసుకుని నీరు త్రాగండి. తీవ్రమైన లేదా నిరంతర నొప్పి, వాంతులు లేదా ఇతర తీవ్రమైన లక్షణాలు ఉంటే వైద్యుడిని సంప్రదించండి."
-
-            : selectedLanguage === "hindi"
-
-            ? "पेट दर्द होने पर हल्का भोजन करें और पानी पिएं। तेज या लगातार दर्द, उल्टी या अन्य गंभीर लक्षण हों तो डॉक्टर से संपर्क करें।"
-
-            : "For stomach pain, stay hydrated and consider light foods if tolerated. Severe or persistent pain, repeated vomiting, or other concerning symptoms should be assessed by a healthcare professional.";
-
-    }
-
-
-
-    if (
-        message.includes("food") ||
-        message.includes("healthy")
-    ) {
-
-        return selectedLanguage === "telugu"
-
-            ? "ఆరోగ్యకరమైన ఆహారంలో కూరగాయలు, పండ్లు, పప్పులు, సంపూర్ణ ధాన్యాలు మరియు తగినంత నీరు ఉండాలి."
-
-            : selectedLanguage === "hindi"
-
-            ? "स्वस्थ आहार में सब्जियां, फल, दालें, साबुत अनाज और पर्याप्त पानी शामिल करें।"
-
-            : "A healthy diet can include vegetables, fruits, pulses, whole grains, adequate protein, and enough water. Try to keep meals varied and balanced.";
-
-    }
-
-
-
-    return selectedLanguage === "telugu"
-
-        ? "మీ లక్షణాల గురించి మరింత వివరంగా చెప్పండి. తీవ్రమైన లేదా అత్యవసర లక్షణాలు ఉంటే వెంటనే వైద్య సహాయం పొందండి."
-
-        : selectedLanguage === "hindi"
-
-        ? "कृपया अपने लक्षणों के बारे में अधिक जानकारी दें। गंभीर या आपातकालीन लक्षण होने पर तुरंत चिकित्सा सहायता लें।"
-
-        : "Please describe your symptoms in more detail. If you have severe or emergency symptoms, seek medical attention immediately.";
-
 }
+
+async function startNewConversation() {
+    if (isSending) return;
+    newChatButton.disabled = true;
+    try {
+        if (conversationId) {
+            await requestJson(`/api/chatbot/conversation/${conversationId}/close?user_id=${storedUser.id}`, {
+                method: "PUT"
+            });
+        }
+        conversationId = null;
+        messages.replaceChildren();
+        addMessage(greetingForLanguage(), "bot");
+    } catch (error) {
+        addMessage(error.message, "bot");
+    } finally {
+        newChatButton.disabled = false;
+    }
+}
+
+async function initializeAssistant() {
+    const savedLanguage = localStorage.getItem("arogyabandhuChatLanguage");
+    if (["english", "telugu", "hindi"].includes(savedLanguage)) {
+        language.value = savedLanguage;
+    } else if (storedUser?.role === "patient") {
+        try {
+            const patient = await requestJson(`/api/patients/${storedUser.id}`);
+            const preferredLanguage = (patient.profile?.preferred_language || "").toLowerCase();
+            if (["english", "telugu", "hindi"].includes(preferredLanguage)) {
+                language.value = preferredLanguage;
+            }
+        } catch (error) {
+            language.value = "english";
+        }
+    }
+    applyLanguage();
+    if (storedUser?.role === "patient") await loadConversation();
+}
+
+language.addEventListener("change", () => {
+    localStorage.setItem("arogyabandhuChatLanguage", language.value);
+    applyLanguage();
+    if (!conversationId) {
+        messages.replaceChildren();
+        addMessage(greetingForLanguage(), "bot");
+    }
+});
+newChatButton.addEventListener("click", startNewConversation);
+userInput.addEventListener("keydown", (event) => {
+    if (event.key === "Enter" && !event.shiftKey) {
+        event.preventDefault();
+        sendMessage();
+    }
+});
+
+initializeAssistant();
 
 
 

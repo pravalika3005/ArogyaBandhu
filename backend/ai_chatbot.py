@@ -144,17 +144,29 @@ def detect_topic(message: str) -> str:
 
     message = message.lower().strip()
 
-    if "fever" in message or "జ్వరం" in message:
+    if (
+        "fever" in message
+        or "జ్వరం" in message
+        or "बुखार" in message
+        or "ज्वर" in message
+    ):
         return "fever"
 
     if (
         "headache" in message
         or "head pain" in message
         or "తలనొప్పి" in message
+        or "सिरदर्द" in message
+        or "सर दर्द" in message
     ):
         return "headache"
 
-    if "cough" in message or "దగ్గు" in message:
+    if (
+        "cough" in message
+        or "దగ్గు" in message
+        or "खांसी" in message
+        or "खाँसी" in message
+    ):
         return "cough"
 
     if (
@@ -162,6 +174,8 @@ def detect_topic(message: str) -> str:
         or "abdomen" in message
         or "stomach pain" in message
         or "కడుపు" in message
+        or "पेट दर्द" in message
+        or "पेट में दर्द" in message
     ):
         return "stomach"
 
@@ -170,6 +184,9 @@ def detect_topic(message: str) -> str:
         or "diet" in message
         or "healthy food" in message
         or "ఆహారం" in message
+        or "भोजन" in message
+        or "आहार" in message
+        or "खाना" in message
     ):
         return "food"
 

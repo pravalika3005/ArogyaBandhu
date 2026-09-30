@@ -631,7 +631,7 @@ registerForm.addEventListener(
 
             const response = await fetch(
 
-                "http://127.0.0.1:8000/api/register",
+                "/api/register",
 
                 {
 
@@ -662,8 +662,9 @@ registerForm.addEventListener(
 
 
 
-            const data =
-                await response.json();
+            const data = await response.json().catch(() => ({
+                detail: "The server returned an invalid response. Please try again."
+            }));
 
 
 

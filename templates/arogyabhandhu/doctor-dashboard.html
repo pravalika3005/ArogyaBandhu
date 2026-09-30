@@ -256,6 +256,25 @@
             color: #2563a8;
         }
 
+        dialog {
+            width: min(520px, calc(100% - 28px));
+            max-height: 90vh;
+            padding: 0;
+            border: 1px solid #cbd8d1;
+            border-radius: 8px;
+        }
+
+        dialog::backdrop { background: rgba(20, 42, 33, .48); }
+        .follow-up-form { display: grid; gap: 14px; padding: 22px; }
+        .follow-up-form label { display: grid; gap: 6px; font-weight: bold; }
+        .follow-up-form select, .follow-up-form textarea { width: 100%; padding: 10px; border: 1px solid #9eafa5; border-radius: 4px; font: inherit; }
+        .follow-up-form textarea { min-height: 130px; resize: vertical; }
+        .follow-up-actions { display: flex; justify-content: flex-end; gap: 10px; }
+        .follow-up-status { min-height: 1.5em; margin: 0; }
+        .records-list { display: grid; gap: 10px; max-height: 45vh; overflow-y: auto; }
+        .record-item { padding: 12px; border: 1px solid #d8e2dc; border-radius: 4px; }
+        .record-item p { margin: 5px 0 0; color: #53665f; white-space: pre-wrap; }
+
         /* ================= NOTICE ================= */
 
         .notice {
@@ -342,11 +361,11 @@
             Dashboard
         </a>
 
-        <a href="appointments.html">
+        <a href="#appointments">
             Appointments
         </a>
 
-        <a href="health-records.html">
+        <a href="#patientHistory">
             Records
         </a>
 
@@ -399,9 +418,7 @@
                 👥
             </div>
 
-            <div class="stat-number">
-                24
-            </div>
+            <div class="stat-number" id="patientsTodayCount">0</div>
 
             <div class="stat-label">
                 Today's Patients
@@ -416,9 +433,7 @@
                 📅
             </div>
 
-            <div class="stat-number">
-                8
-            </div>
+            <div class="stat-number" id="appointmentsTodayCount">0</div>
 
             <div class="stat-label">
                 Appointments Today
@@ -433,12 +448,10 @@
                 💬
             </div>
 
-            <div class="stat-number">
-                5
-            </div>
+            <div class="stat-number" id="pendingAppointmentsCount">0</div>
 
             <div class="stat-label">
-                Follow-ups
+                Waiting requests
             </div>
 
         </div>
@@ -450,12 +463,10 @@
                 📋
             </div>
 
-            <div class="stat-number">
-                3
-            </div>
+            <div class="stat-number" id="confirmedAppointmentsCount">0</div>
 
             <div class="stat-label">
-                Records to Review
+                Confirmed Visits
             </div>
 
         </div>
@@ -480,7 +491,7 @@
 
         <!-- Patient History -->
 
-        <div class="feature-card">
+        <div class="feature-card" id="patientHistory">
 
             <div class="feature-icon">
                 📋
@@ -495,12 +506,13 @@
                 previous visits, and health information.
             </p>
 
-            <a
-                href="health-records.html"
+            <button
                 class="button"
+                type="button"
+                onclick="openPatientRecords()"
             >
                 View Records
-            </a>
+            </button>
 
         </div>
 
@@ -523,7 +535,7 @@
             </p>
 
             <a
-                href="appointments.html"
+                href="#appointments"
                 class="button"
             >
                 View Appointments
@@ -541,17 +553,16 @@
             </div>
 
             <h3>
-                Digital Prescription
+                Medication Note
             </h3>
 
             <p>
-                Prepare prescription information for a patient
-                after appropriate clinical evaluation.
+                Save medication instructions to a patient's health record after a confirmed or completed visit.
             </p>
 
             <button
                 class="button"
-                onclick="showDemo('Digital prescription')"
+                onclick="openMedicationNote()"
             >
                 Open Prescription
             </button>
@@ -578,7 +589,7 @@
 
             <button
                 class="button"
-                onclick="showDemo('Follow-up messaging')"
+                onclick="openFollowUp()"
             >
                 Open Messages
             </button>
@@ -603,12 +614,13 @@
                 changes that may require professional attention.
             </p>
 
-            <a
-                href="health-records.html"
+            <button
                 class="button"
+                type="button"
+                onclick="openPatientRecords()"
             >
                 View Trends
-            </a>
+            </button>
 
         </div>
 
@@ -626,16 +638,8 @@
             </h3>
 
             <p>
-                Access the prototype consultation workflow for
-                remote patient support.
+                Video calling is not configured. Use the appointment's listed consultation type and contact the patient through an approved channel.
             </p>
-
-            <button
-                class="button"
-                onclick="showDemo('Video consultation')"
-            >
-                Start Consultation
-            </button>
 
         </div>
 
@@ -645,17 +649,18 @@
 
     <!-- ================= APPOINTMENTS ================= -->
 
-    <div class="section-title">
+    <div class="section-title" id="appointments">
 
         <h2>
             📅 Today's Appointments
         </h2>
-
-    </div>
-
-
+            <button
+                class="button"
+                type="button"
+                onclick="openPatientRecords()"
+            >
     <div class="table-card">
-
+            </button>
         <table>
 
             <thead>
@@ -687,7 +692,7 @@
             </thead>
 
 
-            <tbody>
+            <tbody id="doctorAppointmentsBody">
 
 
                 <tr>
@@ -813,6 +818,64 @@
     </div>
 
 
+    <dialog id="followUpDialog" aria-labelledby="followUpTitle">
+        <form class="follow-up-form" id="followUpForm">
+            <h2 id="followUpTitle">Send patient follow-up</h2>
+            <label for="followUpPatient">Patient
+                <select id="followUpPatient" required>
+                    <option value="">Choose a patient</option>
+                </select>
+            </label>
+            <label for="followUpText">Message
+                <textarea id="followUpText" maxlength="1000" required placeholder="Write a short follow-up message"></textarea>
+            </label>
+            <p class="follow-up-status" id="followUpStatus" role="status" aria-live="polite"></p>
+            <div class="follow-up-actions">
+                <button class="button secondary" id="closeFollowUp" type="button">Cancel</button>
+                <button class="button" id="sendFollowUp" type="submit">Send message</button>
+            </div>
+        </form>
+    </dialog>
+
+    <dialog id="medicationNoteDialog" aria-labelledby="medicationNoteTitle">
+        <form class="follow-up-form" id="medicationNoteForm">
+            <h2 id="medicationNoteTitle">Save medication note</h2>
+            <label for="medicationPatient">Patient
+                <select id="medicationPatient" required>
+                    <option value="">Choose a patient</option>
+                </select>
+            </label>
+            <label for="medicineName">Medicine name
+                <input id="medicineName" maxlength="120" required>
+            </label>
+            <label for="medicineInstructions">Instructions
+                <textarea id="medicineInstructions" maxlength="1000" required placeholder="Enter the clinician's instructions"></textarea>
+            </label>
+            <p class="follow-up-status" id="medicationNoteStatus" role="status" aria-live="polite"></p>
+            <div class="follow-up-actions">
+                <button class="button secondary" id="closeMedicationNote" type="button">Cancel</button>
+                <button class="button" id="saveMedicationNote" type="submit">Save note</button>
+            </div>
+        </form>
+    </dialog>
+
+    <dialog id="patientRecordsDialog" aria-labelledby="patientRecordsTitle">
+        <section class="follow-up-form">
+            <h2 id="patientRecordsTitle">Patient health history</h2>
+            <label for="patientRecordsSelect">Patient
+                <select id="patientRecordsSelect">
+                    <option value="">Choose a patient</option>
+                </select>
+            </label>
+            <div class="records-list" id="patientRecordsList" aria-live="polite">
+                <p>Choose a patient to view available records.</p>
+            </div>
+            <div class="follow-up-actions">
+                <button class="button secondary" id="closePatientRecords" type="button">Close</button>
+            </div>
+        </section>
+    </dialog>
+
     <!-- ================= QUICK ACTIONS ================= -->
 
     <div class="section-title">
@@ -834,18 +897,18 @@
             </div>
 
             <h3>
-                AI Assistant
+                Health Education
             </h3>
 
             <p>
-                Access the ArogyaBandhu AI health-support interface.
+                Review health information to support patient education.
             </p>
 
             <a
-                href="ai-assistant.html"
+                href="health-tips.html"
                 class="button secondary"
             >
-                Open AI Assistant
+                Open Health Education
             </a>
 
         </div>
@@ -949,72 +1012,210 @@
 <script>
 
 
-/* =====================================================
-   LOAD DOCTOR
-===================================================== */
+const doctorUser = JSON.parse(localStorage.getItem("arogyabandhuUser") || "null");
+let doctorAppointments = [];
 
-function loadDoctor() {
+async function requestJson(url, options) {
+    const response = await fetch(url, options);
+    const data = await response.json().catch(() => ({ detail: "The server returned an invalid response." }));
+    if (!response.ok) throw new Error(data.detail || "Request failed.");
+    return data;
+}
 
-    const storedUser =
-        localStorage.getItem(
-            "arogyabandhuUser"
-        );
+function renderDoctorAppointments(items) {
+    doctorAppointments = items;
+    const body = document.getElementById("doctorAppointmentsBody");
+    body.replaceChildren();
+    if (!items.length) {
+        const row = body.insertRow();
+        const cell = row.insertCell();
+        cell.colSpan = 5;
+        cell.textContent = "No appointments yet.";
+    }
+    items.forEach((item) => {
+        const appointment = item.appointment;
+        const row = body.insertRow();
+        row.insertCell().textContent = item.patient?.name || "Patient";
+        row.insertCell().textContent = new Intl.DateTimeFormat(undefined, { dateStyle: "medium", timeStyle: "short" }).format(new Date(appointment.appointment_date));
+        row.insertCell().textContent = { video: "Video", chat: "Chat", in_person: "Clinic visit" }[appointment.consultation_type] || appointment.consultation_type;
+        row.insertCell().textContent = appointment.reason || "General consultation";
+        const statusCell = row.insertCell();
+        const status = document.createElement("span");
+        status.className = "status " + (appointment.status === "completed" ? "completed" : appointment.status === "pending" ? "review" : "upcoming");
+        status.textContent = appointment.status;
+        statusCell.append(status);
+    });
 
+    const today = new Date();
+    const todaysAppointments = items.filter(({ appointment }) => {
+        const date = new Date(appointment.appointment_date);
+        return date.getFullYear() === today.getFullYear() && date.getMonth() === today.getMonth() && date.getDate() === today.getDate();
+    });
+    document.getElementById("appointmentsTodayCount").textContent = todaysAppointments.length;
+    document.getElementById("patientsTodayCount").textContent = new Set(todaysAppointments.map(({ patient }) => patient?.id).filter(Boolean)).size;
+    document.getElementById("pendingAppointmentsCount").textContent = items.filter(({ appointment }) => appointment.status === "pending").length;
+    document.getElementById("confirmedAppointmentsCount").textContent = items.filter(({ appointment }) => appointment.status === "confirmed").length;
+}
 
-    if (!storedUser) {
+async function loadDoctorAppointments() {
+    const data = await requestJson(`/api/appointments/doctor/${doctorUser.id}`);
+    renderDoctorAppointments(data.appointments || []);
+}
 
-        document.getElementById(
-            "welcomeTitle"
-        ).textContent =
-            "👨‍⚕️ Welcome, Doctor";
-
+async function loadDoctor() {
+    if (!doctorUser || doctorUser.role !== "doctor") {
+        window.location.href = "login.html";
         return;
-
     }
-
-
+    document.getElementById("welcomeTitle").textContent = "👨‍⚕️ Welcome, Dr. " + (doctorUser.name || "Doctor");
     try {
-
-        const user =
-            JSON.parse(storedUser);
-
-
-        const doctorName =
-            user.name || "Doctor";
-
-
-        document.getElementById(
-            "welcomeTitle"
-        ).textContent =
-            "👨‍⚕️ Welcome, Dr. " + doctorName;
-
-
+        await loadDoctorAppointments();
+    } catch (error) {
+        const body = document.getElementById("doctorAppointmentsBody");
+        body.replaceChildren();
+        const row = body.insertRow();
+        const cell = row.insertCell();
+        cell.colSpan = 5;
+        cell.textContent = error.message;
     }
-
-    catch (error) {
-
-        console.log(
-            "Unable to load doctor information."
-        );
-
-    }
-
 }
 
-
-/* =====================================================
-   DEMO ACTION
-===================================================== */
-
-function showDemo(feature) {
-
-    alert(
-        feature +
-        " module is prepared as a prototype feature. " +
-        "Full integration can be connected to the backend later."
-    );
-
+function eligiblePatients() {
+    const eligibleAppointments = doctorAppointments.filter(({ appointment }) => ["confirmed", "completed"].includes(appointment.status));
+    return new Map(eligibleAppointments.map(({ patient }) => [patient?.id, patient?.name]).filter(([id, name]) => id && name));
 }
+
+function fillPatientSelect(selectId) {
+    const select = document.getElementById(selectId);
+    select.replaceChildren(new Option("Choose a patient", ""));
+    const patients = eligiblePatients();
+    patients.forEach((name, id) => select.add(new Option(name, id)));
+    return patients;
+}
+
+function openFollowUp() {
+    const patients = fillPatientSelect("followUpPatient");
+    const status = document.getElementById("followUpStatus");
+    status.textContent = patients.size ? "" : "A confirmed or completed visit is needed before sending a follow-up.";
+    document.getElementById("sendFollowUp").disabled = patients.size === 0;
+    document.getElementById("followUpDialog").showModal();
+}
+
+function openMedicationNote() {
+    const patients = fillPatientSelect("medicationPatient");
+    const status = document.getElementById("medicationNoteStatus");
+    status.textContent = patients.size ? "" : "A confirmed or completed visit is needed before saving a medication note.";
+    document.getElementById("saveMedicationNote").disabled = patients.size === 0;
+    document.getElementById("medicationNoteDialog").showModal();
+}
+
+async function openPatientRecords() {
+    const patients = fillPatientSelect("patientRecordsSelect");
+    const list = document.getElementById("patientRecordsList");
+    if (!patients.size) {
+        list.textContent = "A confirmed or completed visit is needed to view patient records.";
+    } else {
+        document.getElementById("patientRecordsSelect").value = String(patients.keys().next().value);
+        await loadPatientRecords();
+    }
+    document.getElementById("patientRecordsDialog").showModal();
+}
+
+async function loadPatientRecords() {
+    const patientId = document.getElementById("patientRecordsSelect").value;
+    const list = document.getElementById("patientRecordsList");
+    list.replaceChildren();
+    if (!patientId) {
+        list.textContent = "Choose a patient to view available records.";
+        return;
+    }
+    try {
+        const data = await requestJson(`/api/doctors/patient/${patientId}/records?doctor_user_id=${doctorUser.id}`);
+        if (!data.records.length) {
+            list.textContent = "No health records have been saved for this patient.";
+            return;
+        }
+        data.records.forEach((record) => {
+            const item = document.createElement("article");
+            item.className = "record-item";
+            const title = document.createElement("strong");
+            title.textContent = record.title;
+            const details = document.createElement("p");
+            details.textContent = `${record.record_type}${record.description ? ` · ${record.description}` : ""}`;
+            const date = document.createElement("p");
+            date.textContent = new Date(record.recorded_at).toLocaleString();
+            item.append(title, details, date);
+            list.append(item);
+        });
+    } catch (error) {
+        list.textContent = error.message;
+    }
+}
+
+document.getElementById("closeFollowUp").addEventListener("click", () => {
+    document.getElementById("followUpDialog").close();
+});
+
+document.getElementById("closePatientRecords").addEventListener("click", () => {
+    document.getElementById("patientRecordsDialog").close();
+});
+document.getElementById("patientRecordsSelect").addEventListener("change", loadPatientRecords);
+
+document.getElementById("followUpForm").addEventListener("submit", async (event) => {
+    event.preventDefault();
+    const submitButton = document.getElementById("sendFollowUp");
+    const status = document.getElementById("followUpStatus");
+    submitButton.disabled = true;
+    status.textContent = "Sending message…";
+    try {
+        await requestJson("/api/doctors/follow-up", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                doctor_user_id: doctorUser.id,
+                patient_user_id: Number(document.getElementById("followUpPatient").value),
+                message: document.getElementById("followUpText").value.trim()
+            })
+        });
+        status.textContent = "Message sent to the patient’s dashboard.";
+        document.getElementById("followUpText").value = "";
+        await loadDoctorAppointments();
+    } catch (error) {
+        status.textContent = error.message;
+        submitButton.disabled = false;
+    }
+});
+
+document.getElementById("closeMedicationNote").addEventListener("click", () => {
+    document.getElementById("medicationNoteDialog").close();
+});
+
+document.getElementById("medicationNoteForm").addEventListener("submit", async (event) => {
+    event.preventDefault();
+    const submitButton = document.getElementById("saveMedicationNote");
+    const status = document.getElementById("medicationNoteStatus");
+    submitButton.disabled = true;
+    status.textContent = "Saving medication note…";
+    try {
+        await requestJson("/api/doctors/medication-note", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                doctor_user_id: doctorUser.id,
+                patient_user_id: Number(document.getElementById("medicationPatient").value),
+                medicine_name: document.getElementById("medicineName").value.trim(),
+                instructions: document.getElementById("medicineInstructions").value.trim()
+            })
+        });
+        status.textContent = "Medication note saved to the patient's health records.";
+        document.getElementById("medicineName").value = "";
+        document.getElementById("medicineInstructions").value = "";
+    } catch (error) {
+        status.textContent = error.message;
+    } finally {
+        submitButton.disabled = eligiblePatients().size === 0;
+    }
+});
 
 
 /* =====================================================

@@ -277,12 +277,26 @@
             background: white;
 
             border-radius: 15px;
-
             padding: 25px;
 
             box-shadow:
                 0 4px 15px rgba(0,0,0,0.07);
         }
+
+        .notification-entry {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 14px;
+            padding: 14px 0;
+            border-bottom: 1px solid #e3e9e5;
+        }
+
+        .notification-entry:last-child { border-bottom: 0; }
+        .notification-entry.unread { border-left: 4px solid #00897b; padding-left: 12px; }
+        .notification-entry p { margin: 4px 0; color: #53665f; }
+        .notification-entry time { color: #718078; font-size: 13px; }
+        .notification-read { flex: 0 0 auto; padding: 8px 10px; border: 1px solid #176b55; border-radius: 4px; color: #10513f; background: white; cursor: pointer; }
 
         .info-card h3 {
 
@@ -482,6 +496,13 @@
     </section>
 
 
+    <section class="info-card notification-panel" aria-labelledby="notificationsTitle" style="margin-bottom: 30px">
+        <h3 id="notificationsTitle">Messages from your care team</h3>
+        <div id="notificationList" aria-live="polite">
+            <p class="label">Loading messages...</p>
+        </div>
+    </section>
+
     <!-- ================= SERVICES ================= -->
 
     <h2 class="section-title">
@@ -495,7 +516,7 @@
         <!-- AI -->
 
         <a
-            href="ai-assistant.html"
+            href="ai-chat.html"
             class="service-card"
         >
 
@@ -518,7 +539,7 @@
         <!-- APPOINTMENTS -->
 
         <a
-            href="appointments.html"
+            href="appintment.html"
             class="service-card"
         >
 
@@ -541,7 +562,7 @@
         <!-- HEALTH RECORDS -->
 
         <a
-            href="health-records.html"
+            href="health-record.html"
             class="service-card"
         >
 
@@ -792,6 +813,8 @@ const storedUser =
         "arogyabandhuUser"
     );
 
+let currentUser = null;
+
 
 if (storedUser) {
 
@@ -799,6 +822,12 @@ if (storedUser) {
 
         const user =
             JSON.parse(storedUser);
+
+        currentUser = user;
+
+        if (user.role !== "patient") {
+            window.location.href = "login.html";
+        }
 
 
         document.getElementById(
@@ -832,6 +861,8 @@ if (storedUser) {
         ).textContent =
             user.role;
 
+        loadNotifications();
+
 
     }
 
@@ -843,6 +874,63 @@ if (storedUser) {
 
     }
 
+}
+
+
+async function loadNotifications() {
+    const list = document.getElementById("notificationList");
+    try {
+        const response = await fetch(`/api/notifications/${currentUser.id}`);
+        const data = await response.json().catch(() => ({ detail: "Could not load messages." }));
+        if (!response.ok) throw new Error(data.detail || "Could not load messages.");
+        list.replaceChildren();
+        const notifications = data.notifications || [];
+        if (!notifications.length) {
+            const empty = document.createElement("p");
+            empty.className = "label";
+            empty.textContent = "No messages yet.";
+            list.append(empty);
+            return;
+        }
+        notifications.forEach((notification) => {
+            const item = document.createElement("article");
+            item.className = "notification-entry" + (notification.is_read ? "" : " unread");
+            const details = document.createElement("div");
+            const title = document.createElement("strong");
+            title.textContent = notification.title;
+            const message = document.createElement("p");
+            message.textContent = notification.message;
+            const date = document.createElement("time");
+            date.dateTime = notification.created_at;
+            date.textContent = new Date(notification.created_at).toLocaleString();
+            details.append(title, message, date);
+            item.append(details);
+            if (!notification.is_read) {
+                const readButton = document.createElement("button");
+                readButton.className = "notification-read";
+                readButton.type = "button";
+                readButton.textContent = "Mark read";
+                readButton.addEventListener("click", () => markNotificationRead(notification.id, readButton));
+                item.append(readButton);
+            }
+            list.append(item);
+        });
+    } catch (error) {
+        list.textContent = error.message;
+    }
+}
+
+async function markNotificationRead(notificationId, button) {
+    button.disabled = true;
+    try {
+        const response = await fetch(`/api/notifications/${notificationId}/read`, { method: "PUT" });
+        const data = await response.json().catch(() => ({ detail: "Could not update message." }));
+        if (!response.ok) throw new Error(data.detail || "Could not update message.");
+        await loadNotifications();
+    } catch (error) {
+        button.disabled = false;
+        button.textContent = error.message;
+    }
 }
 
 

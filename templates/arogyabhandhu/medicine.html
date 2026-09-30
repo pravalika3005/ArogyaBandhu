@@ -435,7 +435,7 @@
     </div>
 
     <a
-        href="patient-dashboard.html"
+        href="patient-dashbord.html"
         class="back"
     >
         ← Dashboard
@@ -473,6 +473,7 @@
                 type="text"
                 id="medicineSearch"
                 placeholder="Search for a medicine..."
+                aria-label="Search for a medicine"
             >
 
             <button
@@ -645,58 +646,7 @@
 
 
     <section class="pharmacy-grid">
-
-
-        <div class="pharmacy-card">
-
-            <h3>
-                Arogya Pharmacy
-            </h3>
-
-            <p>
-                Nearby pharmacy support for medicine
-                availability and requests.
-            </p>
-
-            <p>
-                📍 Local Service Area
-            </p>
-
-            <a
-                href="pharmacy.html"
-                class="pharmacy-btn"
-            >
-                View Pharmacy
-            </a>
-
-        </div>
-
-
-        <div class="pharmacy-card">
-
-            <h3>
-                Community Pharmacy
-            </h3>
-
-            <p>
-                Supports medicine availability and
-                delivery coordination.
-            </p>
-
-            <p>
-                📍 Rural Service Area
-            </p>
-
-            <a
-                href="pharmacy.html"
-                class="pharmacy-btn"
-            >
-                View Pharmacy
-            </a>
-
-        </div>
-
-
+        <p class="empty">Pharmacies appear here when they add their location and medicine stock.</p>
     </section>
 
 
@@ -705,33 +655,22 @@
     <section class="cart">
 
         <h2>
-            🛒 Medicine Request
+            🛒 My Medicine Requests
         </h2>
 
 
         <div id="cartList">
 
-            <p
-                id="emptyCart"
-                style="color:#777;"
-            >
-                No medicines added yet.
-            </p>
+            <p class="empty">Loading your medicine requests...</p>
 
         </div>
-
-
-        <button
-            class="order-btn"
-            onclick="submitMedicineRequest()"
-        >
-            Submit Medicine Request
-        </button>
 
 
         <div
             id="message"
             class="message"
+            role="status"
+            aria-live="polite"
         ></div>
 
     </section>
@@ -743,12 +682,7 @@
 
         <strong>Important:</strong>
 
-        This is a prototype medicine-support workflow.
-        Medicine availability, prescriptions, payments,
-        delivery and pharmacist verification would need
-        secure real-world integrations before deployment.
-        Do not use this demo as a substitute for medical
-        advice or prescription verification.
+        Stock is entered by pharmacies and may change. Contact the pharmacy to confirm availability and prescription requirements before traveling. A request is not medical advice or a confirmed delivery.
 
     </div>
 
@@ -757,333 +691,167 @@
 
 
 <script>
+const storedUser = JSON.parse(localStorage.getItem("arogyabandhuUser") || "null");
+const medicineGrid = document.getElementById("medicineGrid");
+const medicineSearch = document.getElementById("medicineSearch");
+const cartList = document.getElementById("cartList");
+const message = document.getElementById("message");
 
-
-/* =====================================================
-   MEDICINE DATA
-   ===================================================== */
-
-const medicineCards =
-    document.querySelectorAll(
-        ".medicine-card"
-    );
-
-
-/* =====================================================
-   SEARCH
-   ===================================================== */
-
-function searchMedicine() {
-
-    const search =
-        document.getElementById(
-            "medicineSearch"
-        ).value
-        .trim()
-        .toLowerCase();
-
-
-    medicineCards.forEach(
-        function(card) {
-
-            const name =
-                card.dataset.name
-                .toLowerCase();
-
-
-            if (
-                !search ||
-                name.includes(search)
-            ) {
-
-                card.style.display =
-                    "block";
-
-            }
-
-            else {
-
-                card.style.display =
-                    "none";
-
-            }
-
-        }
-    );
-
+if (!storedUser || storedUser.role !== "patient") {
+    window.location.href = "login.html";
 }
 
-
-/* =====================================================
-   ENTER KEY SEARCH
-   ===================================================== */
-
-document.getElementById(
-    "medicineSearch"
-).addEventListener(
-    "keydown",
-    function(event) {
-
-        if (
-            event.key === "Enter"
-        ) {
-
-            searchMedicine();
-
-        }
-
-    }
-);
-
-
-/* =====================================================
-   CART
-   ===================================================== */
-
-let medicineCart =
-    JSON.parse(
-        localStorage.getItem(
-            "arogyabandhuMedicineCart"
-        ) || "[]"
-    );
-
-
-function addToCart(
-    medicineName
-) {
-
-    if (
-        !medicineCart.includes(
-            medicineName
-        )
-    ) {
-
-        medicineCart.push(
-            medicineName
-        );
-
-    }
-
-
-    saveCart();
-
-    showMessage(
-        medicineName +
-        " added to your medicine request.",
-        "success"
-    );
-
+function showMessage(text, type) {
+    message.textContent = text;
+    message.className = "message " + type;
+    message.style.display = "block";
 }
 
-
-function removeFromCart(
-    medicineName
-) {
-
-    medicineCart =
-        medicineCart.filter(
-            function(item) {
-
-                return item !==
-                    medicineName;
-
-            }
-        );
-
-
-    saveCart();
-
+async function requestJson(url, options) {
+    const response = await fetch(url, options);
+    const data = await response.json().catch(() => ({ detail: "The server returned an invalid response." }));
+    if (!response.ok) throw new Error(data.detail || "Request failed.");
+    return data;
 }
 
-
-function saveCart() {
-
-    localStorage.setItem(
-
-        "arogyabandhuMedicineCart",
-
-        JSON.stringify(
-            medicineCart
-        )
-
-    );
-
-    renderCart();
-
-}
-
-
-function renderCart() {
-
-    const cartList =
-        document.getElementById(
-            "cartList"
-        );
-
-
-    if (
-        medicineCart.length === 0
-    ) {
-
-        cartList.innerHTML =
-            `
-            <p style="color:#777;">
-                No medicines added yet.
-            </p>
-            `;
-
+function renderMedicines(results) {
+    medicineGrid.replaceChildren();
+    if (!results.length) {
+        const empty = document.createElement("p");
+        empty.className = "empty";
+        empty.textContent = "No matching medicine is listed by a pharmacy.";
+        medicineGrid.append(empty);
         return;
-
     }
-
-
-    cartList.innerHTML =
-        "";
-
-
-    medicineCart.forEach(
-        function(medicine) {
-
-            const item =
-                document.createElement(
-                    "div"
-                );
-
-
-            item.className =
-                "cart-item";
-
-
-            item.innerHTML = `
-
-                <span class="cart-item-name">
-                    💊 ${medicine}
-                </span>
-
-                <button
-                    class="remove-btn"
-                    onclick="removeFromCart('${medicine}')"
-                >
-                    Remove
-                </button>
-
-            `;
-
-
-            cartList.appendChild(
-                item
-            );
-
-        }
-    );
-
+    results.forEach((result) => {
+        const medicine = result.medicine;
+        const pharmacy = result.pharmacy;
+        const card = document.createElement("article");
+        card.className = "medicine-card";
+        const icon = document.createElement("div");
+        icon.className = "medicine-icon";
+        icon.setAttribute("aria-hidden", "true");
+        icon.textContent = "💊";
+        const name = document.createElement("h3");
+        name.textContent = medicine.medicine_name;
+        const stock = document.createElement("p");
+        stock.textContent = `Stock listed: ${medicine.quantity} ${medicine.unit}`;
+        const pharmacyName = document.createElement("p");
+        pharmacyName.textContent = pharmacy?.pharmacy_name || "Registered pharmacy";
+        const location = document.createElement("p");
+        location.textContent = [pharmacy?.village, pharmacy?.district].filter(Boolean).join(", ") || pharmacy?.address || "Location not listed";
+        const status = document.createElement("span");
+        status.className = "availability";
+        status.textContent = medicine.requires_prescription ? "Prescription required" : pharmacy?.is_open === false ? "Pharmacy closed" : "Listed by pharmacy";
+        const quantityLabel = document.createElement("label");
+        quantityLabel.textContent = "Quantity";
+        const quantity = document.createElement("input");
+        quantity.type = "number";
+        quantity.min = "1";
+        quantity.max = String(medicine.quantity);
+        quantity.value = "1";
+        quantityLabel.append(quantity);
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "pharmacy-btn";
+        button.textContent = medicine.requires_prescription ? "Contact pharmacy" : "Request medicine";
+        button.disabled = medicine.requires_prescription || pharmacy?.is_open === false || medicine.quantity < 1;
+        button.addEventListener("click", () => requestMedicine(result, quantity, button));
+        card.append(icon, name, stock, pharmacyName, location, status, quantityLabel, button);
+        medicineGrid.append(card);
+    });
 }
 
-
-renderCart();
-
-
-/* =====================================================
-   SUBMIT REQUEST
-   ===================================================== */
-
-function submitMedicineRequest() {
-
-    if (
-        medicineCart.length === 0
-    ) {
-
-        showMessage(
-            "Please add at least one medicine first.",
-            "error"
-        );
-
+async function searchMedicine() {
+    const query = medicineSearch.value.trim();
+    if (!query) {
+        medicineSearch.focus();
         return;
-
     }
-
-
-    const request = {
-
-        medicines:
-            [...medicineCart],
-
-        date:
-            new Date()
-            .toLocaleString(),
-
-        status:
-            "Request Submitted"
-
-    };
-
-
-    localStorage.setItem(
-
-        "arogyabandhuLatestMedicineRequest",
-
-        JSON.stringify(
-            request
-        )
-
-    );
-
-
-    showMessage(
-
-        "Medicine request submitted successfully. " +
-        "The pharmacy workflow can now process your request.",
-
-        "success"
-
-    );
-
-
-    medicineCart = [];
-
-    saveCart();
-
+    medicineGrid.replaceChildren();
+    const loading = document.createElement("p");
+    loading.className = "empty";
+    loading.textContent = "Searching pharmacy stock…";
+    medicineGrid.append(loading);
+    try {
+        const data = await requestJson(`/api/pharmacy/search/${encodeURIComponent(query)}`);
+        renderMedicines((data.results || []).filter((result) => result.medicine.quantity > 0));
+    } catch (error) {
+        medicineGrid.replaceChildren();
+        const failure = document.createElement("p");
+        failure.className = "empty";
+        failure.textContent = error.message;
+        medicineGrid.append(failure);
+    }
 }
 
-
-/* =====================================================
-   MESSAGE
-   ===================================================== */
-
-function showMessage(
-    text,
-    type
-) {
-
-    const message =
-        document.getElementById(
-            "message"
-        );
-
-
-    message.textContent =
-        text;
-
-
-    message.className =
-        "message " + type;
-
-
-    message.style.display =
-        "block";
-
-
-    setTimeout(
-        function() {
-
-            message.style.display =
-                "none";
-
-        },
-        4000
-    );
-
+async function requestMedicine(result, quantityInput, button) {
+    const quantity = Number(quantityInput.value);
+    if (!Number.isInteger(quantity) || quantity < 1 || quantity > result.medicine.quantity) {
+        showMessage("Enter a quantity within the listed stock.", "error");
+        return;
+    }
+    button.disabled = true;
+    try {
+        await requestJson("/api/pharmacy/orders", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                patient_user_id: storedUser.id,
+                pharmacy_user_id: result.medicine.pharmacy_user_id,
+                medicine_name: result.medicine.medicine_name,
+                quantity
+            })
+        });
+        showMessage("Request sent to the pharmacy. Check its status below.", "success");
+        await Promise.all([loadOrders(), searchMedicine()]);
+    } catch (error) {
+        showMessage(error.message, "error");
+        button.disabled = false;
+    }
 }
+
+async function loadOrders() {
+    try {
+        const data = await requestJson(`/api/pharmacy/orders/patient/${storedUser.id}`);
+        const orders = data.orders || [];
+        cartList.replaceChildren();
+        if (!orders.length) {
+            const empty = document.createElement("p");
+            empty.className = "empty";
+            empty.textContent = "You have not sent any medicine requests.";
+            cartList.append(empty);
+            return;
+        }
+        orders.forEach((order) => {
+            const item = document.createElement("article");
+            item.className = "cart-item";
+            const details = document.createElement("span");
+            details.className = "cart-item-name";
+            details.textContent = `${order.medicine_name} · ${order.quantity}`;
+            const status = document.createElement("span");
+            status.textContent = order.status === "pending" ? "Waiting for pharmacy" : order.status;
+            item.append(details, status);
+            cartList.append(item);
+        });
+    } catch (error) {
+        cartList.textContent = error.message;
+    }
+}
+
+medicineGrid.replaceChildren();
+const prompt = document.createElement("p");
+prompt.className = "empty";
+prompt.textContent = "Search by medicine name to see pharmacy stock.";
+medicineGrid.append(prompt);
+document.querySelector(".search-btn").addEventListener("click", searchMedicine);
+medicineSearch.addEventListener("keydown", (event) => {
+    if (event.key === "Enter") {
+        event.preventDefault();
+        searchMedicine();
+    }
+});
+if (storedUser?.role === "patient") loadOrders();
 
 </script>
 

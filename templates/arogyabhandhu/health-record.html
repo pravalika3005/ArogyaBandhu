@@ -375,7 +375,7 @@
     </div>
 
     <a
-        href="patient-dashboard.html"
+        href="patient-dashbord.html"
         class="back"
     >
         ← Dashboard
@@ -694,11 +694,7 @@
 
         <strong>Privacy note:</strong>
 
-        This college-project prototype stores these
-        demo records in the browser. A production
-        healthcare system should use secure,
-        authenticated backend storage and appropriate
-        privacy and security controls.
+        These records are saved to this prototype's database. Do not enter sensitive medical information until account access controls are in place.
 
     </div>
 
@@ -707,361 +703,131 @@
 
 
 <script>
+const storedUser = JSON.parse(localStorage.getItem("arogyabandhuUser") || "null");
+if (!storedUser || storedUser.role !== "patient") {
+    window.location.href = "login.html";
+}
 
+function requestJson(url, options) {
+    return fetch(url, options).then(async (response) => {
+        const data = await response.json().catch(() => ({ detail: "The server returned an invalid response. Please try again." }));
+        if (!response.ok) throw new Error(data.detail || "Request failed.");
+        return data;
+    });
+}
 
-/* =====================================================
-   USER
-   ===================================================== */
+function showMessage(text, type) {
+    const message = document.getElementById("message");
+    message.textContent = text;
+    message.className = "message " + type;
+    message.style.display = "block";
+}
 
-const storedUser =
-    localStorage.getItem(
-        "arogyabandhuUser"
-    );
+function calculateAge(dateOfBirth) {
+    if (!dateOfBirth) return "Not added";
+    const birthDate = new Date(dateOfBirth);
+    if (Number.isNaN(birthDate.getTime())) return "Not added";
+    const today = new Date();
+    let age = today.getFullYear() - birthDate.getFullYear();
+    if (today.getMonth() < birthDate.getMonth() || (today.getMonth() === birthDate.getMonth() && today.getDate() < birthDate.getDate())) age -= 1;
+    return age >= 0 ? String(age) : "Not added";
+}
 
-
-if (storedUser) {
-
+async function loadHealthInfo() {
+    document.getElementById("patientName").textContent = storedUser.name || "--";
+    document.getElementById("patientEmail").textContent = storedUser.email || "--";
     try {
-
-        const user =
-            JSON.parse(storedUser);
-
-
-        document.getElementById(
-            "patientName"
-        ).textContent =
-            user.name || "--";
-
-
-        document.getElementById(
-            "patientEmail"
-        ).textContent =
-            user.email || "--";
-
-
+        const data = await requestJson(`/api/patients/${storedUser.id}`);
+        const profile = data.profile || {};
+        const bloodGroup = profile.blood_group || "Not added";
+        document.getElementById("bloodGroup").textContent = bloodGroup;
+        document.getElementById("bloodGroupSummary").textContent = bloodGroup;
+        document.getElementById("age").textContent = calculateAge(profile.date_of_birth);
+        document.getElementById("allergies").textContent = profile.allergies || "None added";
+    } catch (error) {
+        document.getElementById("patientName").textContent = storedUser.name || "--";
     }
-
-    catch (error) {
-
-        console.log(
-            "Unable to load user information."
-        );
-
-    }
-
 }
 
-
-
-/* =====================================================
-   STORAGE KEY
-   ===================================================== */
-
-const recordsKey =
-    "arogyabandhuHealthRecords";
-
-
-
-/* =====================================================
-   LOAD RECORDS
-   ===================================================== */
-
-function loadRecords() {
-
-
-    const records =
-        JSON.parse(
-            localStorage.getItem(
-                recordsKey
-            ) || "[]"
-        );
-
-
-    const recordsList =
-        document.getElementById(
-            "recordsList"
-        );
-
-
-    if (
-        records.length === 0
-    ) {
-
-        recordsList.innerHTML =
-            `
-            <div class="empty">
-                No health records have been added yet.
-            </div>
-            `;
-
-        document.getElementById(
-            "latestSummary"
-        ).textContent =
-            "No updates";
-
-        return;
-
-    }
-
-
-    recordsList.innerHTML =
-        "";
-
-
-    records
-        .slice()
-        .reverse()
-        .forEach(
-            function(record) {
-
-
-                const div =
-                    document.createElement(
-                        "div"
-                    );
-
-
-                div.className =
-                    "record";
-
-
-                div.innerHTML = `
-
-                    <h3>
-                        ${record.title}
-                    </h3>
-
-                    <p>
-                        <strong>
-                            Type:
-                        </strong>
-                        ${record.type}
-                    </p>
-
-                    <p>
-                        ${record.details}
-                    </p>
-
-                    <p class="record-date">
-                        Added:
-                        ${record.date}
-                    </p>
-
-                `;
-
-
-                recordsList.appendChild(
-                    div
-                );
-
+async function loadRecords() {
+    const recordsList = document.getElementById("recordsList");
+    try {
+        const data = await requestJson(`/api/patients/${storedUser.id}/records`);
+        const records = data.records || [];
+        recordsList.replaceChildren();
+        if (!records.length) {
+            const empty = document.createElement("div");
+            empty.className = "empty";
+            empty.textContent = "No health updates have been saved yet.";
+            recordsList.append(empty);
+            document.getElementById("latestSummary").textContent = "No updates";
+            document.getElementById("weightSummary").textContent = "Not added";
+            return;
+        }
+        records.forEach((record) => {
+            const card = document.createElement("article");
+            card.className = "record";
+            const heading = document.createElement("h3");
+            heading.textContent = record.title;
+            const type = document.createElement("p");
+            type.textContent = `Type: ${record.record_type}`;
+            card.append(heading, type);
+            if (record.description) {
+                const description = document.createElement("p");
+                description.textContent = record.description;
+                card.append(description);
             }
-        );
-
-
-    /*
-     * Update latest summary.
-     */
-
-    document.getElementById(
-        "latestSummary"
-    ).textContent =
-        records[records.length - 1].title;
-
-
-}
-
-
-
-/* =====================================================
-   LOAD BASIC HEALTH INFO
-   ===================================================== */
-
-function loadHealthInfo() {
-
-
-    const healthInfo =
-        JSON.parse(
-            localStorage.getItem(
-                "arogyabandhuHealthInfo"
-            ) || "{}"
-        );
-
-
-    const bloodGroup =
-        healthInfo.bloodGroup ||
-        "Not added";
-
-
-    document.getElementById(
-        "bloodGroup"
-    ).textContent =
-        bloodGroup;
-
-
-    document.getElementById(
-        "bloodGroupSummary"
-    ).textContent =
-        bloodGroup;
-
-
-    document.getElementById(
-        "age"
-    ).textContent =
-        healthInfo.age ||
-        "Not added";
-
-
-    document.getElementById(
-        "allergies"
-    ).textContent =
-        healthInfo.allergies ||
-        "None added";
-
-
-    document.getElementById(
-        "weightSummary"
-    ).textContent =
-        healthInfo.weight
-        ? healthInfo.weight + " kg"
-        : "Not added";
-
-}
-
-
-
-loadHealthInfo();
-
-loadRecords();
-
-
-
-/* =====================================================
-   ADD RECORD
-   ===================================================== */
-
-document.getElementById(
-    "recordForm"
-).addEventListener(
-    "submit",
-    function(event) {
-
-        event.preventDefault();
-
-
-        const type =
-            document.getElementById(
-                "recordType"
-            ).value;
-
-
-        const title =
-            document.getElementById(
-                "recordTitle"
-            ).value
-            .trim();
-
-
-        const details =
-            document.getElementById(
-                "recordDetails"
-            ).value
-            .trim();
-
-
-        const record = {
-
-            type: type,
-
-            title: title,
-
-            details: details,
-
-            date:
-                new Date()
-                .toLocaleString()
-
-        };
-
-
-        const records =
-            JSON.parse(
-                localStorage.getItem(
-                    recordsKey
-                ) || "[]"
-            );
-
-
-        records.push(
-            record
-        );
-
-
-        localStorage.setItem(
-
-            recordsKey,
-
-            JSON.stringify(
-                records
-            )
-
-        );
-
-
-        document.getElementById(
-            "recordForm"
-        ).reset();
-
-
-        showMessage(
-            "Health update saved successfully.",
-            "success"
-        );
-
-
-        loadRecords();
-
+            if (record.value) {
+                const value = document.createElement("p");
+                value.textContent = `Value: ${record.value}${record.unit ? ` ${record.unit}` : ""}`;
+                card.append(value);
+            }
+            const date = document.createElement("p");
+            date.className = "record-date";
+            date.textContent = `Added: ${new Date(record.recorded_at).toLocaleString()}`;
+            card.append(date);
+            recordsList.append(card);
+        });
+        document.getElementById("latestSummary").textContent = records[0].title;
+        const weight = records.find((record) => /weight/i.test(`${record.title} ${record.record_type}`) && record.value);
+        document.getElementById("weightSummary").textContent = weight ? `${weight.value}${weight.unit ? ` ${weight.unit}` : " kg"}` : "Not added";
+    } catch (error) {
+        recordsList.replaceChildren();
+        const failure = document.createElement("div");
+        failure.className = "empty";
+        failure.textContent = error.message;
+        recordsList.append(failure);
     }
-);
+}
 
+document.getElementById("recordForm").addEventListener("submit", async (event) => {
+    event.preventDefault();
+    const saveButton = event.currentTarget.querySelector("button[type='submit']");
+    saveButton.disabled = true;
+    try {
+        await requestJson("/api/patients/records", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                patient_user_id: storedUser.id,
+                record_type: document.getElementById("recordType").value,
+                title: document.getElementById("recordTitle").value.trim(),
+                description: document.getElementById("recordDetails").value.trim()
+            })
+        });
+        document.getElementById("recordForm").reset();
+        showMessage("Health update saved to your account.", "success");
+        await loadRecords();
+    } catch (error) {
+        showMessage(error.message, "error");
+    } finally {
+        saveButton.disabled = false;
+    }
+});
 
-
-/* =====================================================
-   MESSAGE
-   ===================================================== */
-
-function showMessage(
-    text,
-    type
-) {
-
-    const message =
-        document.getElementById(
-            "message"
-        );
-
-
-    message.textContent =
-        text;
-
-
-    message.className =
-        "message " + type;
-
-
-    message.style.display =
-        "block";
-
-
-    setTimeout(
-        function() {
-
-            message.style.display =
-                "none";
-
-        },
-        3500
-    );
-
+if (storedUser?.role === "patient") {
+    loadHealthInfo();
+    loadRecords();
 }
 
 </script>

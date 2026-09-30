@@ -11,7 +11,8 @@ from models import (
     User,
     PharmacyProfile,
     MedicineInventory,
-    MedicineOrder
+    MedicineOrder,
+    Notification
 )
 
 
@@ -57,6 +58,17 @@ class MedicineRequest(BaseModel):
     medicine_name: str
 
     quantity: int = 0
+
+    unit: str = "units"
+
+    requires_prescription: bool = False
+
+
+class MedicineInventoryUpdateRequest(BaseModel):
+
+    pharmacy_user_id: int
+
+    quantity: int
 
     unit: str = "units"
 
@@ -303,6 +315,61 @@ def get_inventory(
 # SEARCH MEDICINE
 # =========================================================
 
+@router.put("/inventory/{inventory_id}")
+def update_inventory_item(
+    inventory_id: int,
+    request: MedicineInventoryUpdateRequest,
+    db: Session = Depends(get_db)
+):
+
+    pharmacy = (
+        db.query(User)
+        .filter(User.id == request.pharmacy_user_id)
+        .first()
+    )
+
+    if not pharmacy or pharmacy.role != "pharmacy":
+
+        raise HTTPException(
+            status_code=404,
+            detail="Pharmacy not found"
+        )
+
+    if request.quantity < 0:
+
+        raise HTTPException(
+            status_code=400,
+            detail="Quantity cannot be negative"
+        )
+
+    medicine = (
+        db.query(MedicineInventory)
+        .filter(
+            MedicineInventory.id == inventory_id,
+            MedicineInventory.pharmacy_user_id == pharmacy.id
+        )
+        .first()
+    )
+
+    if not medicine:
+
+        raise HTTPException(
+            status_code=404,
+            detail="Inventory item not found"
+        )
+
+    medicine.quantity = request.quantity
+    medicine.unit = request.unit.strip() or "units"
+    medicine.requires_prescription = request.requires_prescription
+
+    db.commit()
+    db.refresh(medicine)
+
+    return {
+        "message": "Inventory updated successfully",
+        "medicine": medicine
+    }
+
 @router.get("/search/{medicine_name}")
 def search_medicine(
     medicine_name: str,
@@ -535,13 +602,29 @@ def get_pharmacy_orders(
         .all()
     )
 
+    order_results = []
+
+    for order in orders:
+        patient = (
+            db.query(User)
+            .filter(User.id == order.patient_user_id)
+            .first()
+        )
+        order_results.append({
+            "order": order,
+            "patient": {
+                "id": patient.id if patient else None,
+                "name": patient.name if patient else "Patient"
+            }
+        })
+
     return {
 
         "pharmacy_user_id":
             pharmacy_user_id,
 
         "orders":
-            orders
+            order_results
     }
 
 
@@ -554,6 +637,8 @@ class OrderStatusRequest(BaseModel):
     status: str
 
     delivery_status: str = "not_started"
+
+    pharmacy_user_id: int
 
 
 @router.put("/orders/{order_id}/status")
@@ -611,11 +696,41 @@ def update_order_status(
             detail="Medicine order not found"
         )
 
+    if order.pharmacy_user_id != request.pharmacy_user_id:
+
+        raise HTTPException(
+            status_code=403,
+            detail="This order belongs to another pharmacy"
+        )
+
+    previous_status = order.status
+    previous_delivery_status = order.delivery_status
+
     order.status = request.status
 
     order.delivery_status = (
         request.delivery_status
     )
+
+    if (
+        order.status != previous_status
+        or order.delivery_status != previous_delivery_status
+    ):
+        delivery_text = (
+            f" Delivery status: {request.delivery_status.replace('_', ' ')}."
+            if request.delivery_status != "not_started"
+            else ""
+        )
+        notification = Notification(
+            user_id=order.patient_user_id,
+            title="Medicine request update",
+            message=(
+                f"Your request for {order.medicine_name} is now "
+                f"{request.status.replace('_', ' ')}.{delivery_text}"
+            ),
+            notification_type="medicine"
+        )
+        db.add(notification)
 
     db.commit()
 

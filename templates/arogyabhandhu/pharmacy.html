@@ -273,6 +273,21 @@
             color: #087f78;
         }
 
+        .section-title-row { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+        .dialog-form { display: grid; gap: 14px; padding: 22px; }
+        .dialog-form label { display: grid; gap: 6px; font-weight: bold; }
+        .dialog-form input:not([type="checkbox"]) { width: 100%; min-height: 44px; padding: 9px; border: 1px solid #9eafa5; border-radius: 4px; font: inherit; }
+        .dialog-form .checkbox-label { display: flex; align-items: center; gap: 10px; }
+        .dialog-form input[type="checkbox"] { width: 20px; height: 20px; }
+        dialog { width: min(500px, calc(100% - 28px)); max-height: 90vh; padding: 0; border: 1px solid #cbd8d1; border-radius: 8px; }
+        dialog::backdrop { background: rgba(20, 42, 33, .48); }
+        .dialog-actions { display: flex; justify-content: flex-end; gap: 10px; }
+        .inventory-action { margin-top: 10px; }
+        .order-controls { display: grid; gap: 6px; min-width: 170px; }
+        .order-controls select { max-width: 180px; min-height: 38px; padding: 6px; border: 1px solid #b8cbc1; border-radius: 4px; }
+        .order-controls button { width: fit-content; }
+        .pharmacy-contact { display: grid; gap: 7px; }
+
         /* ================= ORDER TABLE ================= */
 
         .table-card {
@@ -442,7 +457,7 @@
             Medicine
         </a>
 
-        <a href="patient-dashboard.html">
+        <a href="patient-dashbord.html">
             Patient
         </a>
 
@@ -477,8 +492,7 @@
 
         <p>
             Manage medicine inventory, review medicine requests,
-            and track delivery information through the
-            ArogyaBandhu prototype.
+            and update request and delivery status.
         </p>
 
     </section>
@@ -495,9 +509,7 @@
                 💊
             </div>
 
-            <div class="stat-number">
-                128
-            </div>
+            <div class="stat-number" id="inventoryCount">0</div>
 
             <div class="stat-label">
                 Medicines in Inventory
@@ -512,9 +524,7 @@
                 📦
             </div>
 
-            <div class="stat-number">
-                12
-            </div>
+            <div class="stat-number" id="pendingRequestsCount">0</div>
 
             <div class="stat-label">
                 Pending Requests
@@ -529,12 +539,10 @@
                 🚚
             </div>
 
-            <div class="stat-number">
-                7
-            </div>
+            <div class="stat-number" id="activeDeliveriesCount">0</div>
 
             <div class="stat-label">
-                Deliveries Today
+                Active deliveries
             </div>
 
         </div>
@@ -546,9 +554,7 @@
                 ✅
             </div>
 
-            <div class="stat-number">
-                23
-            </div>
+            <div class="stat-number" id="completedOrdersCount">0</div>
 
             <div class="stat-label">
                 Completed Orders
@@ -595,13 +601,17 @@
 
     <!-- ================= INVENTORY ================= -->
 
-    <div class="section-title">
+    <div class="section-title section-title-row">
 
         <h2>
             💊 Medicine Inventory
         </h2>
 
+        <button class="button" id="addMedicineButton" type="button">Add medicine</button>
+
     </div>
+
+    <p id="pharmacyActionMessage" role="status" aria-live="polite"></p>
 
 
     <section
@@ -644,7 +654,6 @@
 
             <button
                 class="button"
-                onclick="showInventoryMessage('Paracetamol')"
             >
                 Manage Stock
             </button>
@@ -687,7 +696,6 @@
 
             <button
                 class="button"
-                onclick="showInventoryMessage('Oral Rehydration Salts')"
             >
                 Manage Stock
             </button>
@@ -729,7 +737,6 @@
 
             <button
                 class="button"
-                onclick="showInventoryMessage('Cetirizine')"
             >
                 Manage Stock
             </button>
@@ -771,7 +778,6 @@
 
             <button
                 class="button"
-                onclick="showInventoryMessage('Antiseptic Solution')"
             >
                 Manage Stock
             </button>
@@ -814,7 +820,6 @@
 
             <button
                 class="button"
-                onclick="showInventoryMessage('Amoxicillin')"
             >
                 Manage Stock
             </button>
@@ -856,7 +861,6 @@
 
             <button
                 class="button"
-                onclick="showInventoryMessage('Vitamin Tablets')"
             >
                 Manage Stock
             </button>
@@ -908,6 +912,10 @@
 
                     <th>
                         Status
+                    </th>
+
+                    <th>
+                        Update
                     </th>
 
                 </tr>
@@ -1035,7 +1043,7 @@
     </div>
 
 
-    <section class="pharmacy-grid">
+    <section class="pharmacy-grid" id="pharmacyDetails">
 
 
         <div class="pharmacy-card">
@@ -1058,7 +1066,6 @@
 
             <button
                 class="button secondary"
-                onclick="showDemo('Pharmacy contact')"
             >
                 View Details
             </button>
@@ -1086,7 +1093,6 @@
 
             <button
                 class="button secondary"
-                onclick="showDemo('Village pharmacy contact')"
             >
                 View Details
             </button>
@@ -1114,7 +1120,6 @@
 
             <button
                 class="button secondary"
-                onclick="showDemo('Community pharmacy contact')"
             >
                 View Details
             </button>
@@ -1125,6 +1130,31 @@
     </section>
 
 
+    <dialog id="inventoryDialog">
+        <form class="dialog-form" id="inventoryForm">
+            <h2 id="inventoryDialogTitle">Add medicine</h2>
+            <input type="hidden" id="inventoryId">
+            <label for="inventoryName">Medicine name
+                <input id="inventoryName" maxlength="120" required>
+            </label>
+            <label for="inventoryQuantity">Stock quantity
+                <input id="inventoryQuantity" type="number" min="0" required>
+            </label>
+            <label for="inventoryUnit">Unit
+                <input id="inventoryUnit" maxlength="40" value="units" required>
+            </label>
+            <label class="checkbox-label" for="inventoryPrescription">
+                <input id="inventoryPrescription" type="checkbox">
+                Prescription required
+            </label>
+            <p id="inventoryStatus" role="status" aria-live="polite"></p>
+            <div class="dialog-actions">
+                <button class="button secondary" id="closeInventoryDialog" type="button">Cancel</button>
+                <button class="button" id="saveInventoryButton" type="submit">Save stock</button>
+            </div>
+        </form>
+    </dialog>
+
     <!-- ================= NOTICE ================= -->
 
     <div class="notice">
@@ -1134,11 +1164,7 @@
         </h3>
 
         <p>
-            This pharmacy module is a demonstration prototype.
-            Medicine availability, pricing, prescription verification,
-            payment, and delivery are not connected to a real pharmacy
-            system. Prescription medicines should only be dispensed
-            according to applicable professional and legal requirements.
+            Stock and requests are stored in this app. Payments and courier delivery are not connected; contact the patient to confirm collection or delivery. Prescription medicines require appropriate verification.
         </p>
 
     </div>
@@ -1175,47 +1201,25 @@
    LOAD PHARMACY USER
 ===================================================== */
 
-function loadPharmacyUser() {
+const pharmacyUser = JSON.parse(localStorage.getItem("arogyabandhuUser") || "null");
 
-    const storedUser =
-        localStorage.getItem(
-            "arogyabandhuUser"
-        );
+async function requestJson(url, options) {
+    const response = await fetch(url, options);
+    const data = await response.json().catch(() => ({ detail: "The server returned an invalid response." }));
+    if (!response.ok) throw new Error(data.detail || "Request failed.");
+    return data;
+}
 
-
-    if (!storedUser) {
-
+async function loadPharmacyUser() {
+    if (!pharmacyUser || pharmacyUser.role !== "pharmacy") {
+        window.location.href = "login.html";
         return;
-
     }
-
-
-    try {
-
-        const user =
-            JSON.parse(storedUser);
-
-
-        const name =
-            user.name || "Pharmacy Partner";
-
-
-        document.getElementById(
-            "welcomeTitle"
-        ).textContent =
-            "💊 Welcome, " + name;
-
-
-    }
-
-    catch (error) {
-
-        console.log(
-            "Unable to load pharmacy user."
-        );
-
-    }
-
+    document.getElementById("welcomeTitle").textContent = "💊 Welcome, " + (pharmacyUser.name || "Pharmacy partner");
+    document.getElementById("medicineGrid").replaceChildren();
+    document.getElementById("ordersTable").replaceChildren();
+    document.getElementById("pharmacyDetails").replaceChildren();
+    await Promise.all([loadPharmacyProfile(), loadInventory(), loadOrders()]);
 }
 
 
@@ -1272,38 +1276,196 @@ function searchMedicine() {
 }
 
 
-/* =====================================================
-   INVENTORY MESSAGE
-===================================================== */
-
-function showInventoryMessage(
-    medicine
-) {
-
-    alert(
-        "Inventory management for " +
-        medicine +
-        " is available as a prototype action."
-    );
-
+function showPharmacyMessage(text) {
+    document.getElementById("pharmacyActionMessage").textContent = text;
 }
 
-
-/* =====================================================
-   DEMO ACTION
-===================================================== */
-
-function showDemo(
-    feature
-) {
-
-    alert(
-        feature +
-        " is available as a prototype feature. " +
-        "Real pharmacy data can be connected to the backend later."
-    );
-
+async function loadPharmacyProfile() {
+    const details = document.getElementById("pharmacyDetails");
+    try {
+        const data = await requestJson(`/api/pharmacy/${pharmacyUser.id}`);
+        const profile = data.profile;
+        const card = document.createElement("article");
+        card.className = "pharmacy-card pharmacy-contact";
+        const name = document.createElement("h3");
+        name.textContent = profile.pharmacy_name;
+        const address = document.createElement("p");
+        address.textContent = [profile.address, profile.village, profile.district].filter(Boolean).join(", ") || "Address not added";
+        const phone = document.createElement("p");
+        phone.textContent = profile.phone ? `Phone: ${profile.phone}` : "Phone number not added";
+        const status = document.createElement("p");
+        status.textContent = profile.is_open ? "Currently open" : "Currently closed";
+        card.append(name, address, phone, status);
+        details.replaceChildren(card);
+    } catch (error) {
+        const empty = document.createElement("p");
+        empty.className = "pharmacy-card";
+        empty.textContent = "No pharmacy profile is saved yet. Add your pharmacy details before patients search for your stock.";
+        details.replaceChildren(empty);
+    }
 }
+
+async function loadInventory() {
+    const grid = document.getElementById("medicineGrid");
+    try {
+        const data = await requestJson(`/api/pharmacy/${pharmacyUser.id}/inventory`);
+        const inventory = data.inventory || [];
+        document.getElementById("inventoryCount").textContent = inventory.length;
+        grid.replaceChildren();
+        if (!inventory.length) {
+            const empty = document.createElement("p");
+            empty.className = "pharmacy-card";
+            empty.textContent = "No medicines are listed yet.";
+            grid.append(empty);
+            return;
+        }
+        inventory.forEach((medicine) => {
+            const card = document.createElement("article");
+            card.className = "medicine-card";
+            card.dataset.name = medicine.medicine_name.toLowerCase();
+            const icon = document.createElement("div");
+            icon.className = "medicine-icon";
+            icon.setAttribute("aria-hidden", "true");
+            icon.textContent = "💊";
+            const name = document.createElement("h3");
+            name.textContent = medicine.medicine_name;
+            const stockCount = document.createElement("p");
+            stockCount.textContent = `Stock: ${medicine.quantity} ${medicine.unit}`;
+            const stockStatus = document.createElement("span");
+            stockStatus.className = "stock " + (medicine.quantity <= 0 ? "out" : medicine.quantity <= 10 ? "low" : "available");
+            stockStatus.textContent = medicine.quantity <= 0 ? "Out of stock" : medicine.quantity <= 10 ? "Low stock" : "Available";
+            const prescription = document.createElement("p");
+            prescription.textContent = medicine.requires_prescription ? "Prescription required" : "No prescription flag";
+            const edit = document.createElement("button");
+            edit.type = "button";
+            edit.className = "button inventory-action";
+            edit.textContent = "Update stock";
+            edit.addEventListener("click", () => openInventoryEditor(medicine));
+            card.append(icon, name, stockCount, stockStatus, prescription, edit);
+            grid.append(card);
+        });
+        searchMedicine();
+    } catch (error) {
+        grid.textContent = error.message;
+    }
+}
+
+function openInventoryEditor(medicine = null) {
+    const form = document.getElementById("inventoryForm");
+    form.reset();
+    document.getElementById("inventoryDialogTitle").textContent = medicine ? "Update medicine stock" : "Add medicine";
+    document.getElementById("inventoryId").value = medicine?.id || "";
+    document.getElementById("inventoryName").value = medicine?.medicine_name || "";
+    document.getElementById("inventoryName").readOnly = Boolean(medicine);
+    document.getElementById("inventoryQuantity").value = medicine?.quantity ?? "";
+    document.getElementById("inventoryUnit").value = medicine?.unit || "units";
+    document.getElementById("inventoryPrescription").checked = Boolean(medicine?.requires_prescription);
+    document.getElementById("inventoryStatus").textContent = "";
+    document.getElementById("inventoryDialog").showModal();
+}
+
+async function saveInventory(event) {
+    event.preventDefault();
+    const inventoryId = document.getElementById("inventoryId").value;
+    const button = document.getElementById("saveInventoryButton");
+    const status = document.getElementById("inventoryStatus");
+    const body = {
+        pharmacy_user_id: pharmacyUser.id,
+        medicine_name: document.getElementById("inventoryName").value.trim(),
+        quantity: Number(document.getElementById("inventoryQuantity").value),
+        unit: document.getElementById("inventoryUnit").value.trim(),
+        requires_prescription: document.getElementById("inventoryPrescription").checked
+    };
+    button.disabled = true;
+    status.textContent = "Saving stock…";
+    try {
+        await requestJson(inventoryId ? `/api/pharmacy/inventory/${inventoryId}` : "/api/pharmacy/inventory", {
+            method: inventoryId ? "PUT" : "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(body)
+        });
+        document.getElementById("inventoryDialog").close();
+        showPharmacyMessage("Inventory saved.");
+        await loadInventory();
+    } catch (error) {
+        status.textContent = error.message;
+    } finally {
+        button.disabled = false;
+    }
+}
+
+async function loadOrders() {
+    const table = document.getElementById("ordersTable");
+    try {
+        const data = await requestJson(`/api/pharmacy/orders/pharmacy/${pharmacyUser.id}`);
+        const orders = data.orders || [];
+        document.getElementById("pendingRequestsCount").textContent = orders.filter(({ order }) => order.status === "pending").length;
+        document.getElementById("activeDeliveriesCount").textContent = orders.filter(({ order }) => ["preparing", "out_for_delivery"].includes(order.delivery_status)).length;
+        document.getElementById("completedOrdersCount").textContent = orders.filter(({ order }) => order.status === "completed").length;
+        table.replaceChildren();
+        if (!orders.length) {
+            const row = table.insertRow();
+            const cell = row.insertCell();
+            cell.colSpan = 7;
+            cell.textContent = "No medicine requests yet.";
+            return;
+        }
+        orders.forEach((item) => {
+            const order = item.order;
+            const row = table.insertRow();
+            row.insertCell().textContent = `AB-${order.id}`;
+            row.insertCell().textContent = item.patient?.name || "Patient";
+            row.insertCell().textContent = order.medicine_name;
+            row.insertCell().textContent = order.quantity;
+            row.insertCell().textContent = new Date(order.created_at).toLocaleString();
+            row.insertCell().textContent = order.status;
+            const controls = row.insertCell();
+            const group = document.createElement("div");
+            group.className = "order-controls";
+            const status = document.createElement("select");
+            status.setAttribute("aria-label", `Request status for ${order.medicine_name}`);
+            ["pending", "accepted", "rejected", "processing", "completed", "cancelled"].forEach((value) => status.add(new Option(value, value)));
+            status.value = order.status;
+            const delivery = document.createElement("select");
+            delivery.setAttribute("aria-label", `Delivery status for ${order.medicine_name}`);
+            ["not_started", "preparing", "out_for_delivery", "delivered"].forEach((value) => delivery.add(new Option(value.replaceAll("_", " "), value)));
+            delivery.value = order.delivery_status;
+            const save = document.createElement("button");
+            save.type = "button";
+            save.className = "button secondary";
+            save.textContent = "Update";
+            save.addEventListener("click", () => updateOrder(order.id, status.value, delivery.value, save));
+            group.append(status, delivery, save);
+            controls.append(group);
+        });
+    } catch (error) {
+        table.replaceChildren();
+        const row = table.insertRow();
+        const cell = row.insertCell();
+        cell.colSpan = 7;
+        cell.textContent = error.message;
+    }
+}
+
+async function updateOrder(orderId, status, deliveryStatus, button) {
+    button.disabled = true;
+    try {
+        await requestJson(`/api/pharmacy/orders/${orderId}/status`, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ pharmacy_user_id: pharmacyUser.id, status, delivery_status: deliveryStatus })
+        });
+        showPharmacyMessage("Order status saved and patient notified.");
+        await loadOrders();
+    } catch (error) {
+        showPharmacyMessage(error.message);
+        button.disabled = false;
+    }
+}
+
+document.getElementById("addMedicineButton").addEventListener("click", () => openInventoryEditor());
+document.getElementById("closeInventoryDialog").addEventListener("click", () => document.getElementById("inventoryDialog").close());
+document.getElementById("inventoryForm").addEventListener("submit", saveInventory);
 
 
 /* =====================================================

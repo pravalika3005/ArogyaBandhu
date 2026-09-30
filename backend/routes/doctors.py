@@ -10,7 +10,9 @@ from database import get_db
 from models import (
     User,
     DoctorProfile,
-    HealthRecord
+    HealthRecord,
+    Appointment,
+    Notification
 )
 
 
@@ -54,6 +56,26 @@ class DoctorAvailabilityRequest(BaseModel):
     user_id: int
 
     is_available: bool
+
+
+class DoctorFollowUpRequest(BaseModel):
+
+    doctor_user_id: int
+
+    patient_user_id: int
+
+    message: str
+
+
+class DoctorMedicationNoteRequest(BaseModel):
+
+    doctor_user_id: int
+
+    patient_user_id: int
+
+    medicine_name: str
+
+    instructions: str
 
 
 # =========================================================
@@ -324,12 +346,202 @@ def get_available_doctors(
 
 
 # =========================================================
+# SEND PATIENT FOLLOW-UP MESSAGE
+# =========================================================
+
+@router.post("/follow-up")
+def send_patient_follow_up(
+    request: DoctorFollowUpRequest,
+    db: Session = Depends(get_db)
+):
+
+    doctor = (
+        db.query(User)
+        .filter(User.id == request.doctor_user_id)
+        .first()
+    )
+
+    if not doctor or doctor.role != "doctor":
+
+        raise HTTPException(
+            status_code=404,
+            detail="Doctor not found"
+        )
+
+    patient = (
+        db.query(User)
+        .filter(User.id == request.patient_user_id)
+        .first()
+    )
+
+    if not patient or patient.role != "patient":
+
+        raise HTTPException(
+            status_code=404,
+            detail="Patient not found"
+        )
+
+    message = request.message.strip()
+
+    if not message:
+
+        raise HTTPException(
+            status_code=400,
+            detail="Follow-up message cannot be empty"
+        )
+
+    if len(message) > 1000:
+
+        raise HTTPException(
+            status_code=400,
+            detail="Follow-up message must be 1000 characters or fewer"
+        )
+
+    appointment = (
+        db.query(Appointment)
+        .filter(
+            Appointment.doctor_user_id == doctor.id,
+            Appointment.patient_user_id == patient.id,
+            Appointment.status.in_(["confirmed", "completed"])
+        )
+        .first()
+    )
+
+    if not appointment:
+
+        raise HTTPException(
+            status_code=403,
+            detail="A confirmed or completed appointment is required"
+        )
+
+    notification = Notification(
+        user_id=patient.id,
+        title="Doctor follow-up",
+        message=message,
+        notification_type="doctor_followup"
+    )
+
+    db.add(notification)
+    db.commit()
+    db.refresh(notification)
+
+    return {
+        "message": "Follow-up message sent",
+        "notification": {
+            "id": notification.id,
+            "user_id": notification.user_id,
+            "title": notification.title,
+            "message": notification.message,
+            "notification_type": notification.notification_type,
+            "created_at": notification.created_at
+        }
+    }
+
+
+# =========================================================
+# SAVE DOCTOR MEDICATION NOTE
+# =========================================================
+
+@router.post("/medication-note")
+def save_medication_note(
+    request: DoctorMedicationNoteRequest,
+    db: Session = Depends(get_db)
+):
+
+    doctor = (
+        db.query(User)
+        .filter(User.id == request.doctor_user_id)
+        .first()
+    )
+
+    if not doctor or doctor.role != "doctor":
+
+        raise HTTPException(
+            status_code=404,
+            detail="Doctor not found"
+        )
+
+    patient = (
+        db.query(User)
+        .filter(User.id == request.patient_user_id)
+        .first()
+    )
+
+    if not patient or patient.role != "patient":
+
+        raise HTTPException(
+            status_code=404,
+            detail="Patient not found"
+        )
+
+    medicine_name = request.medicine_name.strip()
+    instructions = request.instructions.strip()
+
+    if not medicine_name or len(medicine_name) > 120:
+
+        raise HTTPException(
+            status_code=400,
+            detail="Medicine name is required and must be 120 characters or fewer"
+        )
+
+    if not instructions or len(instructions) > 1000:
+
+        raise HTTPException(
+            status_code=400,
+            detail="Instructions are required and must be 1000 characters or fewer"
+        )
+
+    appointment = (
+        db.query(Appointment)
+        .filter(
+            Appointment.doctor_user_id == doctor.id,
+            Appointment.patient_user_id == patient.id,
+            Appointment.status.in_(["confirmed", "completed"])
+        )
+        .first()
+    )
+
+    if not appointment:
+
+        raise HTTPException(
+            status_code=403,
+            detail="A confirmed or completed visit is required"
+        )
+
+    record = HealthRecord(
+        patient_user_id=patient.id,
+        record_type="Medication",
+        title=f"Medication note: {medicine_name}",
+        description=instructions,
+        recorded_by_user_id=doctor.id
+    )
+
+    db.add(record)
+    db.commit()
+    db.refresh(record)
+
+    return {
+        "message": "Medication note saved to patient health records",
+        "record": {
+            "id": record.id,
+            "patient_user_id": record.patient_user_id,
+            "record_type": record.record_type,
+            "title": record.title,
+            "description": record.description,
+            "recorded_by_user_id": record.recorded_by_user_id,
+            "recorded_at": record.recorded_at
+        }
+    }
+
+
+# =========================================================
 # VIEW PATIENT HEALTH RECORDS
 # =========================================================
 
 @router.get("/patient/{patient_user_id}/records")
 def get_patient_records(
     patient_user_id: int,
+    doctor_user_id: int,
     db: Session = Depends(get_db)
 ):
 
@@ -353,6 +565,36 @@ def get_patient_records(
         raise HTTPException(
             status_code=400,
             detail="Selected user is not a patient"
+        )
+
+    doctor = (
+        db.query(User)
+        .filter(User.id == doctor_user_id)
+        .first()
+    )
+
+    if not doctor or doctor.role != "doctor":
+
+        raise HTTPException(
+            status_code=404,
+            detail="Doctor not found"
+        )
+
+    appointment = (
+        db.query(Appointment)
+        .filter(
+            Appointment.doctor_user_id == doctor.id,
+            Appointment.patient_user_id == patient.id,
+            Appointment.status.in_(["confirmed", "completed"])
+        )
+        .first()
+    )
+
+    if not appointment:
+
+        raise HTTPException(
+            status_code=403,
+            detail="A confirmed or completed visit is required"
         )
 
     records = (

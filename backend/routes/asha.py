@@ -544,6 +544,41 @@ def update_visit_status(
 # GET ASSIGNED PATIENTS
 # =========================================================
 
+@router.get("/{user_id}/patient-directory")
+def get_patient_directory(
+    user_id: int,
+    db: Session = Depends(get_db)
+):
+
+    asha_user = (
+        db.query(User)
+        .filter(User.id == user_id)
+        .first()
+    )
+
+    if not asha_user or asha_user.role != "asha":
+
+        raise HTTPException(
+            status_code=404,
+            detail="ASHA worker not found"
+        )
+
+    patients = (
+        db.query(User)
+        .filter(User.role == "patient")
+        .order_by(User.name.asc())
+        .all()
+    )
+
+    return {
+        "asha_user_id": user_id,
+        "patients": [
+            {"id": patient.id, "name": patient.name}
+            for patient in patients
+        ]
+    }
+
+
 @router.get("/{user_id}/patients")
 def get_assigned_patients(
     user_id: int,

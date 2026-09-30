@@ -3,14 +3,6 @@ from sqlalchemy.orm import Session
 
 from database import get_db
 from models import User, Notification
-from services.notification_service import (
-    create_notification,
-    mark_as_read,
-    mark_all_as_read,
-    get_unread_notifications
-)
-
-
 router = APIRouter(
     prefix="/api/notifications",
     tags=["Notifications"]
@@ -39,13 +31,16 @@ def create_user_notification(
             detail="User not found"
         )
 
-    notification = create_notification(
-        db=db,
+    notification = Notification(
         user_id=user_id,
         title=title,
         message=message,
         notification_type=notification_type
     )
+
+    db.add(notification)
+    db.commit()
+    db.refresh(notification)
 
     return {
         "message": "Notification created successfully",
@@ -123,9 +118,14 @@ def get_unread(
             detail="User not found"
         )
 
-    notifications = get_unread_notifications(
-        db=db,
-        user_id=user_id
+    notifications = (
+        db.query(Notification)
+        .filter(
+            Notification.user_id == user_id,
+            Notification.is_read.is_(False)
+        )
+        .order_by(Notification.created_at.desc())
+        .all()
     )
 
     return {
@@ -154,16 +154,19 @@ def read_notification(
     notification_id: int,
     db: Session = Depends(get_db)
 ):
-    notification = mark_as_read(
-        db=db,
-        notification_id=notification_id
-    )
+    notification = db.query(Notification).filter(
+        Notification.id == notification_id
+    ).first()
 
     if not notification:
         raise HTTPException(
             status_code=404,
             detail="Notification not found"
         )
+
+    notification.is_read = True
+    db.commit()
+    db.refresh(notification)
 
     return {
         "message": "Notification marked as read",
@@ -193,10 +196,20 @@ def read_all_notifications(
             detail="User not found"
         )
 
-    count = mark_all_as_read(
-        db=db,
-        user_id=user_id
+    notifications = (
+        db.query(Notification)
+        .filter(
+            Notification.user_id == user_id,
+            Notification.is_read.is_(False)
+        )
+        .all()
     )
+
+    for notification in notifications:
+        notification.is_read = True
+
+    db.commit()
+    count = len(notifications)
 
     return {
         "message": "All notifications marked as read",

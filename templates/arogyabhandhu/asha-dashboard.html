@@ -1,1207 +1,448 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-
     <meta charset="UTF-8">
-
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#176b55">
     <title>ASHA Dashboard | ArogyaBandhu</title>
-
     <style>
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
+        :root {
+            color-scheme: light;
+            --ink: #18352c;
+            --muted: #53665f;
+            --green: #176b55;
+            --green-dark: #10513f;
+            --line: #ccd9d1;
+            --paper: #fffefa;
+            --canvas: #f4f6ef;
+            --red: #a52f29;
+            font-family: "Trebuchet MS", "Noto Sans", sans-serif;
+            font-size: 18px;
+            line-height: 1.55;
         }
 
-        body {
-            font-family: Arial, sans-serif;
-            background: #f4fbfa;
-            color: #173b3a;
-            line-height: 1.6;
+        * { box-sizing: border-box; }
+        body { margin: 0; color: var(--ink); background: var(--canvas); }
+        button, input, select, textarea { font: inherit; }
+        a { color: var(--green-dark); }
+
+        a:focus-visible, button:focus-visible, input:focus-visible,
+        select:focus-visible, textarea:focus-visible {
+            outline: 3px solid #d58a21;
+            outline-offset: 3px;
         }
 
-        /* ================= NAVBAR ================= */
+        .skip-link {
+            position: absolute;
+            top: -60px;
+            left: 12px;
+            z-index: 2;
+            padding: 10px 14px;
+            background: white;
+        }
+        .skip-link:focus { top: 12px; }
 
-        nav {
-            background: #087f78;
-            color: white;
-            padding: 16px 7%;
+        .topbar {
             display: flex;
+            align-items: center;
             justify-content: space-between;
-            align-items: center;
-            gap: 20px;
-            flex-wrap: wrap;
-        }
-
-        .logo {
-            font-size: 24px;
-            font-weight: bold;
-        }
-
-        .nav-links {
-            display: flex;
-            gap: 18px;
-            align-items: center;
-            flex-wrap: wrap;
-        }
-
-        .nav-links a {
+            gap: 16px;
+            padding: 14px max(20px, calc((100% - 1080px) / 2));
             color: white;
-            text-decoration: none;
-            font-weight: 500;
+            background: var(--green-dark);
         }
-
-        .nav-links a:hover {
-            text-decoration: underline;
-        }
-
-        .logout-btn {
-            background: #fff0f0;
-            color: #b42318;
-            border: none;
-            padding: 9px 15px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: bold;
-        }
-
-        /* ================= MAIN ================= */
-
-        .container {
-            width: 90%;
-            max-width: 1200px;
-            margin: auto;
-            padding: 40px 0 65px;
-        }
-
-        /* ================= WELCOME ================= */
-
-        .welcome {
-            background: linear-gradient(
-                135deg,
-                #dff7f3,
-                #eefcf9
-            );
-
-            border-radius: 18px;
-            padding: 35px;
-            margin-bottom: 30px;
-        }
-
-        .welcome h1 {
-            color: #075e59;
-            margin-bottom: 8px;
-        }
-
-        .welcome p {
-            color: #536b69;
-            max-width: 800px;
-        }
-
-        /* ================= STATS ================= */
-
-        .stats {
-            display: grid;
-            grid-template-columns: repeat(
-                auto-fit,
-                minmax(180px, 1fr)
-            );
-
-            gap: 18px;
-            margin-bottom: 35px;
-        }
-
-        .stat-card {
+        .brand { font-size: 1.1rem; font-weight: 800; }
+        .top-actions, .language-control { display: flex; align-items: center; gap: 10px; }
+        .language-control select {
+            min-height: 46px;
+            padding: 7px 30px 7px 10px;
+            border: 1px solid #d6e4db;
+            border-radius: 4px;
+            color: var(--ink);
             background: white;
-            padding: 22px;
-            border-radius: 14px;
-            border: 1px solid #d8ece9;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
         }
-
-        .stat-icon {
-            font-size: 30px;
-            margin-bottom: 7px;
-        }
-
-        .stat-number {
-            font-size: 28px;
-            font-weight: bold;
-            color: #087f78;
-        }
-
-        .stat-label {
-            color: #718482;
-            font-size: 14px;
-        }
-
-        /* ================= SECTION ================= */
-
-        .section-title {
-            margin: 30px 0 18px;
-        }
-
-        .section-title h2 {
-            color: #075e59;
-        }
-
-        /* ================= SERVICE GRID ================= */
-
-        .service-grid {
-            display: grid;
-            grid-template-columns: repeat(
-                auto-fit,
-                minmax(250px, 1fr)
-            );
-
-            gap: 20px;
-        }
-
-        .service-card {
-            background: white;
-            border-radius: 15px;
-            padding: 25px;
-            border: 1px solid #d8ece9;
-            box-shadow: 0 5px 18px rgba(0,0,0,0.05);
-            transition: 0.2s;
-        }
-
-        .service-card:hover {
-            transform: translateY(-3px);
-        }
-
-        .service-icon {
-            font-size: 35px;
-            margin-bottom: 10px;
-        }
-
-        .service-card h3 {
-            color: #087f78;
-            margin-bottom: 8px;
-        }
-
-        .service-card p {
-            color: #607574;
-            font-size: 14px;
-            margin-bottom: 16px;
-        }
-
-        .button {
-            display: inline-block;
-            background: #087f78;
+        .logout {
+            min-height: 46px;
+            padding: 8px 14px;
+            border: 1px solid white;
+            border-radius: 4px;
             color: white;
-            text-decoration: none;
-            padding: 10px 16px;
-            border-radius: 8px;
-            font-size: 14px;
-            font-weight: bold;
-            border: none;
+            background: transparent;
             cursor: pointer;
         }
 
-        .button:hover {
-            background: #075e59;
-        }
-
-        .button.secondary {
-            background: #e7f6f3;
-            color: #087f78;
-        }
-
-        /* ================= FAMILY TABLE ================= */
-
-        .table-card {
-            background: white;
-            border-radius: 15px;
-            padding: 25px;
-            border: 1px solid #d8ece9;
-            box-shadow: 0 5px 18px rgba(0,0,0,0.05);
-            overflow-x: auto;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            min-width: 750px;
-        }
-
-        th,
-        td {
-            padding: 13px;
-            text-align: left;
-            border-bottom: 1px solid #e4eeee;
-        }
-
-        th {
-            background: #f0f8f7;
-            color: #075e59;
-        }
-
-        td {
-            color: #536b69;
-        }
-
-        .status {
-            display: inline-block;
-            padding: 4px 10px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: bold;
-        }
-
-        .status.normal {
-            background: #e7f6ef;
-            color: #17663d;
-        }
-
-        .status.followup {
-            background: #fff4d6;
-            color: #8a6200;
-        }
-
-        .status.urgent {
-            background: #fff0f0;
-            color: #b42318;
-        }
-
-        /* ================= VISIT CARD ================= */
-
-        .visit-list {
-            display: grid;
-            gap: 14px;
-        }
-
-        .visit {
+        main { width: min(1080px, calc(100% - 32px)); margin: 0 auto; padding: 32px 0 56px; }
+        .intro {
             display: flex;
-            justify-content: space-between;
             align-items: center;
+            justify-content: space-between;
             gap: 20px;
-            padding: 18px;
-            background: #f7fcfb;
-            border: 1px solid #dcecea;
-            border-radius: 10px;
+            padding-bottom: 24px;
+            border-bottom: 1px solid var(--line);
         }
-
-        .visit h3 {
-            color: #087f78;
-            margin-bottom: 3px;
-        }
-
-        .visit p {
-            color: #647775;
-            font-size: 14px;
-        }
-
-        .visit-date {
-            font-weight: bold;
-            color: #075e59;
-            white-space: nowrap;
-        }
-
-        /* ================= ALERT ================= */
-
-        .alert-box {
-            margin-top: 30px;
-            background: #fff0f0;
-            border-left: 5px solid #d92d20;
-            padding: 20px;
-            border-radius: 10px;
-        }
-
-        .alert-box h3 {
-            color: #b42318;
-            margin-bottom: 6px;
-        }
-
-        .alert-box p {
-            color: #70433f;
-        }
-
-        /* ================= NOTICE ================= */
-
-        .notice {
-            margin-top: 30px;
-            background: #fff8df;
-            border-left: 5px solid #e0a800;
-            padding: 20px;
-            border-radius: 10px;
-        }
-
-        .notice h3 {
-            color: #7a5b00;
-            margin-bottom: 6px;
-        }
-
-        .notice p {
-            color: #65582d;
-        }
-
-        /* ================= FOOTER ================= */
-
-        footer {
-            background: #075e59;
+        h1, h2, h3, p { margin-top: 0; }
+        h1 { margin-bottom: 6px; font-size: clamp(1.6rem, 4vw, 2.1rem); line-height: 1.2; }
+        h2 { margin-bottom: 4px; font-size: 1.35rem; }
+        h3 { margin-bottom: 2px; font-size: 1.05rem; }
+        .intro p, .section-note { margin-bottom: 0; color: var(--muted); }
+        .emergency-link {
+            display: inline-flex;
+            flex: 0 0 auto;
+            align-items: center;
+            justify-content: center;
+            min-height: 52px;
+            padding: 9px 16px;
+            border-radius: 4px;
             color: white;
-            text-align: center;
-            padding: 25px 15px;
-            margin-top: 30px;
+            background: var(--red);
+            font-weight: 800;
+            text-decoration: none;
         }
 
-        footer p {
-            margin: 5px;
+        .summary { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin: 24px 0 30px; }
+        .summary-item { padding: 16px; border: 1px solid var(--line); border-top: 4px solid var(--green); background: var(--paper); }
+        .summary-number { display: block; font-size: 1.8rem; font-weight: 800; }
+        .summary-label { color: var(--muted); }
+        .work-grid { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(300px, .85fr); gap: 28px; align-items: start; }
+        .section-heading { margin-bottom: 12px; }
+        .panel { padding: 20px; border: 1px solid var(--line); background: var(--paper); }
+        .list { display: grid; gap: 8px; margin: 0; padding: 0; list-style: none; }
+        .list-item { display: flex; justify-content: space-between; gap: 12px; padding: 12px 0; border-bottom: 1px solid #e4e9e3; }
+        .list-item:last-child { border-bottom: 0; }
+        .list-item small { display: block; color: var(--muted); }
+        .empty-state { margin: 0; padding: 16px 0; color: var(--muted); }
+        .form-grid { display: grid; gap: 13px; margin-top: 18px; }
+        .field { display: grid; gap: 5px; }
+        label { font-weight: 700; }
+        input, select, textarea { width: 100%; min-height: 48px; padding: 9px 11px; border: 1px solid #9eafa5; border-radius: 3px; color: var(--ink); background: white; }
+        textarea { min-height: 88px; resize: vertical; }
+        .primary-button { min-height: 52px; padding: 10px 16px; border: 0; border-radius: 3px; color: white; background: var(--green); font-weight: 800; cursor: pointer; }
+        .primary-button:hover { background: var(--green-dark); }
+        .primary-button:disabled { opacity: .55; cursor: not-allowed; }
+        .form-message { min-height: 1.5em; margin: 0; color: var(--green-dark); }
+        .form-message.error { color: var(--red); }
+        .more-links { display: flex; flex-wrap: wrap; gap: 12px 22px; margin-top: 30px; padding-top: 18px; border-top: 1px solid var(--line); }
+        .more-links a { font-weight: 700; }
+        footer { padding: 20px 16px; color: white; background: var(--green-dark); text-align: center; }
+        footer p { margin: 0; }
+
+        @media (max-width: 720px) {
+            .topbar { align-items: flex-start; flex-direction: column; padding: 12px 16px; }
+            .top-actions { width: 100%; justify-content: space-between; }
+            main { width: min(calc(100% - 24px), 560px); padding-top: 24px; }
+            .intro { align-items: stretch; flex-direction: column; }
+            .emergency-link { width: 100%; }
+            .summary { gap: 8px; }
+            .summary-item { padding: 11px 9px; }
+            .summary-number { font-size: 1.5rem; }
+            .summary-label { font-size: .82rem; }
+            .work-grid { grid-template-columns: 1fr; gap: 18px; }
+            .panel { padding: 16px; }
         }
-
-        /* ================= MOBILE ================= */
-
-        @media (max-width: 700px) {
-
-            .logo {
-                width: 100%;
-                text-align: center;
-            }
-
-            .nav-links {
-                justify-content: center;
-            }
-
-            .welcome {
-                padding: 25px;
-            }
-
-            .visit {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-
+        @media (max-width: 380px) {
+            :root { font-size: 16px; }
+            .summary { grid-template-columns: 1fr; }
         }
-
     </style>
-
 </head>
-
-
 <body>
-
-
-<!-- ================= NAVBAR ================= -->
-
-<nav>
-
-    <div class="logo">
-        🌿 ArogyaBandhu
-    </div>
-
-    <div class="nav-links">
-
-        <a href="asha-dashboard.html">
-            Dashboard
-        </a>
-
-        <a href="health-records.html">
-            Records
-        </a>
-
-        <a href="appointments.html">
-            Visits
-        </a>
-
-        <a href="emergency.html">
-            Emergency
-        </a>
-
-        <button
-            class="logout-btn"
-            onclick="logout()"
-        >
-            Logout
-        </button>
-
-    </div>
-
-</nav>
-
-
-<!-- ================= MAIN ================= -->
-
-<div class="container">
-
-
-    <!-- ================= WELCOME ================= -->
-
-    <section class="welcome">
-
-        <h1 id="welcomeTitle">
-            👩‍⚕️ Welcome, ASHA Worker
-        </h1>
-
-        <p>
-            Support families in your community by tracking
-            health information, coordinating visits, following
-            vaccination needs, and responding to health concerns.
-        </p>
-
-    </section>
-
-
-    <!-- ================= STATS ================= -->
-
-    <section class="stats">
-
-
-        <div class="stat-card">
-
-            <div class="stat-icon">
-                👨‍👩‍👧‍👦
-            </div>
-
-            <div class="stat-number">
-                42
-            </div>
-
-            <div class="stat-label">
-                Families Tracked
-            </div>
-
+    <a class="skip-link" href="#main" data-i18n="skip">Skip to main content</a>
+    <header class="topbar">
+        <div class="brand">ArogyaBandhu</div>
+        <div class="top-actions">
+            <label class="language-control" for="language">
+                <span aria-hidden="true">文</span>
+                <span data-i18n="language">Language</span>
+                <select id="language" aria-label="Choose language">
+                    <option value="en">English</option>
+                    <option value="hi">हिन्दी</option>
+                    <option value="te">తెలుగు</option>
+                </select>
+            </label>
+            <button class="logout" id="logout" type="button" data-i18n="logout">Log out</button>
         </div>
+    </header>
 
-
-        <div class="stat-card">
-
-            <div class="stat-icon">
-                🏠
-            </div>
-
-            <div class="stat-number">
-                8
-            </div>
-
-            <div class="stat-label">
-                Visits Planned
-            </div>
-
-        </div>
-
-
-        <div class="stat-card">
-
-            <div class="stat-icon">
-                💉
-            </div>
-
-            <div class="stat-number">
-                6
-            </div>
-
-            <div class="stat-label">
-                Vaccination Follow-ups
-            </div>
-
-        </div>
-
-
-        <div class="stat-card">
-
-            <div class="stat-icon">
-                ⚠️
-            </div>
-
-            <div class="stat-number">
-                2
-            </div>
-
-            <div class="stat-label">
-                Cases Requiring Follow-up
-            </div>
-
-        </div>
-
-
-    </section>
-
-
-    <!-- ================= SERVICES ================= -->
-
-    <div class="section-title">
-
-        <h2>
-            ASHA Services
-        </h2>
-
-    </div>
-
-
-    <section class="service-grid">
-
-
-        <!-- Family Tracking -->
-
-        <div class="service-card">
-
-            <div class="service-icon">
-                👨‍👩‍👧‍👦
-            </div>
-
-            <h3>
-                Family Health Tracking
-            </h3>
-
-            <p>
-                Keep track of families and identify health
-                information that may need follow-up.
-            </p>
-
-            <button
-                class="button"
-                onclick="showDemo('Family health tracking')"
-            >
-                Open Family Tracker
-            </button>
-
-        </div>
-
-
-        <!-- Health Records -->
-
-        <div class="service-card">
-
-            <div class="service-icon">
-                📋
-            </div>
-
-            <h3>
-                Health Record Updates
-            </h3>
-
-            <p>
-                Record available health information during
-                community visits.
-            </p>
-
-            <a
-                href="health-records.html"
-                class="button"
-            >
-                Update Records
-            </a>
-
-        </div>
-
-
-        <!-- Emergency -->
-
-        <div class="service-card">
-
-            <div class="service-icon">
-                🚨
-            </div>
-
-            <h3>
-                Emergency Notifications
-            </h3>
-
-            <p>
-                Open the emergency workflow when a community
-                member requires urgent support.
-            </p>
-
-            <a
-                href="emergency.html"
-                class="button"
-            >
-                Emergency Support
-            </a>
-
-        </div>
-
-
-        <!-- Vaccination -->
-
-        <div class="service-card">
-
-            <div class="service-icon">
-                💉
-            </div>
-
-            <h3>
-                Vaccination Tracker
-            </h3>
-
-            <p>
-                Keep track of vaccination follow-ups and
-                upcoming health-service needs.
-            </p>
-
-            <button
-                class="button"
-                onclick="showDemo('Vaccination tracker')"
-            >
-                Open Tracker
-            </button>
-
-        </div>
-
-
-        <!-- Pregnancy -->
-
-        <div class="service-card">
-
-            <div class="service-icon">
-                🤰
-            </div>
-
-            <h3>
-                Maternal Health Tracker
-            </h3>
-
-            <p>
-                Maintain follow-up information for pregnant
-                women and coordinate appropriate healthcare
-                visits.
-            </p>
-
-            <button
-                class="button"
-                onclick="showDemo('Maternal health tracker')"
-            >
-                Open Tracker
-            </button>
-
-        </div>
-
-
-        <!-- Visit Scheduler -->
-
-        <div class="service-card">
-
-            <div class="service-icon">
-                📅
-            </div>
-
-            <h3>
-                Village Visit Scheduler
-            </h3>
-
-            <p>
-                Organize planned household visits and community
-                health activities.
-            </p>
-
-            <button
-                class="button"
-                onclick="showDemo('Village visit scheduler')"
-            >
-                Schedule Visit
-            </button>
-
-        </div>
-
-
-    </section>
-
-
-    <!-- ================= FAMILY OVERVIEW ================= -->
-
-    <div class="section-title">
-
-        <h2>
-            👨‍👩‍👧‍👦 Family Health Overview
-        </h2>
-
-    </div>
-
-
-    <div class="table-card">
-
-        <table>
-
-            <thead>
-
-                <tr>
-
-                    <th>
-                        Family
-                    </th>
-
-                    <th>
-                        Members
-                    </th>
-
-                    <th>
-                        Last Visit
-                    </th>
-
-                    <th>
-                        Follow-up
-                    </th>
-
-                    <th>
-                        Status
-                    </th>
-
-                </tr>
-
-            </thead>
-
-
-            <tbody>
-
-
-                <tr>
-
-                    <td>
-                        Kumar Family
-                    </td>
-
-                    <td>
-                        4
-                    </td>
-
-                    <td>
-                        22 Sep
-                    </td>
-
-                    <td>
-                        General check-up
-                    </td>
-
-                    <td>
-
-                        <span class="status normal">
-                            Normal
-                        </span>
-
-                    </td>
-
-                </tr>
-
-
-                <tr>
-
-                    <td>
-                        Devi Family
-                    </td>
-
-                    <td>
-                        5
-                    </td>
-
-                    <td>
-                        20 Sep
-                    </td>
-
-                    <td>
-                        Vaccination
-                    </td>
-
-                    <td>
-
-                        <span class="status followup">
-                            Follow-up
-                        </span>
-
-                    </td>
-
-                </tr>
-
-
-                <tr>
-
-                    <td>
-                        Raju Family
-                    </td>
-
-                    <td>
-                        3
-                    </td>
-
-                    <td>
-                        18 Sep
-                    </td>
-
-                    <td>
-                        Child health
-                    </td>
-
-                    <td>
-
-                        <span class="status followup">
-                            Follow-up
-                        </span>
-
-                    </td>
-
-                </tr>
-
-
-                <tr>
-
-                    <td>
-                        Lakshmi Family
-                    </td>
-
-                    <td>
-                        6
-                    </td>
-
-                    <td>
-                        17 Sep
-                    </td>
-
-                    <td>
-                        Health concern
-                    </td>
-
-                    <td>
-
-                        <span class="status urgent">
-                            Needs Attention
-                        </span>
-
-                    </td>
-
-                </tr>
-
-
-            </tbody>
-
-        </table>
-
-    </div>
-
-
-    <!-- ================= UPCOMING VISITS ================= -->
-
-    <div class="section-title">
-
-        <h2>
-            🏠 Upcoming Village Visits
-        </h2>
-
-    </div>
-
-
-    <div class="visit-list">
-
-
-        <div class="visit">
-
+    <main id="main">
+        <section class="intro" aria-labelledby="welcome-title">
             <div>
-
-                <h3>
-                    Village Health Visit
-                </h3>
-
-                <p>
-                    Household health follow-up and record updates
-                </p>
-
+                <h1 id="welcome-title"><span data-i18n="welcome">Hello</span>, <span id="worker-name"></span></h1>
+                    <p data-i18n="intro">Your village health work, in one place.</p>
             </div>
+            <a class="emergency-link" href="emergency.html" data-i18n="emergency">Emergency help</a>
+        </section>
 
-            <div class="visit-date">
-                30 Sep
-            </div>
+        <section class="summary" aria-label="Work summary">
+            <div class="summary-item"><span class="summary-number" id="patient-count">0</span><span class="summary-label" data-i18n="families">Families linked</span></div>
+            <div class="summary-item"><span class="summary-number" id="upcoming-count">0</span><span class="summary-label" data-i18n="upcoming">Upcoming visits</span></div>
+            <div class="summary-item"><span class="summary-number" id="completed-count">0</span><span class="summary-label" data-i18n="completed">Visits completed</span></div>
+        </section>
 
+        <div class="work-grid">
+            <section aria-labelledby="families-title">
+                <div class="section-heading">
+                    <h2 id="families-title" data-i18n="familiesTitle">Families you visit</h2>
+                        <p class="section-note" data-i18n="familiesNote">Patient accounts registered with this service.</p>
+                </div>
+                <div class="panel">
+                    <ul class="list" id="family-list" aria-live="polite"></ul>
+                        <p class="empty-state" id="family-empty" data-i18n="noFamilies">No patient accounts are registered yet.</p>
+                </div>
+
+                <div class="section-heading" style="margin-top: 24px">
+                    <h2 data-i18n="visitsTitle">Your visit plan</h2>
+                    <p class="section-note" data-i18n="visitsNote">Upcoming visits saved to your account.</p>
+                </div>
+                <div class="panel">
+                    <ul class="list" id="visit-list" aria-live="polite"></ul>
+                    <p class="empty-state" id="visit-empty" data-i18n="noVisits">No visits are planned yet.</p>
+                </div>
+            </section>
+
+            <section aria-labelledby="schedule-title">
+                <div class="section-heading">
+                    <h2 id="schedule-title" data-i18n="scheduleTitle">Plan a home visit</h2>
+                    <p class="section-note" data-i18n="scheduleNote">Choose a family and a date. Your plan will be saved.</p>
+                </div>
+                <div class="panel">
+                    <form id="visit-form" class="form-grid">
+                        <div class="field">
+                            <label for="patient" data-i18n="familyLabel">Family member</label>
+                            <select id="patient" name="patient_user_id" required disabled>
+                                <option value="" data-i18n="chooseFamily">Choose a family</option>
+                            </select>
+                        </div>
+                        <div class="field">
+                            <label for="visit-type" data-i18n="visitType">Reason for visit</label>
+                            <select id="visit-type" name="visit_type">
+                                <option value="general" data-i18n="general">General check-up</option>
+                                <option value="vaccination" data-i18n="vaccination">Vaccination</option>
+                                <option value="maternal_health" data-i18n="maternal">Pregnancy care</option>
+                                <option value="child_health" data-i18n="child">Child health</option>
+                                <option value="follow_up" data-i18n="followup">Follow-up</option>
+                            </select>
+                        </div>
+                        <div class="field">
+                            <label for="visit-date" data-i18n="dateLabel">Date and time</label>
+                            <input id="visit-date" name="scheduled_at" type="datetime-local" required>
+                        </div>
+                        <div class="field">
+                            <label for="notes" data-i18n="notesLabel">Note (optional)</label>
+                            <textarea id="notes" name="notes" maxlength="500"></textarea>
+                        </div>
+                        <button class="primary-button" id="save-visit" type="submit" disabled data-i18n="saveVisit">Save visit</button>
+                        <p class="form-message" id="form-message" role="status" aria-live="polite"></p>
+                    </form>
+                </div>
+            </section>
         </div>
 
-
-        <div class="visit">
-
-            <div>
-
-                <h3>
-                    Vaccination Follow-up
-                </h3>
-
-                <p>
-                    Follow-up with families regarding scheduled
-                    vaccinations
-                </p>
-
-            </div>
-
-            <div class="visit-date">
-                02 Oct
-            </div>
-
-        </div>
-
-
-        <div class="visit">
-
-            <div>
-
-                <h3>
-                    Maternal Health Visit
-                </h3>
-
-                <p>
-                    Scheduled maternal healthcare follow-up
-                </p>
-
-            </div>
-
-            <div class="visit-date">
-                04 Oct
-            </div>
-
-        </div>
-
-
-    </div>
-
-
-    <!-- ================= ALERT ================= -->
-
-    <div class="alert-box">
-
-        <h3>
-            🚨 Community Alert
-        </h3>
-
-        <p>
-            One family in the demonstration data is marked
-            as requiring attention. In a real deployment,
-            an appropriate healthcare professional should
-            review the case and determine the required action.
-        </p>
-
-    </div>
-
-
-    <!-- ================= QUICK ACTIONS ================= -->
-
-    <div class="section-title">
-
-        <h2>
-            ⚡ Quick Actions
-        </h2>
-
-    </div>
-
-
-    <section class="service-grid">
-
-
-        <div class="service-card">
-
-            <div class="service-icon">
-                🤖
-            </div>
-
-            <h3>
-                AI Health Assistant
-            </h3>
-
-            <p>
-                Use the AI assistant for general health
-                information and guidance.
-            </p>
-
-            <a
-                href="ai-assistant.html"
-                class="button secondary"
-            >
-                Open AI Assistant
-            </a>
-
-        </div>
-
-
-        <div class="service-card">
-
-            <div class="service-icon">
-                📚
-            </div>
-
-            <h3>
-                Health Education
-            </h3>
-
-            <p>
-                Access simple health education content for
-                community awareness.
-            </p>
-
-            <a
-                href="health-tips.html"
-                class="button secondary"
-            >
-                Health Tips
-            </a>
-
-        </div>
-
-
-        <div class="service-card">
-
-            <div class="service-icon">
-                👤
-            </div>
-
-            <h3>
-                My Profile
-            </h3>
-
-            <p>
-                View your account information and preferences.
-            </p>
-
-            <a
-                href="profile.html"
-                class="button secondary"
-            >
-                My Profile
-            </a>
-
-        </div>
-
-
-    </section>
-
-
-    <!-- ================= NOTICE ================= -->
-
-    <div class="notice">
-
-        <h3>
-            ⚠️ Healthcare Safety Notice
-        </h3>
-
-        <p>
-            ArogyaBandhu is a healthcare support prototype.
-            ASHA workers should follow applicable healthcare
-            protocols and refer patients to qualified healthcare
-            professionals whenever professional evaluation is
-            required.
-        </p>
-
-    </div>
-
-
-</div>
-
-
-<!-- ================= FOOTER ================= -->
-
-<footer>
-
-    <p>
-        🌿 <strong>ArogyaBandhu</strong>
-    </p>
-
-    <p>
-        AI-powered rural healthcare support platform
-    </p>
-
-    <p>
-        © 2026 ArogyaBandhu
-    </p>
-
-</footer>
-
-
-<!-- ================= JAVASCRIPT ================= -->
-
-<script>
-
-
-/* =====================================================
-   LOAD ASHA USER
-===================================================== */
-
-function loadASHA() {
-
-    const storedUser =
-        localStorage.getItem(
-            "arogyabandhuUser"
-        );
-
-
-    if (!storedUser) {
-
-        return;
-
-    }
-
-
-    try {
-
-        const user =
-            JSON.parse(storedUser);
-
-
-        const name =
-            user.name || "ASHA Worker";
-
-
-        document.getElementById(
-            "welcomeTitle"
-        ).textContent =
-            "👩‍⚕️ Welcome, " + name;
-
-
-    }
-
-    catch (error) {
-
-        console.log(
-            "Unable to load ASHA information."
-        );
-
-    }
-
-}
-
-
-/* =====================================================
-   DEMO ACTION
-===================================================== */
-
-function showDemo(feature) {
-
-    alert(
-        feature +
-        " module is prepared as a prototype feature. " +
-        "Full backend integration can be connected later."
-    );
-
-}
-
-
-/* =====================================================
-   LOGOUT
-===================================================== */
-
-function logout() {
-
-    localStorage.removeItem(
-        "arogyabandhuUser"
-    );
-
-    window.location.href =
-        "login.html";
-
-}
-
-
-/* =====================================================
-   PAGE LOAD
-===================================================== */
-
-document.addEventListener(
-    "DOMContentLoaded",
-    loadASHA
-);
-
-
-</script>
-
-
+        <nav class="more-links" aria-label="More services">
+            <a href="health-record.html" data-i18n="records">Health records</a>
+            <a href="ai-chat.html" data-i18n="assistant">Health assistant</a>
+            <a href="health-tips.html" data-i18n="tips">Health tips</a>
+            <a href="profile.html" data-i18n="profile">My profile</a>
+        </nav>
+    </main>
+
+    <footer><p><strong>ArogyaBandhu</strong> · <span data-i18n="footer">Community health support</span></p></footer>
+
+    <script>
+        const translations = {
+            en: {
+                skip: "Skip to main content", language: "Language", logout: "Log out", welcome: "Hello",
+                intro: "Your village health work, in one place.", emergency: "Emergency help", families: "Families linked",
+                upcoming: "Upcoming visits", completed: "Visits completed", familiesTitle: "Families you visit",
+                familiesNote: "People connected to your scheduled visits.", noFamilies: "No families are linked yet.",
+                visitsTitle: "Your visit plan", visitsNote: "Upcoming visits saved to your account.",
+                noVisits: "No visits are planned yet.", scheduleTitle: "Plan a home visit",
+                scheduleNote: "Choose a family and a date. Your plan will be saved.", familyLabel: "Family member",
+                chooseFamily: "Choose a family", visitType: "Reason for visit", general: "General check-up",
+                vaccination: "Vaccination", maternal: "Pregnancy care", child: "Child health", followup: "Follow-up",
+                dateLabel: "Date and time", notesLabel: "Note (optional)", saveVisit: "Save visit",
+                records: "Health records", assistant: "Health assistant", tips: "Health tips", profile: "My profile",
+                footer: "Community health support", loading: "Loading your information…", loadError: "Could not load information. Check your connection and try again.",
+                saveError: "Could not save the visit. Please try again.", saved: "Visit saved.", emptyPatient: "Add a linked family before planning a visit.",
+                visit: "Visit", scheduled: "Scheduled"
+            },
+            hi: {
+                skip: "मुख्य सामग्री पर जाएँ", language: "भाषा", logout: "लॉग आउट", welcome: "नमस्ते",
+                intro: "गाँव के स्वास्थ्य कार्य की जानकारी एक जगह।", emergency: "आपातकालीन सहायता", families: "जुड़े परिवार",
+                upcoming: "आने वाली मुलाक़ातें", completed: "पूरी हुई मुलाक़ातें", familiesTitle: "जिन परिवारों से मिलना है",
+                familiesNote: "आपकी तय मुलाक़ातों से जुड़े लोग।", noFamilies: "अभी कोई परिवार नहीं जुड़ा है।",
+                visitsTitle: "आपकी मुलाक़ातें", visitsNote: "आपके खाते में सहेजी गई आने वाली मुलाक़ातें।",
+                noVisits: "अभी कोई मुलाक़ात तय नहीं है।", scheduleTitle: "घर की मुलाक़ात तय करें",
+                scheduleNote: "परिवार और तारीख़ चुनें। आपकी योजना सहेजी जाएगी।", familyLabel: "परिवार का सदस्य",
+                chooseFamily: "परिवार चुनें", visitType: "मुलाक़ात का कारण", general: "सामान्य जाँच",
+                vaccination: "टीकाकरण", maternal: "गर्भावस्था देखभाल", child: "बच्चे का स्वास्थ्य", followup: "दोबारा जाँच",
+                dateLabel: "तारीख़ और समय", notesLabel: "नोट (ज़रूरी नहीं)", saveVisit: "मुलाक़ात सहेजें",
+                records: "स्वास्थ्य रिकॉर्ड", assistant: "स्वास्थ्य सहायक", tips: "स्वास्थ्य सुझाव", profile: "मेरी जानकारी",
+                footer: "सामुदायिक स्वास्थ्य सहायता", loading: "जानकारी लोड हो रही है…", loadError: "जानकारी नहीं मिली। इंटरनेट जाँचें और फिर कोशिश करें।",
+                saveError: "मुलाक़ात नहीं सहेजी गई। फिर कोशिश करें।", saved: "मुलाक़ात सहेजी गई।", emptyPatient: "मुलाक़ात तय करने से पहले परिवार जोड़ें।",
+                visit: "मुलाक़ात", scheduled: "तय है"
+            },
+            te: {
+                skip: "ప్రధాన విషయానికి వెళ్లండి", language: "భాష", logout: "లాగ్ అవుట్", welcome: "నమస్కారం",
+                intro: "మీ గ్రామ ఆరోగ్య పని వివరాలు ఒకేచోట.", emergency: "అత్యవసర సహాయం", families: "కలిపిన కుటుంబాలు",
+                upcoming: "రాబోయే సందర్శనలు", completed: "పూర్తైన సందర్శనలు", familiesTitle: "మీరు సందర్శించే కుటుంబాలు",
+                familiesNote: "మీ సందర్శనలతో అనుసంధానమైన వ్యక్తులు.", noFamilies: "ఇంకా కుటుంబాలు అనుసంధానం కాలేదు.",
+                visitsTitle: "మీ సందర్శనల ప్రణాళిక", visitsNote: "మీ ఖాతాలో భద్రపరిచిన రాబోయే సందర్శనలు.",
+                noVisits: "ఇంకా సందర్శనలు ప్రణాళిక చేయలేదు.", scheduleTitle: "ఇంటి సందర్శనను ప్రణాళిక చేయండి",
+                scheduleNote: "కుటుంబాన్ని, తేదీని ఎంచుకోండి. మీ ప్రణాళిక భద్రపరచబడుతుంది.", familyLabel: "కుటుంబ సభ్యుడు",
+                chooseFamily: "కుటుంబాన్ని ఎంచుకోండి", visitType: "సందర్శన కారణం", general: "సాధారణ ఆరోగ్య పరీక్ష",
+                vaccination: "టీకాలు", maternal: "గర్భిణీ సంరక్షణ", child: "పిల్లల ఆరోగ్యం", followup: "తదుపరి పరీక్ష",
+                dateLabel: "తేదీ మరియు సమయం", notesLabel: "గమనిక (ఐచ్ఛికం)", saveVisit: "సందర్శనను భద్రపరచండి",
+                records: "ఆరోగ్య రికార్డులు", assistant: "ఆరోగ్య సహాయకుడు", tips: "ఆరోగ్య సూచనలు", profile: "నా వివరాలు",
+                footer: "సమాజ ఆరోగ్య సహాయం", loading: "మీ వివరాలు లోడ్ అవుతున్నాయి…", loadError: "వివరాలు తెరవలేకపోయాం. ఇంటర్నెట్ తనిఖీ చేసి మళ్లీ ప్రయత్నించండి.",
+                saveError: "సందర్శన భద్రపరచలేకపోయాం. మళ్లీ ప్రయత్నించండి.", saved: "సందర్శన భద్రపరచబడింది.", emptyPatient: "సందర్శన ప్రణాళికకు ముందు కుటుంబాన్ని జోడించండి.",
+                visit: "సందర్శన", scheduled: "ప్రణాళికలో ఉంది"
+            }
+        };
+
+        const storedUser = JSON.parse(localStorage.getItem("arogyabandhuUser") || "null");
+        let currentLanguage = localStorage.getItem("arogyabandhuLanguage") || "en";
+        let patients = [];
+        let currentVisits = [];
+
+        function text(key) {
+            return translations[currentLanguage][key] || translations.en[key] || key;
+        }
+
+        function setLanguage(language) {
+            currentLanguage = translations[language] ? language : "en";
+            localStorage.setItem("arogyabandhuLanguage", currentLanguage);
+            document.documentElement.lang = currentLanguage;
+            document.querySelectorAll("[data-i18n]").forEach((element) => {
+                element.textContent = text(element.dataset.i18n);
+            });
+            renderPatients();
+            renderVisits(currentVisits);
+        }
+
+        async function getJson(url, options) {
+            const response = await fetch(url, options);
+            const data = await response.json();
+            if (!response.ok) throw new Error(data.detail || "Request failed");
+            return data;
+        }
+
+        function renderPatients() {
+            const list = document.getElementById("family-list");
+            const select = document.getElementById("patient");
+            list.replaceChildren();
+            select.replaceChildren(new Option(text("chooseFamily"), ""));
+            patients.forEach((patient) => {
+                const item = document.createElement("li");
+                item.className = "list-item";
+                const name = document.createElement("strong");
+                name.textContent = patient.name;
+                item.append(name);
+                list.append(item);
+                select.add(new Option(patient.name, patient.id));
+            });
+            document.getElementById("family-empty").hidden = patients.length > 0;
+            document.getElementById("patient-count").textContent = patients.length;
+            select.disabled = patients.length === 0;
+            document.getElementById("save-visit").disabled = patients.length === 0;
+            document.getElementById("form-message").textContent = patients.length ? "" : text("emptyPatient");
+        }
+
+        function renderVisits(visits) {
+            currentVisits = visits;
+            const now = new Date();
+            const upcoming = visits.filter((visit) => visit.scheduled_at && new Date(visit.scheduled_at) >= now && visit.status === "scheduled");
+            const completed = visits.filter((visit) => visit.status === "completed");
+            document.getElementById("upcoming-count").textContent = upcoming.length;
+            document.getElementById("completed-count").textContent = completed.length;
+            const list = document.getElementById("visit-list");
+            list.replaceChildren();
+            upcoming.forEach((visit) => {
+                const item = document.createElement("li");
+                item.className = "list-item";
+                const details = document.createElement("span");
+                const patient = patients.find((entry) => entry.id === visit.patient_user_id);
+                const title = document.createElement("strong");
+                title.textContent = patient ? patient.name : text("visit");
+                const date = document.createElement("small");
+                date.textContent = new Intl.DateTimeFormat(currentLanguage, { dateStyle: "medium", timeStyle: "short" }).format(new Date(visit.scheduled_at));
+                details.append(title, date);
+                const status = document.createElement("span");
+                status.textContent = text("scheduled");
+                item.append(details, status);
+                list.append(item);
+            });
+            document.getElementById("visit-empty").hidden = upcoming.length > 0;
+        }
+
+        async function loadDashboard() {
+            if (!storedUser || !storedUser.id || storedUser.role !== "asha") {
+                window.location.href = "login.html";
+                return;
+            }
+            document.getElementById("worker-name").textContent = storedUser.name || "";
+            document.getElementById("family-empty").textContent = text("loading");
+            document.getElementById("visit-empty").textContent = text("loading");
+            try {
+                const [patientData, visitData] = await Promise.all([
+                    getJson(`/api/asha/${storedUser.id}/patient-directory`),
+                    getJson(`/api/asha/${storedUser.id}/visits`)
+                ]);
+                patients = patientData.patients || [];
+                renderPatients();
+                renderVisits(visitData.visits || []);
+            } catch (error) {
+                document.getElementById("family-empty").hidden = false;
+                document.getElementById("family-empty").textContent = text("loadError");
+                document.getElementById("visit-empty").hidden = false;
+                document.getElementById("visit-empty").textContent = text("loadError");
+            }
+        }
+
+        document.getElementById("language").value = currentLanguage;
+        document.getElementById("language").addEventListener("change", (event) => setLanguage(event.target.value));
+        document.getElementById("logout").addEventListener("click", () => {
+            localStorage.removeItem("arogyabandhuUser");
+            window.location.href = "login.html";
+        });
+        document.getElementById("visit-form").addEventListener("submit", async (event) => {
+            event.preventDefault();
+            const form = event.currentTarget;
+            const message = document.getElementById("form-message");
+            const saveButton = document.getElementById("save-visit");
+            const scheduledAt = new Date(form.elements.scheduled_at.value);
+            if (!Number.isFinite(scheduledAt.getTime()) || scheduledAt <= new Date()) {
+                message.className = "form-message error";
+                message.textContent = text("saveError");
+                return;
+            }
+            saveButton.disabled = true;
+            message.className = "form-message";
+            message.textContent = "";
+            try {
+                await getJson("/api/asha/visits", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        asha_user_id: storedUser.id,
+                        patient_user_id: Number(form.elements.patient_user_id.value),
+                        visit_type: form.elements.visit_type.value,
+                        scheduled_at: scheduledAt.toISOString(),
+                        notes: form.elements.notes.value.trim()
+                    })
+                });
+                form.reset();
+                message.textContent = text("saved");
+                await loadDashboard();
+            } catch (error) {
+                message.className = "form-message error";
+                message.textContent = text("saveError");
+            } finally {
+                saveButton.disabled = patients.length === 0;
+            }
+        });
+
+        setLanguage(currentLanguage);
+        loadDashboard();
+    </script>
 </body>
 </html>

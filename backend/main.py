@@ -1,5 +1,9 @@
+from pathlib import Path
+
 from fastapi import FastAPI, Depends, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import FileResponse
+from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
 from passlib.context import CryptContext
@@ -33,6 +37,8 @@ Base.metadata.create_all(bind=engine)
 # -----------------------------
 # FastAPI Application
 # -----------------------------
+
+FRONTEND_DIR = Path(__file__).resolve().parent.parent / "templates" / "arogyabhandhu"
 
 app = FastAPI(
     title="ArogyaBandhu API",
@@ -225,11 +231,7 @@ def health_response(
 
 @app.get("/")
 def root():
-    return {
-        "application": "ArogyaBandhu",
-        "message": "ArogyaBandhu backend is running",
-        "version": "1.0.0"
-    }
+    return FileResponse(FRONTEND_DIR / "index.html")
 
 
 # -----------------------------
@@ -482,3 +484,24 @@ app.include_router(location_router)
 app.include_router(notifications_router)
 app.include_router(automation_router)
 app.include_router(profile_router)
+
+app.mount(
+    "/css",
+    StaticFiles(directory=FRONTEND_DIR.parent / "css"),
+    name="styles"
+)
+app.mount(
+    "/js",
+    StaticFiles(directory=FRONTEND_DIR.parent / "js"),
+    name="scripts"
+)
+app.mount(
+    "/images",
+    StaticFiles(directory=FRONTEND_DIR.parent / "images"),
+    name="images"
+)
+app.mount(
+    "/",
+    StaticFiles(directory=FRONTEND_DIR, html=True),
+    name="website"
+)

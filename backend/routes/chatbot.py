@@ -33,6 +33,8 @@ class ChatRequest(BaseModel):
 
     user_id: int | None = None
 
+    conversation_id: int | None = None
+
     message: str
 
     language: str = "english"
@@ -110,22 +112,47 @@ def send_message(
     )
 
 
-    # Create conversation automatically
+    if request.conversation_id is not None:
 
-    conversation = ChatConversation(
+        conversation = (
+            db.query(ChatConversation)
+            .filter(
+                ChatConversation.id
+                == request.conversation_id
+            )
+            .first()
+        )
 
-        user_id=request.user_id,
+        if (
+            not conversation
+            or conversation.user_id != request.user_id
+        ):
 
-        language=ai_result["language"],
+            raise HTTPException(
+                status_code=404,
+                detail="Conversation not found"
+            )
 
-        status="active"
-    )
+        if conversation.status != "active":
 
-    db.add(conversation)
+            raise HTTPException(
+                status_code=400,
+                detail="Conversation is closed"
+            )
 
-    db.commit()
+        conversation.language = ai_result["language"]
 
-    db.refresh(conversation)
+    else:
+
+        conversation = ChatConversation(
+            user_id=request.user_id,
+            language=ai_result["language"],
+            status="active"
+        )
+
+        db.add(conversation)
+
+        db.flush()
 
 
     # Store user message
@@ -163,6 +190,8 @@ def send_message(
 
     db.commit()
 
+    db.refresh(conversation)
+
 
     return {
 
@@ -193,6 +222,7 @@ def send_message(
 @router.get("/conversation/{conversation_id}")
 def get_conversation(
     conversation_id: int,
+    user_id: int | None = None,
     db: Session = Depends(get_db)
 ):
 
@@ -207,6 +237,16 @@ def get_conversation(
 
 
     if not conversation:
+
+        raise HTTPException(
+            status_code=404,
+            detail="Conversation not found"
+        )
+
+    if (
+        user_id is not None
+        and conversation.user_id != user_id
+    ):
 
         raise HTTPException(
             status_code=404,
@@ -291,6 +331,7 @@ def get_user_conversations(
 )
 def close_conversation(
     conversation_id: int,
+    user_id: int | None = None,
     db: Session = Depends(get_db)
 ):
 
@@ -305,6 +346,16 @@ def close_conversation(
 
 
     if not conversation:
+
+        raise HTTPException(
+            status_code=404,
+            detail="Conversation not found"
+        )
+
+    if (
+        user_id is not None
+        and conversation.user_id != user_id
+    ):
 
         raise HTTPException(
             status_code=404,

@@ -243,6 +243,13 @@
             cursor: pointer;
 
             transition: 0.2s;
+
+            display: block;
+            width: 100%;
+            text-align: left;
+            color: inherit;
+            background: white;
+            font: inherit;
         }
 
         .doctor:hover {
@@ -404,7 +411,7 @@
     </div>
 
     <a
-        href="patient-dashboard.html"
+        href="patient-dashbord.html"
         class="back"
     >
         ← Dashboard
@@ -443,6 +450,8 @@
                 👨‍⚕️ Available Doctors
             </h2>
 
+
+            <div id="doctorsList">
 
             <div
                 class="doctor"
@@ -542,6 +551,7 @@
 
             </div>
 
+            </div>
 
         </section>
 
@@ -639,15 +649,15 @@
 
                     <select id="type" required>
 
-                        <option value="Video Consultation">
+                        <option value="video">
                             Video Consultation
                         </option>
 
-                        <option value="Chat Consultation">
+                        <option value="chat">
                             Chat Consultation
                         </option>
 
-                        <option value="Clinic Visit">
+                        <option value="in_person">
                             Clinic Visit
                         </option>
 
@@ -715,13 +725,7 @@
 
     <div class="notice">
 
-        <strong>Prototype notice:</strong>
-
-        This appointment module demonstrates the
-        booking workflow. In a production system,
-        appointment confirmation would be connected
-        to verified doctor availability and a secure
-        healthcare backend.
+        Appointment requests are saved to your account. A request is not confirmed until the doctor accepts it.
 
     </div>
 
@@ -730,362 +734,188 @@
 
 
 <script>
+const storedUser = JSON.parse(localStorage.getItem("arogyabandhuUser") || "null");
+const doctorInput = document.getElementById("doctor");
+const doctorList = document.getElementById("doctorsList");
+const appointmentForm = document.getElementById("appointmentForm");
+const message = document.getElementById("message");
+const bookButton = document.getElementById("bookButton");
+const appointmentsList = document.getElementById("appointmentsList");
+const dateInput = document.getElementById("date");
+let selectedDoctor = null;
 
-
-/* =====================================================
-   ELEMENTS
-   ===================================================== */
-
-const doctorInput =
-    document.getElementById("doctor");
-
-const appointmentForm =
-    document.getElementById("appointmentForm");
-
-const message =
-    document.getElementById("message");
-
-const bookButton =
-    document.getElementById("bookButton");
-
-const appointmentsList =
-    document.getElementById("appointmentsList");
-
-
-
-/* =====================================================
-   SELECT DOCTOR
-   ===================================================== */
-
-function selectDoctor(
-    element,
-    doctorName,
-    specialty
-) {
-
-
-    /*
-     * Remove selected state
-     * from all doctors.
-     */
-
-    document
-        .querySelectorAll(".doctor")
-        .forEach(
-            function(card) {
-
-                card.classList.remove(
-                    "selected"
-                );
-
-            }
-        );
-
-
-    /*
-     * Select current doctor.
-     */
-
-    element.classList.add(
-        "selected"
-    );
-
-
-    /*
-     * Put doctor name into form.
-     */
-
-    doctorInput.value =
-        doctorName + " — " + specialty;
-
+if (!storedUser || storedUser.role !== "patient") {
+    window.location.href = "login.html";
 }
 
-
-
-/* =====================================================
-   SET MINIMUM DATE
-   ===================================================== */
-
-const dateInput =
-    document.getElementById("date");
-
-
-const today =
-    new Date()
-        .toISOString()
-        .split("T")[0];
-
-
-dateInput.min =
-    today;
-
-
-
-/* =====================================================
-   LOAD APPOINTMENTS
-   ===================================================== */
-
-function loadAppointments() {
-
-
-    const appointments =
-        JSON.parse(
-            localStorage.getItem(
-                "arogyabandhuAppointments"
-            ) || "[]"
-        );
-
-
-    if (
-        appointments.length === 0
-    ) {
-
-        appointmentsList.innerHTML =
-            '<div class="empty">' +
-            'No appointments booked yet.' +
-            '</div>';
-
-        return;
-
-    }
-
-
-    appointmentsList.innerHTML =
-        "";
-
-
-    appointments
-        .slice()
-        .reverse()
-        .forEach(
-            function(appointment) {
-
-
-                const div =
-                    document.createElement(
-                        "div"
-                    );
-
-
-                div.className =
-                    "appointment";
-
-
-                div.innerHTML = `
-
-                    <h3>
-                        ${appointment.doctor}
-                    </h3>
-
-                    <p>
-                        📅 ${appointment.date}
-                    </p>
-
-                    <p>
-                        🕐 ${appointment.time}
-                    </p>
-
-                    <p>
-                        💻 ${appointment.type}
-                    </p>
-
-                    <p>
-                        📝 ${appointment.reason || "General consultation"}
-                    </p>
-
-                `;
-
-
-                appointmentsList.appendChild(
-                    div
-                );
-
-            }
-        );
-
+function showMessage(text, type) {
+    message.textContent = text;
+    message.className = "message " + type;
+    message.style.display = "block";
 }
 
+async function requestJson(url, options) {
+    const response = await fetch(url, options);
+    const data = await response.json().catch(() => ({
+        detail: "The server returned an invalid response. Please try again."
+    }));
+    if (!response.ok) throw new Error(data.detail || "Request failed.");
+    return data;
+}
 
-loadAppointments();
+function selectDoctor(doctor, button) {
+    selectedDoctor = doctor;
+    document.querySelectorAll(".doctor").forEach((card) => card.classList.remove("selected"));
+    button.classList.add("selected");
+    doctorInput.value = `${doctor.name} — ${doctor.specialization || "Doctor"}`;
+}
 
-
-
-/* =====================================================
-   BOOK APPOINTMENT
-   ===================================================== */
-
-appointmentForm.addEventListener(
-    "submit",
-    function(event) {
-
-        event.preventDefault();
-
-
-        const doctor =
-            doctorInput.value.trim();
-
-        const date =
-            document.getElementById(
-                "date"
-            ).value;
-
-        const time =
-            document.getElementById(
-                "time"
-            ).value;
-
-        const type =
-            document.getElementById(
-                "type"
-            ).value;
-
-        const reason =
-            document.getElementById(
-                "reason"
-            ).value.trim();
-
-
-
-        if (!doctor) {
-
-            showMessage(
-                "Please select a doctor first.",
-                "error"
-            );
-
+async function loadDoctors() {
+    doctorList.replaceChildren();
+    const loading = document.createElement("p");
+    loading.className = "empty";
+    loading.textContent = "Loading available doctors…";
+    doctorList.append(loading);
+    try {
+        const data = await requestJson("/api/doctors/");
+        doctorList.replaceChildren();
+        const doctors = data.doctors || [];
+        if (!doctors.length) {
+            const empty = document.createElement("p");
+            empty.className = "empty";
+            empty.textContent = "No doctors are accepting appointments yet.";
+            doctorList.append(empty);
+            bookButton.disabled = true;
             return;
-
         }
-
-
-        bookButton.disabled =
-            true;
-
-        bookButton.textContent =
-            "Booking...";
-
-
-        /*
-         * Create appointment.
-         */
-
-        const appointment = {
-
-            doctor: doctor,
-
-            date: date,
-
-            time: time,
-
-            type: type,
-
-            reason: reason
-
-        };
-
-
-        /*
-         * Store appointments locally
-         * for the prototype.
-         */
-
-        const appointments =
-            JSON.parse(
-                localStorage.getItem(
-                    "arogyabandhuAppointments"
-                ) || "[]"
-            );
-
-
-        appointments.push(
-            appointment
-        );
-
-
-        localStorage.setItem(
-
-            "arogyabandhuAppointments",
-
-            JSON.stringify(
-                appointments
-            )
-
-        );
-
-
-        showMessage(
-            "Appointment request saved successfully.",
-            "success"
-        );
-
-
-        appointmentForm.reset();
-
-
-        /*
-         * Clear selected doctor.
-         */
-
-        document
-            .querySelectorAll(".doctor")
-            .forEach(
-                function(card) {
-
-                    card.classList.remove(
-                        "selected"
-                    );
-
-                }
-            );
-
-
-        doctorInput.value =
-            "";
-
-
-        loadAppointments();
-
-
-        bookButton.disabled =
-            false;
-
-        bookButton.textContent =
-            "Book Appointment";
-
+        doctors.forEach((doctor) => {
+            const button = document.createElement("button");
+            button.type = "button";
+            button.className = "doctor";
+            const header = document.createElement("span");
+            header.className = "doctor-header";
+            const icon = document.createElement("span");
+            icon.className = "doctor-icon";
+            icon.setAttribute("aria-hidden", "true");
+            icon.textContent = "＋";
+            const details = document.createElement("span");
+            const name = document.createElement("strong");
+            name.textContent = doctor.name;
+            const specialization = document.createElement("span");
+            specialization.textContent = doctor.specialization || "Healthcare professional";
+            details.append(name, document.createElement("br"), specialization);
+            header.append(icon, details);
+            button.append(header);
+            if (doctor.hospital || doctor.village || doctor.district) {
+                const location = document.createElement("span");
+                location.className = "doctor-location";
+                location.textContent = [doctor.hospital, doctor.village, doctor.district].filter(Boolean).join(" · ");
+                button.append(location);
+            }
+            button.addEventListener("click", () => selectDoctor(doctor, button));
+            doctorList.append(button);
+        });
+        bookButton.disabled = false;
+    } catch (error) {
+        doctorList.replaceChildren();
+        const errorMessage = document.createElement("p");
+        errorMessage.className = "empty";
+        errorMessage.textContent = error.message;
+        doctorList.append(errorMessage);
+        bookButton.disabled = true;
     }
-);
+}
 
+function renderAppointments(items) {
+    appointmentsList.replaceChildren();
+    if (!items.length) {
+        const empty = document.createElement("div");
+        empty.className = "empty";
+        empty.textContent = "No appointments yet.";
+        appointmentsList.append(empty);
+        return;
+    }
+    items.forEach((item) => {
+        const appointment = item.appointment;
+        const card = document.createElement("article");
+        card.className = "appointment";
+        const heading = document.createElement("h3");
+        heading.textContent = item.doctor?.name || "Healthcare professional";
+        const date = document.createElement("p");
+        date.textContent = new Intl.DateTimeFormat(undefined, { dateStyle: "medium", timeStyle: "short" }).format(new Date(appointment.appointment_date));
+        const type = document.createElement("p");
+        type.textContent = `Type: ${{ video: "Video", chat: "Chat", in_person: "Clinic visit" }[appointment.consultation_type] || appointment.consultation_type}`;
+        const status = document.createElement("p");
+        status.textContent = `Status: ${{ pending: "Request sent", confirmed: "Confirmed", completed: "Completed", cancelled: "Cancelled", rejected: "Not accepted", no_show: "Missed" }[appointment.status] || appointment.status}`;
+        card.append(heading, date, type, status);
+        if (appointment.reason) {
+            const reason = document.createElement("p");
+            reason.textContent = `Reason: ${appointment.reason}`;
+            card.append(reason);
+        }
+        appointmentsList.append(card);
+    });
+}
 
+async function loadAppointments() {
+    try {
+        const data = await requestJson(`/api/appointments/patient/${storedUser.id}`);
+        renderAppointments(data.appointments || []);
+    } catch (error) {
+        appointmentsList.textContent = error.message;
+    }
+}
 
-/* =====================================================
-   SHOW MESSAGE
-   ===================================================== */
+const localToday = new Date();
+dateInput.min = `${localToday.getFullYear()}-${String(localToday.getMonth() + 1).padStart(2, "0")}-${String(localToday.getDate()).padStart(2, "0")}`;
 
-function showMessage(
-    text,
-    type
-) {
+appointmentForm.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    if (!selectedDoctor) {
+        showMessage("Choose a doctor first.", "error");
+        return;
+    }
+    const date = document.getElementById("date").value;
+    const timeValue = document.getElementById("time").value;
+    const [clock, period] = timeValue.split(" ");
+    let [hours, minutes] = clock.split(":").map(Number);
+    hours = hours % 12 + (period === "PM" ? 12 : 0);
+    const appointmentDate = `${date}T${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}:00`;
+    if (new Date(appointmentDate) <= new Date()) {
+        showMessage("Choose a future date and time.", "error");
+        return;
+    }
+    bookButton.disabled = true;
+    bookButton.textContent = "Sending request…";
+    try {
+        await requestJson("/api/appointments/", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                patient_user_id: storedUser.id,
+                doctor_user_id: selectedDoctor.user_id,
+                appointment_date: appointmentDate,
+                consultation_type: document.getElementById("type").value,
+                reason: document.getElementById("reason").value.trim()
+            })
+        });
+        showMessage("Appointment request sent. Check the status below.", "success");
+        appointmentForm.reset();
+        doctorInput.value = "";
+        selectedDoctor = null;
+        document.querySelectorAll(".doctor").forEach((card) => card.classList.remove("selected"));
+        await loadAppointments();
+    } catch (error) {
+        showMessage(error.message, "error");
+    } finally {
+        bookButton.disabled = false;
+        bookButton.textContent = "Book Appointment";
+    }
+});
 
-    message.textContent =
-        text;
-
-    message.className =
-        "message " + type;
-
-    message.style.display =
-        "block";
-
-
-    setTimeout(
-        function() {
-
-            message.style.display =
-                "none";
-
-        },
-        4000
-    );
-
+if (storedUser?.role === "patient") {
+    loadDoctors();
+    loadAppointments();
 }
 
 </script>
