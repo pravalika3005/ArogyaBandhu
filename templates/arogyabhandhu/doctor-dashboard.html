@@ -1,0 +1,1050 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Doctor Dashboard | ArogyaBandhu</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4fbfa;
+            color: #173b3a;
+            line-height: 1.6;
+        }
+
+        /* ================= NAVBAR ================= */
+
+        nav {
+            background: #087f78;
+            color: white;
+            padding: 16px 7%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 18px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .nav-links a:hover {
+            text-decoration: underline;
+        }
+
+        /* ================= MAIN ================= */
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: auto;
+            padding: 40px 0 60px;
+        }
+
+        .welcome {
+            background: linear-gradient(
+                135deg,
+                #dff7f3,
+                #eefcf9
+            );
+
+            border-radius: 18px;
+            padding: 35px;
+            margin-bottom: 30px;
+        }
+
+        .welcome h1 {
+            color: #075e59;
+            margin-bottom: 8px;
+        }
+
+        .welcome p {
+            color: #536b69;
+        }
+
+        /* ================= STATS ================= */
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(
+                auto-fit,
+                minmax(180px, 1fr)
+            );
+
+            gap: 18px;
+            margin-bottom: 35px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 22px;
+            border-radius: 14px;
+            border: 1px solid #d8ece9;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+
+        .stat-icon {
+            font-size: 30px;
+            margin-bottom: 8px;
+        }
+
+        .stat-number {
+            font-size: 28px;
+            font-weight: bold;
+            color: #087f78;
+        }
+
+        .stat-label {
+            color: #718482;
+            font-size: 14px;
+        }
+
+        /* ================= SECTION ================= */
+
+        .section-title {
+            margin: 30px 0 18px;
+        }
+
+        .section-title h2 {
+            color: #075e59;
+        }
+
+        /* ================= DASHBOARD GRID ================= */
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(
+                auto-fit,
+                minmax(250px, 1fr)
+            );
+
+            gap: 20px;
+        }
+
+        .feature-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            border: 1px solid #d8ece9;
+            box-shadow: 0 5px 18px rgba(0,0,0,0.05);
+            transition: 0.2s;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-3px);
+        }
+
+        .feature-icon {
+            font-size: 35px;
+            margin-bottom: 12px;
+        }
+
+        .feature-card h3 {
+            color: #087f78;
+            margin-bottom: 8px;
+        }
+
+        .feature-card p {
+            color: #607574;
+            font-size: 14px;
+            margin-bottom: 16px;
+        }
+
+        .button {
+            display: inline-block;
+            background: #087f78;
+            color: white;
+            text-decoration: none;
+            padding: 10px 16px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .button:hover {
+            background: #075e59;
+        }
+
+        .button.secondary {
+            background: #e7f6f3;
+            color: #087f78;
+        }
+
+        /* ================= PATIENT TABLE ================= */
+
+        .table-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            border: 1px solid #d8ece9;
+            box-shadow: 0 5px 18px rgba(0,0,0,0.05);
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 650px;
+        }
+
+        th,
+        td {
+            padding: 13px;
+            text-align: left;
+            border-bottom: 1px solid #e4eeee;
+        }
+
+        th {
+            background: #f0f8f7;
+            color: #075e59;
+        }
+
+        td {
+            color: #536b69;
+        }
+
+        .status {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .status.upcoming {
+            background: #fff4d6;
+            color: #8a6200;
+        }
+
+        .status.completed {
+            background: #e7f6ef;
+            color: #17663d;
+        }
+
+        .status.review {
+            background: #eaf3ff;
+            color: #2563a8;
+        }
+
+        /* ================= NOTICE ================= */
+
+        .notice {
+            margin-top: 30px;
+            background: #fff8df;
+            border-left: 5px solid #e0a800;
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        .notice h3 {
+            color: #7a5b00;
+            margin-bottom: 5px;
+        }
+
+        .notice p {
+            color: #65582d;
+        }
+
+        /* ================= LOGOUT ================= */
+
+        .logout-btn {
+            background: #fff0f0;
+            color: #b42318;
+            border: none;
+            padding: 10px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        /* ================= FOOTER ================= */
+
+        footer {
+            background: #075e59;
+            color: white;
+            text-align: center;
+            padding: 25px 15px;
+            margin-top: 30px;
+        }
+
+        footer p {
+            margin: 5px;
+        }
+
+        /* ================= MOBILE ================= */
+
+        @media (max-width: 700px) {
+
+            .logo {
+                width: 100%;
+                text-align: center;
+            }
+
+            .nav-links {
+                justify-content: center;
+            }
+
+            .welcome {
+                padding: 25px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<!-- ================= NAVBAR ================= -->
+
+<nav>
+
+    <div class="logo">
+        🌿 ArogyaBandhu
+    </div>
+
+    <div class="nav-links">
+
+        <a href="doctor-dashboard.html">
+            Dashboard
+        </a>
+
+        <a href="appointments.html">
+            Appointments
+        </a>
+
+        <a href="health-records.html">
+            Records
+        </a>
+
+        <a href="index.html">
+            Home
+        </a>
+
+        <button
+            class="logout-btn"
+            onclick="logout()"
+        >
+            Logout
+        </button>
+
+    </div>
+
+</nav>
+
+
+<!-- ================= MAIN ================= -->
+
+<div class="container">
+
+
+    <!-- ================= WELCOME ================= -->
+
+    <section class="welcome">
+
+        <h1 id="welcomeTitle">
+            👨‍⚕️ Welcome, Doctor
+        </h1>
+
+        <p>
+            Manage appointments, review patient information,
+            prepare prescriptions, and support patients through
+            ArogyaBandhu.
+        </p>
+
+    </section>
+
+
+    <!-- ================= STATS ================= -->
+
+    <section class="stats">
+
+
+        <div class="stat-card">
+
+            <div class="stat-icon">
+                👥
+            </div>
+
+            <div class="stat-number">
+                24
+            </div>
+
+            <div class="stat-label">
+                Today's Patients
+            </div>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <div class="stat-icon">
+                📅
+            </div>
+
+            <div class="stat-number">
+                8
+            </div>
+
+            <div class="stat-label">
+                Appointments Today
+            </div>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <div class="stat-icon">
+                💬
+            </div>
+
+            <div class="stat-number">
+                5
+            </div>
+
+            <div class="stat-label">
+                Follow-ups
+            </div>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <div class="stat-icon">
+                📋
+            </div>
+
+            <div class="stat-number">
+                3
+            </div>
+
+            <div class="stat-label">
+                Records to Review
+            </div>
+
+        </div>
+
+
+    </section>
+
+
+    <!-- ================= SERVICES ================= -->
+
+    <div class="section-title">
+
+        <h2>
+            Doctor Services
+        </h2>
+
+    </div>
+
+
+    <section class="dashboard-grid">
+
+
+        <!-- Patient History -->
+
+        <div class="feature-card">
+
+            <div class="feature-icon">
+                📋
+            </div>
+
+            <h3>
+                Patient History
+            </h3>
+
+            <p>
+                Review available patient health records,
+                previous visits, and health information.
+            </p>
+
+            <a
+                href="health-records.html"
+                class="button"
+            >
+                View Records
+            </a>
+
+        </div>
+
+
+        <!-- Appointments -->
+
+        <div class="feature-card">
+
+            <div class="feature-icon">
+                📅
+            </div>
+
+            <h3>
+                Appointments
+            </h3>
+
+            <p>
+                View and manage upcoming patient consultations
+                and appointment requests.
+            </p>
+
+            <a
+                href="appointments.html"
+                class="button"
+            >
+                View Appointments
+            </a>
+
+        </div>
+
+
+        <!-- Digital Prescription -->
+
+        <div class="feature-card">
+
+            <div class="feature-icon">
+                💊
+            </div>
+
+            <h3>
+                Digital Prescription
+            </h3>
+
+            <p>
+                Prepare prescription information for a patient
+                after appropriate clinical evaluation.
+            </p>
+
+            <button
+                class="button"
+                onclick="showDemo('Digital prescription')"
+            >
+                Open Prescription
+            </button>
+
+        </div>
+
+
+        <!-- Follow-up -->
+
+        <div class="feature-card">
+
+            <div class="feature-icon">
+                💬
+            </div>
+
+            <h3>
+                Follow-up Messaging
+            </h3>
+
+            <p>
+                Send follow-up communication and appointment
+                reminders to patients.
+            </p>
+
+            <button
+                class="button"
+                onclick="showDemo('Follow-up messaging')"
+            >
+                Open Messages
+            </button>
+
+        </div>
+
+
+        <!-- Health Trends -->
+
+        <div class="feature-card">
+
+            <div class="feature-icon">
+                📈
+            </div>
+
+            <h3>
+                Health Trend Analysis
+            </h3>
+
+            <p>
+                Review available health measurements and identify
+                changes that may require professional attention.
+            </p>
+
+            <a
+                href="health-records.html"
+                class="button"
+            >
+                View Trends
+            </a>
+
+        </div>
+
+
+        <!-- Teleconsultation -->
+
+        <div class="feature-card">
+
+            <div class="feature-icon">
+                🎥
+            </div>
+
+            <h3>
+                Video Consultation
+            </h3>
+
+            <p>
+                Access the prototype consultation workflow for
+                remote patient support.
+            </p>
+
+            <button
+                class="button"
+                onclick="showDemo('Video consultation')"
+            >
+                Start Consultation
+            </button>
+
+        </div>
+
+
+    </section>
+
+
+    <!-- ================= APPOINTMENTS ================= -->
+
+    <div class="section-title">
+
+        <h2>
+            📅 Today's Appointments
+        </h2>
+
+    </div>
+
+
+    <div class="table-card">
+
+        <table>
+
+            <thead>
+
+                <tr>
+
+                    <th>
+                        Patient
+                    </th>
+
+                    <th>
+                        Time
+                    </th>
+
+                    <th>
+                        Consultation
+                    </th>
+
+                    <th>
+                        Reason
+                    </th>
+
+                    <th>
+                        Status
+                    </th>
+
+                </tr>
+
+            </thead>
+
+
+            <tbody>
+
+
+                <tr>
+
+                    <td>
+                        Ramesh Kumar
+                    </td>
+
+                    <td>
+                        09:30 AM
+                    </td>
+
+                    <td>
+                        Video
+                    </td>
+
+                    <td>
+                        Follow-up
+                    </td>
+
+                    <td>
+
+                        <span class="status upcoming">
+                            Upcoming
+                        </span>
+
+                    </td>
+
+                </tr>
+
+
+                <tr>
+
+                    <td>
+                        Sita Devi
+                    </td>
+
+                    <td>
+                        11:00 AM
+                    </td>
+
+                    <td>
+                        Chat
+                    </td>
+
+                    <td>
+                        General consultation
+                    </td>
+
+                    <td>
+
+                        <span class="status review">
+                            Review
+                        </span>
+
+                    </td>
+
+                </tr>
+
+
+                <tr>
+
+                    <td>
+                        Lakshmi
+                    </td>
+
+                    <td>
+                        02:00 PM
+                    </td>
+
+                    <td>
+                        Video
+                    </td>
+
+                    <td>
+                        Medication follow-up
+                    </td>
+
+                    <td>
+
+                        <span class="status upcoming">
+                            Upcoming
+                        </span>
+
+                    </td>
+
+                </tr>
+
+
+                <tr>
+
+                    <td>
+                        Anil Kumar
+                    </td>
+
+                    <td>
+                        04:00 PM
+                    </td>
+
+                    <td>
+                        Chat
+                    </td>
+
+                    <td>
+                        Previous consultation
+                    </td>
+
+                    <td>
+
+                        <span class="status completed">
+                            Completed
+                        </span>
+
+                    </td>
+
+                </tr>
+
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+
+    <!-- ================= QUICK ACTIONS ================= -->
+
+    <div class="section-title">
+
+        <h2>
+            ⚡ Quick Actions
+        </h2>
+
+    </div>
+
+
+    <section class="dashboard-grid">
+
+
+        <div class="feature-card">
+
+            <div class="feature-icon">
+                🤖
+            </div>
+
+            <h3>
+                AI Assistant
+            </h3>
+
+            <p>
+                Access the ArogyaBandhu AI health-support interface.
+            </p>
+
+            <a
+                href="ai-assistant.html"
+                class="button secondary"
+            >
+                Open AI Assistant
+            </a>
+
+        </div>
+
+
+        <div class="feature-card">
+
+            <div class="feature-icon">
+                🚨
+            </div>
+
+            <h3>
+                Emergency Support
+            </h3>
+
+            <p>
+                Open the emergency workflow when urgent support
+                is required.
+            </p>
+
+            <a
+                href="emergency.html"
+                class="button secondary"
+            >
+                Emergency
+            </a>
+
+        </div>
+
+
+        <div class="feature-card">
+
+            <div class="feature-icon">
+                👤
+            </div>
+
+            <h3>
+                Profile
+            </h3>
+
+            <p>
+                Review your account information and preferences.
+            </p>
+
+            <a
+                href="profile.html"
+                class="button secondary"
+            >
+                My Profile
+            </a>
+
+        </div>
+
+
+    </section>
+
+
+    <!-- ================= NOTICE ================= -->
+
+    <div class="notice">
+
+        <h3>
+            ⚠️ Clinical Safety Notice
+        </h3>
+
+        <p>
+            ArogyaBandhu is a healthcare support prototype.
+            Information displayed by the platform should not replace
+            professional clinical judgment. Doctors should review
+            patient information and make clinical decisions based
+            on appropriate medical evaluation.
+        </p>
+
+    </div>
+
+
+</div>
+
+
+<!-- ================= FOOTER ================= -->
+
+<footer>
+
+    <p>
+        🌿 <strong>ArogyaBandhu</strong>
+    </p>
+
+    <p>
+        AI-powered rural healthcare support platform
+    </p>
+
+    <p>
+        © 2026 ArogyaBandhu
+    </p>
+
+</footer>
+
+
+<!-- ================= JAVASCRIPT ================= -->
+
+<script>
+
+
+/* =====================================================
+   LOAD DOCTOR
+===================================================== */
+
+function loadDoctor() {
+
+    const storedUser =
+        localStorage.getItem(
+            "arogyabandhuUser"
+        );
+
+
+    if (!storedUser) {
+
+        document.getElementById(
+            "welcomeTitle"
+        ).textContent =
+            "👨‍⚕️ Welcome, Doctor";
+
+        return;
+
+    }
+
+
+    try {
+
+        const user =
+            JSON.parse(storedUser);
+
+
+        const doctorName =
+            user.name || "Doctor";
+
+
+        document.getElementById(
+            "welcomeTitle"
+        ).textContent =
+            "👨‍⚕️ Welcome, Dr. " + doctorName;
+
+
+    }
+
+    catch (error) {
+
+        console.log(
+            "Unable to load doctor information."
+        );
+
+    }
+
+}
+
+
+/* =====================================================
+   DEMO ACTION
+===================================================== */
+
+function showDemo(feature) {
+
+    alert(
+        feature +
+        " module is prepared as a prototype feature. " +
+        "Full integration can be connected to the backend later."
+    );
+
+}
+
+
+/* =====================================================
+   LOGOUT
+===================================================== */
+
+function logout() {
+
+    localStorage.removeItem(
+        "arogyabandhuUser"
+    );
+
+    window.location.href =
+        "login.html";
+
+}
+
+
+/* =====================================================
+   PAGE LOAD
+===================================================== */
+
+document.addEventListener(
+    "DOMContentLoaded",
+    loadDoctor
+);
+
+
+</script>
+
+
+</body>
+</html>

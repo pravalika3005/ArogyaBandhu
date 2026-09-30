@@ -1,0 +1,898 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>AI Health Assistant | ArogyaBandhu</title>
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #f4f8f7;
+            color: #263238;
+        }
+
+        /* ================= NAVBAR ================= */
+
+        nav {
+            height: 70px;
+            background: white;
+            padding: 0 6%;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .logo {
+            color: #00897b;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .back {
+            color: #00695c;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        /* ================= MAIN ================= */
+
+        .container {
+            width: 90%;
+            max-width: 900px;
+            margin: 35px auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .header h1 {
+            color: #00695c;
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            color: #666;
+            line-height: 1.6;
+        }
+
+        /* ================= WARNING ================= */
+
+        .notice {
+            background: #fff8e1;
+            border-left: 5px solid #ffb300;
+            padding: 15px 18px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            color: #5d4037;
+            line-height: 1.5;
+        }
+
+        /* ================= CHAT ================= */
+
+        .chat-box {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+            overflow: hidden;
+        }
+
+        .chat-header {
+            background: #00897b;
+            color: white;
+            padding: 18px 22px;
+        }
+
+        .chat-header h2 {
+            font-size: 20px;
+            margin-bottom: 5px;
+        }
+
+        .chat-header p {
+            font-size: 13px;
+            opacity: 0.9;
+        }
+
+        .messages {
+            height: 430px;
+            overflow-y: auto;
+            padding: 20px;
+            background: #f9fcfb;
+        }
+
+        .message {
+            max-width: 78%;
+            padding: 13px 16px;
+            border-radius: 13px;
+            margin-bottom: 15px;
+            line-height: 1.5;
+            font-size: 15px;
+            white-space: pre-line;
+        }
+
+        .bot {
+            background: #e0f2f1;
+            color: #263238;
+            border-bottom-left-radius: 3px;
+        }
+
+        .user {
+            background: #00897b;
+            color: white;
+            margin-left: auto;
+            border-bottom-right-radius: 3px;
+        }
+
+        /* ================= INPUT ================= */
+
+        .input-area {
+            padding: 18px;
+            border-top: 1px solid #eee;
+        }
+
+        .language-row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+
+        select {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 7px;
+            outline: none;
+        }
+
+        .input-row {
+            display: flex;
+            gap: 10px;
+        }
+
+        textarea {
+            flex: 1;
+            resize: none;
+            height: 55px;
+            padding: 13px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            outline: none;
+            font-size: 15px;
+        }
+
+        textarea:focus {
+            border-color: #00897b;
+        }
+
+        .send-btn,
+        .voice-btn {
+            border: none;
+            border-radius: 8px;
+            padding: 0 18px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .send-btn {
+            background: #00897b;
+            color: white;
+        }
+
+        .voice-btn {
+            background: #eeeeee;
+            color: #333;
+        }
+
+        .send-btn:hover {
+            background: #00695c;
+        }
+
+        /* ================= QUICK QUESTIONS ================= */
+
+        .quick {
+            padding: 18px;
+            border-top: 1px solid #eee;
+        }
+
+        .quick h3 {
+            color: #00695c;
+            font-size: 16px;
+            margin-bottom: 12px;
+        }
+
+        .quick-buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .quick-btn {
+            border: 1px solid #80cbc4;
+            background: white;
+            color: #00695c;
+            padding: 9px 13px;
+            border-radius: 20px;
+            cursor: pointer;
+        }
+
+        .quick-btn:hover {
+            background: #e0f2f1;
+        }
+
+        /* ================= MOBILE ================= */
+
+        @media (max-width: 650px) {
+
+            .container {
+                width: 94%;
+            }
+
+            .input-row {
+                flex-wrap: wrap;
+            }
+
+            textarea {
+                width: 100%;
+                flex-basis: 100%;
+            }
+
+            .send-btn,
+            .voice-btn {
+                height: 45px;
+            }
+
+            .message {
+                max-width: 90%;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<!-- ================= NAVBAR ================= -->
+
+<nav>
+
+    <div class="logo">
+        🌿 ArogyaBandhu
+    </div>
+
+    <a
+        href="patient-dashboard.html"
+        class="back"
+    >
+        ← Dashboard
+    </a>
+
+</nav>
+
+
+<!-- ================= MAIN ================= -->
+
+<main class="container">
+
+
+    <div class="header">
+
+        <h1>
+            🤖 AI Health Assistant
+        </h1>
+
+        <p>
+            Describe your symptoms or ask a general
+            health-related question in simple language.
+        </p>
+
+    </div>
+
+
+    <!-- ================= SAFETY NOTICE ================= -->
+
+    <div class="notice">
+
+        <strong>Important:</strong>
+        This assistant provides preliminary health
+        information and does not diagnose diseases.
+        For severe or emergency symptoms, contact a
+        qualified healthcare professional or emergency
+        service immediately.
+
+    </div>
+
+
+    <!-- ================= CHAT ================= -->
+
+    <div class="chat-box">
+
+
+        <div class="chat-header">
+
+            <h2>
+                ArogyaBandhu Health Assistant
+            </h2>
+
+            <p>
+                Ask your health question below
+            </p>
+
+        </div>
+
+
+        <div
+            class="messages"
+            id="messages"
+        >
+
+            <div class="message bot">
+
+                Hello! 👋 I am the ArogyaBandhu Health
+                Assistant.
+
+                You can tell me about symptoms such as
+                fever, headache, cough, stomach pain,
+                or ask about healthy habits.
+
+                I can provide general health information,
+                but I cannot replace a doctor.
+
+            </div>
+
+        </div>
+
+
+        <!-- ================= INPUT ================= -->
+
+        <div class="input-area">
+
+
+            <div class="language-row">
+
+                <label for="language">
+                    Language:
+                </label>
+
+                <select id="language">
+
+                    <option value="english">
+                        English
+                    </option>
+
+                    <option value="telugu">
+                        తెలుగు
+                    </option>
+
+                    <option value="hindi">
+                        हिन्दी
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <div class="input-row">
+
+                <textarea
+                    id="userInput"
+                    placeholder="Describe your symptoms..."
+                ></textarea>
+
+
+                <button
+                    class="voice-btn"
+                    id="voiceButton"
+                    type="button"
+                    onclick="startVoice()"
+                    title="Voice input"
+                >
+                    🎤
+                </button>
+
+
+                <button
+                    class="send-btn"
+                    type="button"
+                    onclick="sendMessage()"
+                >
+                    Send
+                </button>
+
+            </div>
+
+        </div>
+
+
+        <!-- ================= QUICK QUESTIONS ================= -->
+
+        <div class="quick">
+
+            <h3>
+                Quick Questions
+            </h3>
+
+            <div class="quick-buttons">
+
+                <button
+                    class="quick-btn"
+                    onclick="quickQuestion('I have fever')"
+                >
+                    🌡️ Fever
+                </button>
+
+                <button
+                    class="quick-btn"
+                    onclick="quickQuestion('I have a headache')"
+                >
+                    🤕 Headache
+                </button>
+
+                <button
+                    class="quick-btn"
+                    onclick="quickQuestion('I have a cough')"
+                >
+                    😷 Cough
+                </button>
+
+                <button
+                    class="quick-btn"
+                    onclick="quickQuestion('I have stomach pain')"
+                >
+                    🤢 Stomach Pain
+                </button>
+
+                <button
+                    class="quick-btn"
+                    onclick="quickQuestion('Give me healthy food tips')"
+                >
+                    🥗 Healthy Food
+                </button>
+
+            </div>
+
+        </div>
+
+
+    </div>
+
+</main>
+
+
+<script>
+
+
+/* =====================================================
+   ELEMENTS
+   ===================================================== */
+
+const messages =
+    document.getElementById("messages");
+
+const userInput =
+    document.getElementById("userInput");
+
+const language =
+    document.getElementById("language");
+
+
+
+/* =====================================================
+   ADD MESSAGE
+   ===================================================== */
+
+function addMessage(
+    text,
+    type
+) {
+
+    const message =
+        document.createElement("div");
+
+    message.className =
+        "message " + type;
+
+    message.textContent =
+        text;
+
+    messages.appendChild(message);
+
+    messages.scrollTop =
+        messages.scrollHeight;
+}
+
+
+
+/* =====================================================
+   QUICK QUESTION
+   ===================================================== */
+
+function quickQuestion(text) {
+
+    userInput.value = text;
+
+    sendMessage();
+
+}
+
+
+
+/* =====================================================
+   SEND MESSAGE
+   ===================================================== */
+
+async function sendMessage() {
+
+    const text =
+        userInput.value.trim();
+
+
+    if (!text) {
+
+        return;
+
+    }
+
+
+    addMessage(
+        text,
+        "user"
+    );
+
+
+    userInput.value = "";
+
+
+    /*
+     * Temporary response while the backend
+     * AI endpoint is being connected.
+     */
+
+    addMessage(
+        "Please wait... I am preparing your health guidance.",
+        "bot"
+    );
+
+
+    try {
+
+        const response =
+            await fetch(
+                "http://127.0.0.1:8000/api/chat",
+                {
+                    method: "POST",
+
+                    headers: {
+                        "Content-Type":
+                            "application/json"
+                    },
+
+                    body: JSON.stringify({
+
+                        message: text,
+
+                        language:
+                            language.value
+
+                    })
+
+                }
+            );
+
+
+        const data =
+            await response.json();
+
+
+        /*
+         * Remove temporary message.
+         */
+
+        const botMessages =
+            messages.querySelectorAll(".bot");
+
+        const lastBot =
+            botMessages[
+                botMessages.length - 1
+            ];
+
+        if (
+            lastBot &&
+            lastBot.textContent.includes(
+                "Please wait"
+            )
+        ) {
+
+            lastBot.remove();
+
+        }
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                data.detail ||
+                "Unable to get a response."
+            );
+
+        }
+
+
+        addMessage(
+            data.response,
+            "bot"
+        );
+
+    }
+
+
+    catch (error) {
+
+
+        const botMessages =
+            messages.querySelectorAll(".bot");
+
+        const lastBot =
+            botMessages[
+                botMessages.length - 1
+            ];
+
+        if (
+            lastBot &&
+            lastBot.textContent.includes(
+                "Please wait"
+            )
+        ) {
+
+            lastBot.remove();
+
+        }
+
+
+        /*
+         * Temporary demo fallback.
+         * The real backend AI endpoint will be
+         * added during the backend replacement phase.
+         */
+
+        addMessage(
+            getDemoResponse(
+                text,
+                language.value
+            ),
+            "bot"
+        );
+
+    }
+
+}
+
+
+
+/* =====================================================
+   DEMO RESPONSE
+   ===================================================== */
+
+function getDemoResponse(
+    text,
+    selectedLanguage
+) {
+
+    const message =
+        text.toLowerCase();
+
+
+    if (
+        message.includes("fever") ||
+        message.includes("temperature")
+    ) {
+
+        if (selectedLanguage === "telugu") {
+
+            return "జ్వరం ఉంటే తగినంత నీరు త్రాగండి, విశ్రాంతి తీసుకోండి మరియు మీ ఉష్ణోగ్రతను గమనించండి. జ్వరం ఎక్కువగా ఉంటే లేదా కొనసాగితే వైద్యుడిని సంప్రదించండి.";
+
+        }
+
+        if (selectedLanguage === "hindi") {
+
+            return "बुखार होने पर पर्याप्त पानी पिएं, आराम करें और तापमान पर नजर रखें। बुखार अधिक हो या बना रहे तो डॉक्टर से संपर्क करें।";
+
+        }
+
+        return "If you have a fever, stay hydrated, rest, and monitor your temperature. If the fever is high, persistent, or accompanied by concerning symptoms, contact a healthcare professional.";
+
+    }
+
+
+
+    if (
+        message.includes("headache")
+    ) {
+
+        return selectedLanguage === "telugu"
+
+            ? "తలనొప్పి ఉంటే విశ్రాంతి తీసుకోండి, నీరు త్రాగండి మరియు ఎక్కువ వెలుతురు లేదా శబ్దాన్ని తగ్గించండి. నొప్పి తీవ్రమైనదిగా లేదా అసాధారణంగా ఉంటే వైద్యుడిని సంప్రదించండి."
+
+            : selectedLanguage === "hindi"
+
+            ? "सिरदर्द होने पर आराम करें, पानी पिएं और तेज रोशनी या शोर से बचें। दर्द बहुत तेज या असामान्य हो तो डॉक्टर से संपर्क करें।"
+
+            : "For a headache, rest, drink enough water, and reduce exposure to strong light or noise. If the headache is severe, sudden, or unusual for you, seek medical attention.";
+
+    }
+
+
+
+    if (
+        message.includes("cough")
+    ) {
+
+        return selectedLanguage === "telugu"
+
+            ? "దగ్గు ఉంటే నీరు లేదా వెచ్చని ద్రవాలు తీసుకోండి మరియు విశ్రాంతి తీసుకోండి. శ్వాస తీసుకోవడంలో ఇబ్బంది లేదా ఛాతి నొప్పి ఉంటే వెంటనే వైద్య సహాయం పొందండి."
+
+            : selectedLanguage === "hindi"
+
+            ? "खांसी होने पर पानी या गर्म तरल पदार्थ लें और आराम करें। सांस लेने में परेशानी या सीने में दर्द हो तो तुरंत चिकित्सा सहायता लें।"
+
+            : "For a cough, stay hydrated and rest. If you have difficulty breathing, chest pain, or other severe symptoms, seek medical attention promptly.";
+
+    }
+
+
+
+    if (
+        message.includes("stomach") ||
+        message.includes("abdominal")
+    ) {
+
+        return selectedLanguage === "telugu"
+
+            ? "కడుపు నొప్పికి తేలికపాటి ఆహారం తీసుకుని నీరు త్రాగండి. తీవ్రమైన లేదా నిరంతర నొప్పి, వాంతులు లేదా ఇతర తీవ్రమైన లక్షణాలు ఉంటే వైద్యుడిని సంప్రదించండి."
+
+            : selectedLanguage === "hindi"
+
+            ? "पेट दर्द होने पर हल्का भोजन करें और पानी पिएं। तेज या लगातार दर्द, उल्टी या अन्य गंभीर लक्षण हों तो डॉक्टर से संपर्क करें।"
+
+            : "For stomach pain, stay hydrated and consider light foods if tolerated. Severe or persistent pain, repeated vomiting, or other concerning symptoms should be assessed by a healthcare professional.";
+
+    }
+
+
+
+    if (
+        message.includes("food") ||
+        message.includes("healthy")
+    ) {
+
+        return selectedLanguage === "telugu"
+
+            ? "ఆరోగ్యకరమైన ఆహారంలో కూరగాయలు, పండ్లు, పప్పులు, సంపూర్ణ ధాన్యాలు మరియు తగినంత నీరు ఉండాలి."
+
+            : selectedLanguage === "hindi"
+
+            ? "स्वस्थ आहार में सब्जियां, फल, दालें, साबुत अनाज और पर्याप्त पानी शामिल करें।"
+
+            : "A healthy diet can include vegetables, fruits, pulses, whole grains, adequate protein, and enough water. Try to keep meals varied and balanced.";
+
+    }
+
+
+
+    return selectedLanguage === "telugu"
+
+        ? "మీ లక్షణాల గురించి మరింత వివరంగా చెప్పండి. తీవ్రమైన లేదా అత్యవసర లక్షణాలు ఉంటే వెంటనే వైద్య సహాయం పొందండి."
+
+        : selectedLanguage === "hindi"
+
+        ? "कृपया अपने लक्षणों के बारे में अधिक जानकारी दें। गंभीर या आपातकालीन लक्षण होने पर तुरंत चिकित्सा सहायता लें।"
+
+        : "Please describe your symptoms in more detail. If you have severe or emergency symptoms, seek medical attention immediately.";
+
+}
+
+
+
+/* =====================================================
+   VOICE INPUT
+   ===================================================== */
+
+function startVoice() {
+
+    const SpeechRecognition =
+        window.SpeechRecognition ||
+        window.webkitSpeechRecognition;
+
+
+    if (!SpeechRecognition) {
+
+        alert(
+            "Voice input is not supported by this browser."
+        );
+
+        return;
+
+    }
+
+
+    const recognition =
+        new SpeechRecognition();
+
+
+    if (language.value === "telugu") {
+
+        recognition.lang =
+            "te-IN";
+
+    }
+
+    else if (language.value === "hindi") {
+
+        recognition.lang =
+            "hi-IN";
+
+    }
+
+    else {
+
+        recognition.lang =
+            "en-IN";
+
+    }
+
+
+    recognition.start();
+
+
+    recognition.onresult =
+        function(event) {
+
+            userInput.value =
+                event.results[0][0].transcript;
+
+        };
+
+
+    recognition.onerror =
+        function() {
+
+            alert(
+                "Voice input could not be captured."
+            );
+
+        };
+
+}
+
+
+</script>
+
+
+</body>
+
+</html>

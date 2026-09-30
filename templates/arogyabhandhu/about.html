@@ -1,0 +1,979 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>About Us | ArogyaBandhu</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4fbfa;
+            color: #173b3a;
+            line-height: 1.6;
+        }
+
+        /* ================= NAVBAR ================= */
+
+        nav {
+            background: #087f78;
+            color: white;
+            padding: 16px 7%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 18px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .nav-links a:hover {
+            text-decoration: underline;
+        }
+
+        .nav-button {
+            background: white;
+            color: #087f78 !important;
+            padding: 8px 14px;
+            border-radius: 8px;
+        }
+
+        /* ================= HERO ================= */
+
+        .hero {
+            text-align: center;
+            padding: 65px 20px;
+            background: linear-gradient(
+                135deg,
+                #dff7f3,
+                #eefcf9
+            );
+        }
+
+        .hero h1 {
+            font-size: 42px;
+            color: #075e59;
+            margin-bottom: 15px;
+        }
+
+        .hero p {
+            max-width: 800px;
+            margin: auto;
+            color: #526968;
+            font-size: 18px;
+        }
+
+        /* ================= CONTAINER ================= */
+
+        .container {
+            width: 90%;
+            max-width: 1150px;
+            margin: auto;
+            padding: 50px 0 70px;
+        }
+
+        .section {
+            margin-bottom: 50px;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .section-title h2 {
+            color: #075e59;
+            font-size: 30px;
+            margin-bottom: 8px;
+        }
+
+        .section-title p {
+            color: #667c7b;
+        }
+
+        /* ================= ABOUT CARD ================= */
+
+        .about-card {
+            background: white;
+            padding: 35px;
+            border-radius: 18px;
+            border: 1px solid #d8ece9;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.05);
+        }
+
+        .about-card p {
+            color: #536b69;
+            margin-bottom: 15px;
+        }
+
+        .about-card p:last-child {
+            margin-bottom: 0;
+        }
+
+        /* ================= VISION GRID ================= */
+
+        .vision-grid {
+            display: grid;
+            grid-template-columns: repeat(
+                auto-fit,
+                minmax(280px, 1fr)
+            );
+            gap: 22px;
+        }
+
+        .vision-card {
+            background: white;
+            padding: 28px;
+            border-radius: 16px;
+            border: 1px solid #d8ece9;
+            box-shadow: 0 5px 18px rgba(0,0,0,0.05);
+        }
+
+        .vision-icon {
+            font-size: 40px;
+            margin-bottom: 12px;
+        }
+
+        .vision-card h3 {
+            color: #087f78;
+            margin-bottom: 8px;
+        }
+
+        .vision-card p {
+            color: #607574;
+            font-size: 15px;
+        }
+
+        /* ================= FEATURES ================= */
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(
+                auto-fit,
+                minmax(220px, 1fr)
+            );
+            gap: 18px;
+        }
+
+        .feature {
+            background: white;
+            padding: 22px;
+            border-radius: 14px;
+            border: 1px solid #d8ece9;
+        }
+
+        .feature strong {
+            display: block;
+            color: #087f78;
+            margin-bottom: 5px;
+        }
+
+        .feature span {
+            color: #667c7b;
+            font-size: 14px;
+        }
+
+        /* ================= HOW IT WORKS ================= */
+
+        .steps {
+            display: grid;
+            grid-template-columns: repeat(
+                auto-fit,
+                minmax(200px, 1fr)
+            );
+            gap: 20px;
+        }
+
+        .step {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            border: 1px solid #d8ece9;
+            text-align: center;
+        }
+
+        .step-number {
+            width: 45px;
+            height: 45px;
+            margin: 0 auto 12px;
+            border-radius: 50%;
+            background: #087f78;
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        .step h3 {
+            color: #075e59;
+            margin-bottom: 7px;
+        }
+
+        .step p {
+            color: #667c7b;
+            font-size: 14px;
+        }
+
+        /* ================= VALUES ================= */
+
+        .values-list {
+            display: grid;
+            grid-template-columns: repeat(
+                auto-fit,
+                minmax(220px, 1fr)
+            );
+            gap: 15px;
+        }
+
+        .value {
+            padding: 18px;
+            background: #eaf8f5;
+            border-radius: 10px;
+            border: 1px solid #d2ebe7;
+        }
+
+        .value h3 {
+            color: #087f78;
+            margin-bottom: 5px;
+        }
+
+        .value p {
+            color: #607574;
+            font-size: 14px;
+        }
+
+        /* ================= SAFETY ================= */
+
+        .notice {
+            background: #fff8df;
+            border-left: 5px solid #e0a800;
+            padding: 22px;
+            border-radius: 10px;
+        }
+
+        .notice h3 {
+            color: #7a5b00;
+            margin-bottom: 6px;
+        }
+
+        .notice p {
+            color: #65582d;
+        }
+
+        /* ================= CTA ================= */
+
+        .cta {
+            text-align: center;
+            background: #075e59;
+            color: white;
+            padding: 45px 25px;
+            border-radius: 18px;
+        }
+
+        .cta h2 {
+            font-size: 30px;
+            margin-bottom: 10px;
+        }
+
+        .cta p {
+            max-width: 700px;
+            margin: auto;
+            opacity: 0.92;
+        }
+
+        .cta-buttons {
+            margin-top: 22px;
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .cta-button {
+            display: inline-block;
+            padding: 11px 20px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .cta-primary {
+            background: white;
+            color: #075e59;
+        }
+
+        .cta-secondary {
+            border: 1px solid white;
+            color: white;
+        }
+
+        /* ================= FOOTER ================= */
+
+        footer {
+            background: #064e4a;
+            color: white;
+            text-align: center;
+            padding: 28px 15px;
+        }
+
+        footer p {
+            margin: 5px;
+        }
+
+        /* ================= MOBILE ================= */
+
+        @media (max-width: 700px) {
+
+            .logo {
+                width: 100%;
+                text-align: center;
+            }
+
+            .nav-links {
+                justify-content: center;
+            }
+
+            .hero h1 {
+                font-size: 32px;
+            }
+
+            .hero {
+                padding: 45px 20px;
+            }
+
+            .about-card {
+                padding: 25px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<!-- ================= NAVBAR ================= -->
+
+<nav>
+
+    <div class="logo">
+        🌿 ArogyaBandhu
+    </div>
+
+    <div class="nav-links">
+
+        <a href="index.html">
+            Home
+        </a>
+
+        <a href="about.html">
+            About
+        </a>
+
+        <a href="health-tips.html">
+            Health Tips
+        </a>
+
+        <a href="contact.html">
+            Contact
+        </a>
+
+        <a
+            href="login.html"
+            class="nav-button"
+        >
+            Login
+        </a>
+
+    </div>
+
+</nav>
+
+
+<!-- ================= HERO ================= -->
+
+<section class="hero">
+
+    <h1>
+        🌿 About ArogyaBandhu
+    </h1>
+
+    <p>
+        A digital healthcare support platform designed to
+        connect rural communities with health information,
+        healthcare professionals, ASHA workers, pharmacies,
+        and emergency support.
+    </p>
+
+</section>
+
+
+<!-- ================= MAIN ================= -->
+
+<div class="container">
+
+
+    <!-- ================= ABOUT ================= -->
+
+    <section class="section">
+
+        <div class="section-title">
+
+            <h2>
+                What is ArogyaBandhu?
+            </h2>
+
+            <p>
+                Technology designed around community healthcare needs.
+            </p>
+
+        </div>
+
+
+        <div class="about-card">
+
+            <p>
+                <strong>ArogyaBandhu</strong> combines the ideas of
+                "Arogya", meaning health, and "Bandhu", meaning
+                friend or companion.
+            </p>
+
+            <p>
+                The platform is designed as a digital healthcare
+                support system for rural communities. It brings
+                together patients, doctors, ASHA workers, pharmacies,
+                and emergency support workflows in one platform.
+            </p>
+
+            <p>
+                ArogyaBandhu aims to make health information and
+                healthcare support easier to access, particularly
+                for communities where distance, connectivity,
+                language, or limited healthcare resources can create
+                challenges.
+            </p>
+
+            <p>
+                The platform includes AI-assisted health information,
+                digital health records, appointment support,
+                medicine search, health education, multilingual
+                interfaces, and emergency assistance workflows.
+            </p>
+
+        </div>
+
+    </section>
+
+
+    <!-- ================= VISION ================= -->
+
+    <section class="section">
+
+        <div class="section-title">
+
+            <h2>
+                Our Vision
+            </h2>
+
+            <p>
+                Supporting more connected and accessible community healthcare.
+            </p>
+
+        </div>
+
+
+        <div class="vision-grid">
+
+
+            <div class="vision-card">
+
+                <div class="vision-icon">
+                    🏥
+                </div>
+
+                <h3>
+                    Accessible Healthcare
+                </h3>
+
+                <p>
+                    Help people access healthcare information and
+                    support through a simple digital platform.
+                </p>
+
+            </div>
+
+
+            <div class="vision-card">
+
+                <div class="vision-icon">
+                    🤝
+                </div>
+
+                <h3>
+                    Community Connection
+                </h3>
+
+                <p>
+                    Connect patients, healthcare workers, doctors,
+                    pharmacies, and support services.
+                </p>
+
+            </div>
+
+
+            <div class="vision-card">
+
+                <div class="vision-icon">
+                    🤖
+                </div>
+
+                <h3>
+                    Responsible AI
+                </h3>
+
+                <p>
+                    Use AI as a support tool for health information
+                    and triage assistance rather than as a replacement
+                    for professional medical judgment.
+                </p>
+
+            </div>
+
+
+        </div>
+
+    </section>
+
+
+    <!-- ================= FEATURES ================= -->
+
+    <section class="section">
+
+        <div class="section-title">
+
+            <h2>
+                Platform Features
+            </h2>
+
+            <p>
+                Key capabilities included in the ArogyaBandhu prototype.
+            </p>
+
+        </div>
+
+
+        <div class="feature-grid">
+
+
+            <div class="feature">
+
+                <strong>
+                    🤖 AI Symptom Support
+                </strong>
+
+                <span>
+                    Provides general health information and
+                    symptom-related guidance.
+                </span>
+
+            </div>
+
+
+            <div class="feature">
+
+                <strong>
+                    🎤 Voice Assistant
+                </strong>
+
+                <span>
+                    Supports voice-based interaction for easier
+                    access to health information.
+                </span>
+
+            </div>
+
+
+            <div class="feature">
+
+                <strong>
+                    📋 Digital Health Records
+                </strong>
+
+                <span>
+                    Helps organize health information and records.
+                </span>
+
+            </div>
+
+
+            <div class="feature">
+
+                <strong>
+                    📅 Appointments
+                </strong>
+
+                <span>
+                    Provides a workflow for requesting healthcare
+                    consultations.
+                </span>
+
+            </div>
+
+
+            <div class="feature">
+
+                <strong>
+                    💊 Medicine Support
+                </strong>
+
+                <span>
+                    Allows users to search medicines and prepare
+                    medicine requests in the prototype.
+                </span>
+
+            </div>
+
+
+            <div class="feature">
+
+                <strong>
+                    🚨 Emergency SOS
+                </strong>
+
+                <span>
+                    Provides an emergency workflow with location
+                    information and emergency calling options.
+                </span>
+
+            </div>
+
+
+            <div class="feature">
+
+                <strong>
+                    👩‍⚕️ ASHA Dashboard
+                </strong>
+
+                <span>
+                    Supports community health tracking and
+                    follow-up workflows.
+                </span>
+
+            </div>
+
+
+            <div class="feature">
+
+                <strong>
+                    💊 Pharmacy Dashboard
+                </strong>
+
+                <span>
+                    Provides demonstration inventory and medicine
+                    request management.
+                </span>
+
+            </div>
+
+
+        </div>
+
+    </section>
+
+
+    <!-- ================= HOW IT WORKS ================= -->
+
+    <section class="section">
+
+        <div class="section-title">
+
+            <h2>
+                How ArogyaBandhu Works
+            </h2>
+
+            <p>
+                A simple workflow for connecting users with healthcare support.
+            </p>
+
+        </div>
+
+
+        <div class="steps">
+
+
+            <div class="step">
+
+                <div class="step-number">
+                    1
+                </div>
+
+                <h3>
+                    Register
+                </h3>
+
+                <p>
+                    Create an account and select the appropriate
+                    user role.
+                </p>
+
+            </div>
+
+
+            <div class="step">
+
+                <div class="step-number">
+                    2
+                </div>
+
+                <h3>
+                    Access Support
+                </h3>
+
+                <p>
+                    Use AI assistance, health records, appointments,
+                    medicine support, or health education.
+                </p>
+
+            </div>
+
+
+            <div class="step">
+
+                <div class="step-number">
+                    3
+                </div>
+
+                <h3>
+                    Connect
+                </h3>
+
+                <p>
+                    Connect with doctors, ASHA workers, pharmacies,
+                    or emergency services through the relevant workflow.
+                </p>
+
+            </div>
+
+
+            <div class="step">
+
+                <div class="step-number">
+                    4
+                </div>
+
+                <h3>
+                    Follow Up
+                </h3>
+
+                <p>
+                    Keep relevant health information organized and
+                    support continued healthcare follow-up.
+                </p>
+
+            </div>
+
+
+        </div>
+
+    </section>
+
+
+    <!-- ================= VALUES ================= -->
+
+    <section class="section">
+
+        <div class="section-title">
+
+            <h2>
+                Our Principles
+            </h2>
+
+        </div>
+
+
+        <div class="values-list">
+
+
+            <div class="value">
+
+                <h3>
+                    Accessibility
+                </h3>
+
+                <p>
+                    Keep the interface simple and understandable.
+                </p>
+
+            </div>
+
+
+            <div class="value">
+
+                <h3>
+                    Community First
+                </h3>
+
+                <p>
+                    Consider the needs of patients and healthcare
+                    workers in local communities.
+                </p>
+
+            </div>
+
+
+            <div class="value">
+
+                <h3>
+                    Multilingual Support
+                </h3>
+
+                <p>
+                    Support multiple languages to reduce language
+                    barriers in healthcare access.
+                </p>
+
+            </div>
+
+
+            <div class="value">
+
+                <h3>
+                    Human-Centered AI
+                </h3>
+
+                <p>
+                    Use AI to assist people while keeping healthcare
+                    professionals involved in clinical decisions.
+                </p>
+
+            </div>
+
+
+        </div>
+
+    </section>
+
+
+    <!-- ================= SAFETY ================= -->
+
+    <section class="section">
+
+        <div class="notice">
+
+            <h3>
+                ⚠️ Important Healthcare Notice
+            </h3>
+
+            <p>
+                ArogyaBandhu is currently a prototype and is intended
+                to demonstrate healthcare support workflows. AI-generated
+                information should not be treated as a medical diagnosis.
+                Serious or emergency health concerns should be handled
+                through appropriate qualified healthcare professionals
+                and emergency services.
+            </p>
+
+        </div>
+
+    </section>
+
+
+    <!-- ================= CTA ================= -->
+
+    <section class="section">
+
+        <div class="cta">
+
+            <h2>
+                Healthcare Support, Connected.
+            </h2>
+
+            <p>
+                Explore the ArogyaBandhu prototype and discover
+                how digital tools can support rural healthcare workflows.
+            </p>
+
+            <div class="cta-buttons">
+
+                <a
+                    href="register.html"
+                    class="cta-button cta-primary"
+                >
+                    Create Account
+                </a>
+
+                <a
+                    href="ai-assistant.html"
+                    class="cta-button cta-secondary"
+                >
+                    Try AI Assistant
+                </a>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+</div>
+
+
+<!-- ================= FOOTER ================= -->
+
+<footer>
+
+    <p>
+        🌿 <strong>ArogyaBandhu</strong>
+    </p>
+
+    <p>
+        AI-powered rural healthcare support platform
+    </p>
+
+    <p>
+        © 2026 ArogyaBandhu
+    </p>
+
+</footer>
+
+
+</body>
+
+</html>

@@ -1,0 +1,937 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Health Tips | ArogyaBandhu</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4fbfa;
+            color: #173b3a;
+            line-height: 1.6;
+        }
+
+        /* ================= NAVBAR ================= */
+
+        nav {
+            background: #087f78;
+            color: white;
+            padding: 16px 7%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 18px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .nav-links a:hover {
+            text-decoration: underline;
+        }
+
+        .back-btn {
+            background: white;
+            color: #087f78 !important;
+            padding: 8px 14px;
+            border-radius: 8px;
+        }
+
+        /* ================= HERO ================= */
+
+        .hero {
+            text-align: center;
+            padding: 55px 20px 40px;
+            background: linear-gradient(
+                135deg,
+                #dff7f3,
+                #eefcf9
+            );
+        }
+
+        .hero h1 {
+            font-size: 40px;
+            margin-bottom: 12px;
+            color: #075e59;
+        }
+
+        .hero p {
+            max-width: 700px;
+            margin: auto;
+            color: #4a6665;
+            font-size: 17px;
+        }
+
+        /* ================= LANGUAGE ================= */
+
+        .language-box {
+            text-align: center;
+            margin: 25px auto;
+        }
+
+        .language-box select {
+            padding: 10px 16px;
+            border: 1px solid #b8d9d5;
+            border-radius: 8px;
+            font-size: 15px;
+            background: white;
+        }
+
+        /* ================= CONTAINER ================= */
+
+        .container {
+            width: 90%;
+            max-width: 1150px;
+            margin: auto;
+            padding: 20px 0 60px;
+        }
+
+        /* ================= CATEGORY ================= */
+
+        .section-title {
+            text-align: center;
+            margin: 35px 0 25px;
+        }
+
+        .section-title h2 {
+            color: #075e59;
+            font-size: 28px;
+        }
+
+        .section-title p {
+            color: #667c7b;
+            margin-top: 5px;
+        }
+
+        .category-grid {
+            display: grid;
+            grid-template-columns: repeat(
+                auto-fit,
+                minmax(180px, 1fr)
+            );
+            gap: 18px;
+        }
+
+        .category {
+            background: white;
+            border-radius: 14px;
+            padding: 22px;
+            text-align: center;
+            border: 1px solid #d8ece9;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+
+        .category-icon {
+            font-size: 35px;
+            margin-bottom: 8px;
+        }
+
+        .category h3 {
+            color: #087f78;
+        }
+
+        /* ================= TIPS ================= */
+
+        .tips-grid {
+            display: grid;
+            grid-template-columns: repeat(
+                auto-fit,
+                minmax(260px, 1fr)
+            );
+            gap: 22px;
+        }
+
+        .tip-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            border: 1px solid #d8ece9;
+            box-shadow: 0 6px 18px rgba(0,0,0,0.06);
+            transition: 0.2s;
+        }
+
+        .tip-card:hover {
+            transform: translateY(-3px);
+        }
+
+        .tip-icon {
+            font-size: 35px;
+            margin-bottom: 10px;
+        }
+
+        .tip-card h3 {
+            color: #087f78;
+            margin-bottom: 10px;
+        }
+
+        .tip-card p {
+            color: #526968;
+            font-size: 15px;
+        }
+
+        .tip-card ul {
+            margin-top: 12px;
+            padding-left: 20px;
+            color: #526968;
+        }
+
+        .tip-card li {
+            margin-bottom: 7px;
+        }
+
+        /* ================= IMPORTANT NOTICE ================= */
+
+        .notice {
+            margin-top: 40px;
+            background: #fff8df;
+            border-left: 5px solid #e0a800;
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        .notice h3 {
+            color: #7a5b00;
+            margin-bottom: 6px;
+        }
+
+        .notice p {
+            color: #65582d;
+        }
+
+        /* ================= EMERGENCY ================= */
+
+        .emergency-box {
+            margin-top: 35px;
+            background: #fff0f0;
+            border: 1px solid #f2caca;
+            border-radius: 14px;
+            padding: 25px;
+            text-align: center;
+        }
+
+        .emergency-box h3 {
+            color: #b42318;
+            margin-bottom: 8px;
+        }
+
+        .emergency-btn {
+            display: inline-block;
+            margin-top: 15px;
+            padding: 11px 20px;
+            background: #d92d20;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: bold;
+        }
+
+        /* ================= FOOTER ================= */
+
+        footer {
+            background: #075e59;
+            color: white;
+            text-align: center;
+            padding: 25px 15px;
+            margin-top: 30px;
+        }
+
+        footer p {
+            margin: 5px;
+        }
+
+        /* ================= MOBILE ================= */
+
+        @media (max-width: 650px) {
+
+            .hero h1 {
+                font-size: 30px;
+            }
+
+            .nav-links {
+                justify-content: center;
+            }
+
+            .logo {
+                width: 100%;
+                text-align: center;
+            }
+
+        }
+
+    </style>
+</head>
+
+<body>
+
+
+<!-- ================= NAVBAR ================= -->
+
+<nav>
+
+    <div class="logo">
+        🌿 ArogyaBandhu
+    </div>
+
+    <div class="nav-links">
+
+        <a href="patient-dashboard.html">
+            Dashboard
+        </a>
+
+        <a href="ai-assistant.html">
+            AI Assistant
+        </a>
+
+        <a href="health-records.html">
+            Health Records
+        </a>
+
+        <a href="emergency.html">
+            Emergency
+        </a>
+
+        <a href="index.html">
+            Home
+        </a>
+
+    </div>
+
+</nav>
+
+
+<!-- ================= HERO ================= -->
+
+<section class="hero">
+
+    <h1>📚 Health Tips</h1>
+
+    <p>
+        Simple and practical health information to help
+        individuals and families make healthier everyday choices.
+    </p>
+
+</section>
+
+
+<!-- ================= LANGUAGE ================= -->
+
+<div class="language-box">
+
+    <label for="language">
+        🌐 Choose Language:
+    </label>
+
+    <select id="language" onchange="changeLanguage()">
+
+        <option value="english">
+            English
+        </option>
+
+        <option value="telugu">
+            తెలుగు
+        </option>
+
+        <option value="hindi">
+            हिंदी
+        </option>
+
+    </select>
+
+</div>
+
+
+<div class="container">
+
+
+    <!-- ================= CATEGORIES ================= -->
+
+    <div class="section-title">
+
+        <h2>
+            Health Categories
+        </h2>
+
+        <p>
+            Explore important areas of everyday health.
+        </p>
+
+    </div>
+
+
+    <div class="category-grid">
+
+
+        <div class="category">
+
+            <div class="category-icon">
+                🥗
+            </div>
+
+            <h3>
+                Nutrition
+            </h3>
+
+        </div>
+
+
+        <div class="category">
+
+            <div class="category-icon">
+                🧼
+            </div>
+
+            <h3>
+                Hygiene
+            </h3>
+
+        </div>
+
+
+        <div class="category">
+
+            <div class="category-icon">
+                👩‍🍼
+            </div>
+
+            <h3>
+                Maternal & Child
+            </h3>
+
+        </div>
+
+
+        <div class="category">
+
+            <div class="category-icon">
+                🛡️
+            </div>
+
+            <h3>
+                Prevention
+            </h3>
+
+        </div>
+
+
+        <div class="category">
+
+            <div class="category-icon">
+                🧘
+            </div>
+
+            <h3>
+                Wellbeing
+            </h3>
+
+        </div>
+
+
+    </div>
+
+
+    <!-- ================= DAILY HEALTH ================= -->
+
+    <div class="section-title">
+
+        <h2>
+            🌱 Everyday Health Tips
+        </h2>
+
+        <p>
+            Small healthy habits can support your overall wellbeing.
+        </p>
+
+    </div>
+
+
+    <div class="tips-grid">
+
+
+        <!-- Nutrition -->
+
+        <div class="tip-card">
+
+            <div class="tip-icon">
+                🥗
+            </div>
+
+            <h3>
+                Eat a Balanced Diet
+            </h3>
+
+            <p>
+                Include a variety of foods in your meals.
+            </p>
+
+            <ul>
+
+                <li>
+                    Include vegetables and fruits.
+                </li>
+
+                <li>
+                    Choose whole grains when possible.
+                </li>
+
+                <li>
+                    Include protein-rich foods.
+                </li>
+
+                <li>
+                    Drink enough safe drinking water.
+                </li>
+
+            </ul>
+
+        </div>
+
+
+        <!-- Hygiene -->
+
+        <div class="tip-card">
+
+            <div class="tip-icon">
+                🧼
+            </div>
+
+            <h3>
+                Maintain Good Hygiene
+            </h3>
+
+            <p>
+                Good hygiene can help reduce the spread of infections.
+            </p>
+
+            <ul>
+
+                <li>
+                    Wash hands regularly.
+                </li>
+
+                <li>
+                    Wash hands before eating.
+                </li>
+
+                <li>
+                    Keep food preparation areas clean.
+                </li>
+
+                <li>
+                    Use clean drinking water.
+                </li>
+
+            </ul>
+
+        </div>
+
+
+        <!-- Water -->
+
+        <div class="tip-card">
+
+            <div class="tip-icon">
+                💧
+            </div>
+
+            <h3>
+                Safe Drinking Water
+            </h3>
+
+            <p>
+                Safe water is important for maintaining good health.
+            </p>
+
+            <ul>
+
+                <li>
+                    Use a reliable source of drinking water.
+                </li>
+
+                <li>
+                    Store drinking water in clean containers.
+                </li>
+
+                <li>
+                    Keep containers covered.
+                </li>
+
+                <li>
+                    Follow local water-safety guidance.
+                </li>
+
+            </ul>
+
+        </div>
+
+
+        <!-- Exercise -->
+
+        <div class="tip-card">
+
+            <div class="tip-icon">
+                🚶
+            </div>
+
+            <h3>
+                Stay Physically Active
+            </h3>
+
+            <p>
+                Regular physical activity can support overall health.
+            </p>
+
+            <ul>
+
+                <li>
+                    Walk or perform suitable physical activities.
+                </li>
+
+                <li>
+                    Avoid sitting for very long periods.
+                </li>
+
+                <li>
+                    Choose activities suitable for your abilities.
+                </li>
+
+                <li>
+                    Take rest when your body needs it.
+                </li>
+
+            </ul>
+
+        </div>
+
+
+        <!-- Sleep -->
+
+        <div class="tip-card">
+
+            <div class="tip-icon">
+                😴
+            </div>
+
+            <h3>
+                Get Enough Sleep
+            </h3>
+
+            <p>
+                Good sleep supports physical and mental wellbeing.
+            </p>
+
+            <ul>
+
+                <li>
+                    Maintain a regular sleep schedule.
+                </li>
+
+                <li>
+                    Keep your sleeping area comfortable.
+                </li>
+
+                <li>
+                    Reduce unnecessary screen use before sleep.
+                </li>
+
+                <li>
+                    Give your body enough time to rest.
+                </li>
+
+            </ul>
+
+        </div>
+
+
+        <!-- Mental wellbeing -->
+
+        <div class="tip-card">
+
+            <div class="tip-icon">
+                🧘
+            </div>
+
+            <h3>
+                Take Care of Your Wellbeing
+            </h3>
+
+            <p>
+                Mental and emotional wellbeing are also important parts
+                of overall health.
+            </p>
+
+            <ul>
+
+                <li>
+                    Take regular breaks.
+                </li>
+
+                <li>
+                    Talk to someone you trust when needed.
+                </li>
+
+                <li>
+                    Spend time doing activities you enjoy.
+                </li>
+
+                <li>
+                    Seek professional support when necessary.
+                </li>
+
+            </ul>
+
+        </div>
+
+
+        <!-- Prevention -->
+
+        <div class="tip-card">
+
+            <div class="tip-icon">
+                🛡️
+            </div>
+
+            <h3>
+                Prevent Illness
+            </h3>
+
+            <p>
+                Preventive healthcare can help identify health concerns
+                early.
+            </p>
+
+            <ul>
+
+                <li>
+                    Follow recommended vaccination schedules.
+                </li>
+
+                <li>
+                    Attend appropriate health check-ups.
+                </li>
+
+                <li>
+                    Follow advice from qualified healthcare professionals.
+                </li>
+
+                <li>
+                    Do not ignore persistent or serious symptoms.
+                </li>
+
+            </ul>
+
+        </div>
+
+
+        <!-- Maternal and child -->
+
+        <div class="tip-card">
+
+            <div class="tip-icon">
+                👩‍🍼
+            </div>
+
+            <h3>
+                Maternal & Child Health
+            </h3>
+
+            <p>
+                Mothers and children may need additional healthcare
+                support.
+            </p>
+
+            <ul>
+
+                <li>
+                    Attend recommended antenatal check-ups.
+                </li>
+
+                <li>
+                    Follow vaccination schedules.
+                </li>
+
+                <li>
+                    Monitor child growth as recommended.
+                </li>
+
+                <li>
+                    Contact healthcare workers when concerns arise.
+                </li>
+
+            </ul>
+
+        </div>
+
+
+        <!-- Medicines -->
+
+        <div class="tip-card">
+
+            <div class="tip-icon">
+                💊
+            </div>
+
+            <h3>
+                Use Medicines Safely
+            </h3>
+
+            <p>
+                Medicines should be used according to appropriate
+                healthcare guidance.
+            </p>
+
+            <ul>
+
+                <li>
+                    Follow the prescribed dose.
+                </li>
+
+                <li>
+                    Do not share prescription medicines.
+                </li>
+
+                <li>
+                    Check medicine labels carefully.
+                </li>
+
+                <li>
+                    Ask a healthcare professional when unsure.
+                </li>
+
+            </ul>
+
+        </div>
+
+
+    </div>
+
+
+    <!-- ================= IMPORTANT NOTICE ================= -->
+
+    <div class="notice">
+
+        <h3>
+            ⚠️ Important Health Notice
+        </h3>
+
+        <p>
+            These health tips are for general educational purposes.
+            They are not a diagnosis or a substitute for professional
+            medical advice. If you have serious, persistent, or
+            worsening symptoms, contact a qualified healthcare
+            professional.
+        </p>
+
+    </div>
+
+
+    <!-- ================= EMERGENCY ================= -->
+
+    <div class="emergency-box">
+
+        <h3>
+            🚨 Medical Emergency?
+        </h3>
+
+        <p>
+            If someone is experiencing a serious or life-threatening
+            emergency, seek immediate emergency medical assistance.
+        </p>
+
+        <a
+            href="emergency.html"
+            class="emergency-btn"
+        >
+            Open Emergency SOS
+        </a>
+
+    </div>
+
+
+</div>
+
+
+<!-- ================= FOOTER ================= -->
+
+<footer>
+
+    <p>
+        🌿 <strong>ArogyaBandhu</strong>
+    </p>
+
+    <p>
+        AI-powered rural healthcare support platform
+    </p>
+
+    <p>
+        © 2026 ArogyaBandhu
+    </p>
+
+</footer>
+
+
+<!-- ================= JAVASCRIPT ================= -->
+
+<script>
+
+function changeLanguage() {
+
+    const language =
+        document.getElementById("language").value;
+
+    if (language === "telugu") {
+
+        alert(
+            "తెలుగు ఆరోగ్య సమాచారం త్వరలో అందుబాటులో ఉంటుంది."
+        );
+
+    }
+
+    else if (language === "hindi") {
+
+        alert(
+            "हिंदी स्वास्थ्य जानकारी जल्द उपलब्ध होगी।"
+        );
+
+    }
+
+    else {
+
+        alert(
+            "English health information selected."
+        );
+
+    }
+
+}
+
+</script>
+
+
+</body>
+</html>

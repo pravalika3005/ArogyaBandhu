@@ -1,0 +1,869 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Patient Dashboard | ArogyaBandhu</title>
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #f4f8f7;
+            color: #263238;
+        }
+
+        /* ================= NAVBAR ================= */
+
+        nav {
+            height: 70px;
+
+            background: white;
+
+            padding: 0 5%;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+
+            position: sticky;
+            top: 0;
+
+            z-index: 1000;
+        }
+
+        .logo {
+            color: #00897b;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .user-name {
+            color: #555;
+            font-weight: bold;
+        }
+
+        .logout-btn {
+            border: none;
+
+            background: #e53935;
+
+            color: white;
+
+            padding: 9px 16px;
+
+            border-radius: 7px;
+
+            cursor: pointer;
+
+            font-weight: bold;
+        }
+
+        .logout-btn:hover {
+            background: #c62828;
+        }
+
+
+        /* ================= MAIN ================= */
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+
+            margin: 35px auto;
+        }
+
+
+        /* ================= WELCOME ================= */
+
+        .welcome {
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #00897b,
+                    #00695c
+                );
+
+            color: white;
+
+            padding: 35px;
+
+            border-radius: 18px;
+
+            margin-bottom: 30px;
+        }
+
+        .welcome h1 {
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+
+        .welcome p {
+            font-size: 17px;
+            opacity: 0.95;
+        }
+
+
+        /* ================= EMERGENCY ================= */
+
+        .emergency {
+
+            background: #ffebee;
+
+            border: 1px solid #ef9a9a;
+
+            border-radius: 15px;
+
+            padding: 22px;
+
+            margin-bottom: 30px;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: space-between;
+
+            gap: 20px;
+        }
+
+        .emergency h3 {
+            color: #c62828;
+            margin-bottom: 7px;
+        }
+
+        .emergency p {
+            color: #555;
+        }
+
+        .sos-btn {
+
+            background: #d32f2f;
+
+            color: white;
+
+            text-decoration: none;
+
+            padding: 13px 22px;
+
+            border-radius: 8px;
+
+            font-weight: bold;
+
+            white-space: nowrap;
+        }
+
+        .sos-btn:hover {
+            background: #b71c1c;
+        }
+
+
+        /* ================= SECTION TITLE ================= */
+
+        .section-title {
+
+            color: #00695c;
+
+            font-size: 25px;
+
+            margin-bottom: 20px;
+        }
+
+
+        /* ================= SERVICE GRID ================= */
+
+        .services {
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(auto-fit, minmax(220px, 1fr));
+
+            gap: 20px;
+
+            margin-bottom: 40px;
+        }
+
+        .service-card {
+
+            background: white;
+
+            border-radius: 15px;
+
+            padding: 25px;
+
+            box-shadow:
+                0 4px 15px rgba(0,0,0,0.07);
+
+            text-decoration: none;
+
+            color: inherit;
+
+            transition: 0.25s;
+
+            border: 1px solid #eeeeee;
+        }
+
+        .service-card:hover {
+
+            transform: translateY(-5px);
+
+            box-shadow:
+                0 8px 20px rgba(0,0,0,0.12);
+        }
+
+        .service-icon {
+
+            font-size: 40px;
+
+            margin-bottom: 15px;
+        }
+
+        .service-card h3 {
+
+            color: #00796b;
+
+            margin-bottom: 9px;
+
+            font-size: 19px;
+        }
+
+        .service-card p {
+
+            color: #666;
+
+            line-height: 1.5;
+
+            font-size: 14px;
+        }
+
+
+        /* ================= QUICK INFO ================= */
+
+        .info-grid {
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(auto-fit, minmax(250px, 1fr));
+
+            gap: 20px;
+
+            margin-bottom: 40px;
+        }
+
+        .info-card {
+
+            background: white;
+
+            border-radius: 15px;
+
+            padding: 25px;
+
+            box-shadow:
+                0 4px 15px rgba(0,0,0,0.07);
+        }
+
+        .info-card h3 {
+
+            color: #00695c;
+
+            margin-bottom: 15px;
+        }
+
+        .info-item {
+
+            display: flex;
+
+            justify-content: space-between;
+
+            padding: 10px 0;
+
+            border-bottom: 1px solid #eeeeee;
+
+            font-size: 14px;
+        }
+
+        .info-item:last-child {
+            border-bottom: none;
+        }
+
+        .label {
+            color: #777;
+        }
+
+        .value {
+            font-weight: bold;
+            color: #333;
+        }
+
+
+        /* ================= NOTICE ================= */
+
+        .notice {
+
+            background: #e0f2f1;
+
+            border-left: 5px solid #00897b;
+
+            padding: 20px;
+
+            border-radius: 8px;
+
+            margin-bottom: 30px;
+
+            color: #37474f;
+
+            line-height: 1.6;
+        }
+
+
+        /* ================= FOOTER ================= */
+
+        footer {
+
+            background: #263238;
+
+            color: white;
+
+            padding: 25px;
+
+            text-align: center;
+
+            margin-top: 50px;
+        }
+
+        footer p {
+
+            color: #ccc;
+
+            font-size: 14px;
+        }
+
+
+        /* ================= MOBILE ================= */
+
+        @media (max-width: 700px) {
+
+            nav {
+                padding: 0 20px;
+            }
+
+            .user-name {
+                display: none;
+            }
+
+            .container {
+                width: 94%;
+            }
+
+            .welcome {
+                padding: 25px;
+            }
+
+            .welcome h1 {
+                font-size: 26px;
+            }
+
+            .emergency {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .sos-btn {
+                width: 100%;
+                text-align: center;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<!-- ================= NAVBAR ================= -->
+
+<nav>
+
+    <div class="logo">
+        🌿 ArogyaBandhu
+    </div>
+
+    <div class="nav-right">
+
+        <span
+            class="user-name"
+            id="userName"
+        >
+            Patient
+        </span>
+
+        <button
+            class="logout-btn"
+            onclick="logout()"
+        >
+            Logout
+        </button>
+
+    </div>
+
+</nav>
+
+
+<!-- ================= MAIN ================= -->
+
+<main class="container">
+
+
+    <!-- ================= WELCOME ================= -->
+
+    <section class="welcome">
+
+        <h1 id="welcomeName">
+            Welcome, Patient 👋
+        </h1>
+
+        <p>
+            Your healthcare services are available
+            in one place through ArogyaBandhu.
+        </p>
+
+    </section>
+
+
+    <!-- ================= EMERGENCY ================= -->
+
+    <section class="emergency">
+
+        <div>
+
+            <h3>
+                🚨 Need Emergency Help?
+            </h3>
+
+            <p>
+                Use Emergency SOS to access emergency
+                support and share your location.
+            </p>
+
+        </div>
+
+        <a
+            href="emergency.html"
+            class="sos-btn"
+        >
+            🚨 Emergency SOS
+        </a>
+
+    </section>
+
+
+    <!-- ================= SERVICES ================= -->
+
+    <h2 class="section-title">
+        Healthcare Services
+    </h2>
+
+
+    <section class="services">
+
+
+        <!-- AI -->
+
+        <a
+            href="ai-assistant.html"
+            class="service-card"
+        >
+
+            <div class="service-icon">
+                🤖
+            </div>
+
+            <h3>
+                AI Health Assistant
+            </h3>
+
+            <p>
+                Describe your symptoms and receive
+                preliminary health guidance.
+            </p>
+
+        </a>
+
+
+        <!-- APPOINTMENTS -->
+
+        <a
+            href="appointments.html"
+            class="service-card"
+        >
+
+            <div class="service-icon">
+                📅
+            </div>
+
+            <h3>
+                Doctor Appointment
+            </h3>
+
+            <p>
+                Book and manage appointments with
+                healthcare professionals.
+            </p>
+
+        </a>
+
+
+        <!-- HEALTH RECORDS -->
+
+        <a
+            href="health-records.html"
+            class="service-card"
+        >
+
+            <div class="service-icon">
+                📋
+            </div>
+
+            <h3>
+                Health Records
+            </h3>
+
+            <p>
+                View and organize your digital
+                healthcare information.
+            </p>
+
+        </a>
+
+
+        <!-- MEDICINES -->
+
+        <a
+            href="medicine.html"
+            class="service-card"
+        >
+
+            <div class="service-icon">
+                💊
+            </div>
+
+            <h3>
+                Medicines
+            </h3>
+
+            <p>
+                Search medicines and access
+                pharmacy support.
+            </p>
+
+        </a>
+
+
+        <!-- HEALTH TIPS -->
+
+        <a
+            href="health-tips.html"
+            class="service-card"
+        >
+
+            <div class="service-icon">
+                📚
+            </div>
+
+            <h3>
+                Health Education
+            </h3>
+
+            <p>
+                Learn about preventive healthcare,
+                nutrition and healthy habits.
+            </p>
+
+        </a>
+
+
+        <!-- PROFILE -->
+
+        <a
+            href="profile.html"
+            class="service-card"
+        >
+
+            <div class="service-icon">
+                👤
+            </div>
+
+            <h3>
+                My Profile
+            </h3>
+
+            <p>
+                View and manage your personal
+                account information.
+            </p>
+
+        </a>
+
+
+    </section>
+
+
+    <!-- ================= QUICK INFORMATION ================= -->
+
+    <h2 class="section-title">
+        Quick Information
+    </h2>
+
+
+    <section class="info-grid">
+
+
+        <div class="info-card">
+
+            <h3>
+                👤 Account
+            </h3>
+
+            <div class="info-item">
+
+                <span class="label">
+                    Name
+                </span>
+
+                <span
+                    class="value"
+                    id="infoName"
+                >
+                    --
+                </span>
+
+            </div>
+
+            <div class="info-item">
+
+                <span class="label">
+                    Email
+                </span>
+
+                <span
+                    class="value"
+                    id="infoEmail"
+                >
+                    --
+                </span>
+
+            </div>
+
+            <div class="info-item">
+
+                <span class="label">
+                    Role
+                </span>
+
+                <span
+                    class="value"
+                    id="infoRole"
+                >
+                    Patient
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <div class="info-card">
+
+            <h3>
+                🏥 Healthcare
+            </h3>
+
+            <div class="info-item">
+
+                <span class="label">
+                    Appointments
+                </span>
+
+                <span class="value">
+                    Available
+                </span>
+
+            </div>
+
+            <div class="info-item">
+
+                <span class="label">
+                    Health Records
+                </span>
+
+                <span class="value">
+                    Available
+                </span>
+
+            </div>
+
+            <div class="info-item">
+
+                <span class="label">
+                    AI Assistant
+                </span>
+
+                <span class="value">
+                    Available
+                </span>
+
+            </div>
+
+        </div>
+
+
+    </section>
+
+
+    <!-- ================= NOTICE ================= -->
+
+    <div class="notice">
+
+        <strong>Important:</strong>
+
+        The AI Health Assistant provides
+        preliminary health information only.
+        It is not a replacement for a qualified
+        healthcare professional. For serious or
+        emergency symptoms, contact appropriate
+        emergency services or a healthcare
+        professional.
+
+    </div>
+
+
+</main>
+
+
+<!-- ================= FOOTER ================= -->
+
+<footer>
+
+    <p>
+        🌿 ArogyaBandhu — Your Digital Healthcare Companion
+    </p>
+
+    <p>
+        © 2026 ArogyaBandhu
+    </p>
+
+</footer>
+
+
+<script>
+
+
+/* =====================================================
+   LOAD USER INFORMATION
+   ===================================================== */
+
+const storedUser =
+    localStorage.getItem(
+        "arogyabandhuUser"
+    );
+
+
+if (storedUser) {
+
+    try {
+
+        const user =
+            JSON.parse(storedUser);
+
+
+        document.getElementById(
+            "welcomeName"
+        ).textContent =
+            "Welcome, " +
+            user.name +
+            " 👋";
+
+
+        document.getElementById(
+            "userName"
+        ).textContent =
+            user.name;
+
+
+        document.getElementById(
+            "infoName"
+        ).textContent =
+            user.name;
+
+
+        document.getElementById(
+            "infoEmail"
+        ).textContent =
+            user.email;
+
+
+        document.getElementById(
+            "infoRole"
+        ).textContent =
+            user.role;
+
+
+    }
+
+    catch (error) {
+
+        console.log(
+            "Unable to read user information."
+        );
+
+    }
+
+}
+
+
+/* =====================================================
+   LOGOUT
+   ===================================================== */
+
+function logout() {
+
+    localStorage.removeItem(
+        "arogyabandhuUser"
+    );
+
+    window.location.href =
+        "login.html";
+
+}
+
+</script>
+
+
+</body>
+
+</html>

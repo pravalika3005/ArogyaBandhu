@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Login | ArogyaBandhu</title>
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #e8f8f5,
+                    #d4efdf
+                );
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            padding: 30px 15px;
+        }
+
+        .container {
+            width: 850px;
+            max-width: 100%;
+
+            background: white;
+
+            border-radius: 20px;
+
+            overflow: hidden;
+
+            box-shadow:
+                0 10px 35px rgba(0,0,0,0.15);
+
+            display: flex;
+        }
+
+
+        /* ================= LEFT ================= */
+
+        .left {
+            width: 45%;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #00897b,
+                    #00695c
+                );
+
+            color: white;
+
+            padding: 50px 40px;
+
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .left h1 {
+            font-size: 34px;
+            margin-bottom: 15px;
+        }
+
+        .left h2 {
+            font-size: 22px;
+            margin-bottom: 20px;
+        }
+
+        .left p {
+            line-height: 1.7;
+            opacity: 0.95;
+        }
+
+        .features {
+            margin-top: 25px;
+        }
+
+        .features p {
+            margin: 13px 0;
+            font-size: 15px;
+        }
+
+
+        /* ================= RIGHT ================= */
+
+        .right {
+            width: 55%;
+            padding: 50px 45px;
+
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .right h2 {
+            color: #00695c;
+            font-size: 30px;
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            color: #777;
+            margin-bottom: 28px;
+        }
+
+
+        /* ================= FORM ================= */
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 7px;
+
+            font-weight: bold;
+            color: #444;
+        }
+
+        input,
+        select {
+            width: 100%;
+
+            padding: 13px;
+
+            border: 1px solid #ccc;
+
+            border-radius: 8px;
+
+            font-size: 15px;
+
+            outline: none;
+        }
+
+        input:focus,
+        select:focus {
+            border-color: #00897b;
+        }
+
+
+        .login-btn {
+            width: 100%;
+
+            padding: 14px;
+
+            background: #00897b;
+
+            color: white;
+
+            border: none;
+
+            border-radius: 8px;
+
+            font-size: 17px;
+
+            font-weight: bold;
+
+            cursor: pointer;
+
+            margin-top: 5px;
+        }
+
+        .login-btn:hover {
+            background: #00695c;
+        }
+
+        .login-btn:disabled {
+            background: #80cbc4;
+            cursor: not-allowed;
+        }
+
+
+        /* ================= MESSAGE ================= */
+
+        .message {
+            display: none;
+
+            margin-top: 15px;
+
+            padding: 11px;
+
+            border-radius: 7px;
+
+            text-align: center;
+
+            font-size: 14px;
+        }
+
+        .success {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+
+        /* ================= LINKS ================= */
+
+        .register-link {
+            text-align: center;
+
+            margin-top: 20px;
+
+            color: #666;
+        }
+
+        .register-link a {
+            color: #00897b;
+
+            text-decoration: none;
+
+            font-weight: bold;
+        }
+
+        .home-link {
+            position: fixed;
+
+            top: 20px;
+            left: 25px;
+
+            color: #00695c;
+
+            text-decoration: none;
+
+            font-weight: bold;
+        }
+
+
+        /* ================= MOBILE ================= */
+
+        @media (max-width: 700px) {
+
+            .container {
+                flex-direction: column;
+            }
+
+            .left,
+            .right {
+                width: 100%;
+            }
+
+            .left {
+                padding: 30px;
+            }
+
+            .right {
+                padding: 35px 30px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<a href="index.html" class="home-link">
+    ← Home
+</a>
+
+
+<div class="container">
+
+
+    <!-- ================= LEFT ================= -->
+
+    <div class="left">
+
+        <h1>
+            🌿 ArogyaBandhu
+        </h1>
+
+        <h2>
+            Your Digital Healthcare Companion
+        </h2>
+
+        <p>
+            Access healthcare services through one simple
+            platform connecting patients, doctors, ASHA
+            workers, pharmacies and emergency support.
+        </p>
+
+
+        <div class="features">
+
+            <p>
+                🤖 AI Health Assistant
+            </p>
+
+            <p>
+                🚨 Emergency Support
+            </p>
+
+            <p>
+                👨‍⚕️ Doctor Consultation
+            </p>
+
+            <p>
+                📋 Digital Health Records
+            </p>
+
+            <p>
+                💊 Medicine Support
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <!-- ================= RIGHT ================= -->
+
+    <div class="right">
+
+        <h2>
+            Welcome Back
+        </h2>
+
+        <p class="subtitle">
+            Login to your ArogyaBandhu account
+        </p>
+
+
+        <form id="loginForm">
+
+
+            <!-- EMAIL -->
+
+            <div class="form-group">
+
+                <label for="email">
+                    Email
+                </label>
+
+                <input
+                    type="email"
+                    id="email"
+                    placeholder="Enter your email"
+                    required
+                >
+
+            </div>
+
+
+            <!-- PASSWORD -->
+
+            <div class="form-group">
+
+                <label for="password">
+                    Password
+                </label>
+
+                <input
+                    type="password"
+                    id="password"
+                    placeholder="Enter your password"
+                    required
+                >
+
+            </div>
+
+
+            <!-- ROLE -->
+
+            <div class="form-group">
+
+                <label for="role">
+                    Login As
+                </label>
+
+                <select id="role" required>
+
+                    <option value="patient">
+                        Patient
+                    </option>
+
+                    <option value="doctor">
+                        Doctor
+                    </option>
+
+                    <option value="asha">
+                        ASHA Worker
+                    </option>
+
+                    <option value="pharmacy">
+                        Pharmacy
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <!-- LOGIN BUTTON -->
+
+            <button
+                type="submit"
+                class="login-btn"
+                id="loginButton"
+            >
+                Login
+            </button>
+
+
+        </form>
+
+
+        <!-- MESSAGE -->
+
+        <div
+            id="message"
+            class="message"
+        ></div>
+
+
+        <!-- REGISTER -->
+
+        <div class="register-link">
+
+            Don't have an account?
+
+            <a href="register.html">
+                Register here
+            </a>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<script>
+
+
+const loginForm =
+    document.getElementById("loginForm");
+
+
+const message =
+    document.getElementById("message");
+
+
+const loginButton =
+    document.getElementById("loginButton");
+
+
+
+loginForm.addEventListener(
+    "submit",
+    async function(event) {
+
+        event.preventDefault();
+
+
+        const email =
+            document.getElementById("email")
+            .value
+            .trim();
+
+
+        const password =
+            document.getElementById("password")
+            .value;
+
+
+        const selectedRole =
+            document.getElementById("role")
+            .value;
+
+
+
+        loginButton.disabled = true;
+
+        loginButton.textContent =
+            "Logging in...";
+
+        message.style.display =
+            "none";
+
+
+
+        try {
+
+
+            const response = await fetch(
+
+                "http://127.0.0.1:8000/api/login",
+
+                {
+
+                    method: "POST",
+
+                    headers: {
+
+                        "Content-Type":
+                            "application/json"
+
+                    },
+
+                    body: JSON.stringify({
+
+                        email: email,
+
+                        password: password
+
+                    })
+
+                }
+
+            );
+
+
+
+            const data =
+                await response.json();
+
+
+
+            if (!response.ok) {
+
+                throw new Error(
+
+                    data.detail ||
+                    "Login failed."
+
+                );
+
+            }
+
+
+
+            /*
+             * Make sure the selected role
+             * matches the account role.
+             */
+
+            if (
+                data.user.role !==
+                selectedRole
+            ) {
+
+                throw new Error(
+                    "The selected role does not match this account."
+                );
+
+            }
+
+
+
+            /*
+             * Store basic user information
+             * for dashboard navigation.
+             */
+
+            localStorage.setItem(
+
+                "arogyabandhuUser",
+
+                JSON.stringify(data.user)
+
+            );
+
+
+
+            message.textContent =
+                "Login successful!";
+
+            message.className =
+                "message success";
+
+            message.style.display =
+                "block";
+
+
+
+            /*
+             * Redirect according to role.
+             */
+
+            setTimeout(
+                function() {
+
+
+                    if (
+                        data.user.role ===
+                        "patient"
+                    ) {
+
+                        window.location.href =
+                            "patient-dashboard.html";
+
+                    }
+
+
+                    else if (
+                        data.user.role ===
+                        "doctor"
+                    ) {
+
+                        window.location.href =
+                            "doctor-dashboard.html";
+
+                    }
+
+
+                    else if (
+                        data.user.role ===
+                        "asha"
+                    ) {
+
+                        window.location.href =
+                            "asha-dashboard.html";
+
+                    }
+
+
+                    else if (
+                        data.user.role ===
+                        "pharmacy"
+                    ) {
+
+                        window.location.href =
+                            "pharmacy.html";
+
+                    }
+
+
+                    else {
+
+                        window.location.href =
+                            "dashboard.html";
+
+                    }
+
+
+                },
+                1000
+            );
+
+
+        }
+
+
+        catch (error) {
+
+
+            message.textContent =
+                error.message ||
+                "Unable to connect to the server.";
+
+            message.className =
+                "message error";
+
+            message.style.display =
+                "block";
+
+        }
+
+
+        finally {
+
+            loginButton.disabled =
+                false;
+
+            loginButton.textContent =
+                "Login";
+
+        }
+
+    }
+
+);
+
+</script>
+
+
+</body>
+
+</html>

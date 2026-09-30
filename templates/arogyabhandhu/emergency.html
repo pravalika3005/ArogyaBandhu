@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Emergency SOS | ArogyaBandhu</title>
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #f8f9fa;
+            color: #263238;
+        }
+
+        /* ================= NAVBAR ================= */
+
+        nav {
+            height: 70px;
+            background: white;
+
+            padding: 0 6%;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .logo {
+            color: #00897b;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .back {
+            color: #00695c;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        /* ================= CONTAINER ================= */
+
+        .container {
+            width: 90%;
+            max-width: 900px;
+            margin: 35px auto;
+        }
+
+        /* ================= HEADER ================= */
+
+        .header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .header-icon {
+            font-size: 60px;
+            margin-bottom: 10px;
+        }
+
+        .header h1 {
+            color: #c62828;
+            font-size: 34px;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            color: #666;
+            line-height: 1.6;
+        }
+
+        /* ================= EMERGENCY CARD ================= */
+
+        .emergency-card {
+            background: white;
+            border-radius: 18px;
+
+            padding: 35px;
+
+            box-shadow:
+                0 5px 20px rgba(0,0,0,0.08);
+
+            text-align: center;
+
+            margin-bottom: 25px;
+        }
+
+        .emergency-card h2 {
+            color: #b71c1c;
+            margin-bottom: 12px;
+        }
+
+        .emergency-card p {
+            color: #555;
+            line-height: 1.6;
+            margin-bottom: 25px;
+        }
+
+        /* ================= SOS BUTTON ================= */
+
+        .sos-button {
+
+            width: 180px;
+            height: 180px;
+
+            border-radius: 50%;
+
+            border: 8px solid #ffcdd2;
+
+            background: #d32f2f;
+
+            color: white;
+
+            font-size: 30px;
+
+            font-weight: bold;
+
+            cursor: pointer;
+
+            box-shadow:
+                0 8px 25px rgba(211,47,47,0.35);
+
+            transition: 0.2s;
+        }
+
+        .sos-button:hover {
+            transform: scale(1.04);
+            background: #b71c1c;
+        }
+
+        .sos-button:active {
+            transform: scale(0.96);
+        }
+
+        .sos-button:disabled {
+            background: #9e9e9e;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+
+        /* ================= STATUS ================= */
+
+        .status {
+
+            display: none;
+
+            margin-top: 25px;
+
+            padding: 18px;
+
+            border-radius: 10px;
+
+            line-height: 1.6;
+
+            text-align: left;
+        }
+
+        .status.success {
+            display: block;
+            background: #e8f5e9;
+            border-left: 5px solid #43a047;
+            color: #2e7d32;
+        }
+
+        .status.error {
+            display: block;
+            background: #ffebee;
+            border-left: 5px solid #e53935;
+            color: #b71c1c;
+        }
+
+        .status.info {
+            display: block;
+            background: #e3f2fd;
+            border-left: 5px solid #1e88e5;
+            color: #1565c0;
+        }
+
+        /* ================= EMERGENCY NUMBERS ================= */
+
+        .numbers {
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(auto-fit, minmax(220px, 1fr));
+
+            gap: 18px;
+
+            margin-bottom: 25px;
+        }
+
+        .number-card {
+
+            background: white;
+
+            border-radius: 12px;
+
+            padding: 22px;
+
+            box-shadow:
+                0 4px 15px rgba(0,0,0,0.07);
+
+            text-align: center;
+        }
+
+        .number-card .icon {
+            font-size: 35px;
+            margin-bottom: 10px;
+        }
+
+        .number-card h3 {
+            color: #00695c;
+            margin-bottom: 8px;
+        }
+
+        .number-card a {
+            color: #00897b;
+            font-size: 22px;
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        /* ================= WARNING ================= */
+
+        .warning {
+
+            background: #fff3e0;
+
+            border-left: 5px solid #fb8c00;
+
+            padding: 18px;
+
+            border-radius: 8px;
+
+            color: #5d4037;
+
+            line-height: 1.6;
+
+            margin-bottom: 25px;
+        }
+
+        /* ================= LOCATION ================= */
+
+        .location-card {
+
+            background: white;
+
+            border-radius: 12px;
+
+            padding: 22px;
+
+            box-shadow:
+                0 4px 15px rgba(0,0,0,0.07);
+
+            margin-bottom: 25px;
+        }
+
+        .location-card h3 {
+            color: #00695c;
+            margin-bottom: 12px;
+        }
+
+        #locationText {
+            color: #666;
+            line-height: 1.6;
+        }
+
+        /* ================= FOOTER ================= */
+
+        footer {
+
+            background: #263238;
+
+            color: white;
+
+            text-align: center;
+
+            padding: 25px;
+
+            margin-top: 50px;
+        }
+
+        footer p {
+            color: #ccc;
+            font-size: 14px;
+        }
+
+        /* ================= MOBILE ================= */
+
+        @media (max-width: 600px) {
+
+            .container {
+                width: 94%;
+            }
+
+            .sos-button {
+                width: 150px;
+                height: 150px;
+                font-size: 25px;
+            }
+
+            .header h1 {
+                font-size: 28px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<!-- ================= NAVBAR ================= -->
+
+<nav>
+
+    <div class="logo">
+        🌿 ArogyaBandhu
+    </div>
+
+    <a
+        href="patient-dashboard.html"
+        class="back"
+    >
+        ← Dashboard
+    </a>
+
+</nav>
+
+
+<!-- ================= MAIN ================= -->
+
+<main class="container">
+
+
+    <div class="header">
+
+        <div class="header-icon">
+            🚨
+        </div>
+
+        <h1>
+            Emergency SOS
+        </h1>
+
+        <p>
+            Use this feature when you need urgent
+            healthcare assistance.
+        </p>
+
+    </div>
+
+
+    <!-- ================= SOS ================= -->
+
+    <section class="emergency-card">
+
+        <h2>
+            Need Emergency Help?
+        </h2>
+
+        <p>
+            Press the SOS button to request emergency
+            assistance and attempt to obtain your current
+            location.
+        </p>
+
+
+        <button
+            class="sos-button"
+            id="sosButton"
+            onclick="activateSOS()"
+        >
+            SOS
+        </button>
+
+
+        <div
+            id="status"
+            class="status"
+        ></div>
+
+    </section>
+
+
+    <!-- ================= EMERGENCY NUMBERS ================= -->
+
+    <section class="numbers">
+
+
+        <div class="number-card">
+
+            <div class="icon">
+                📞
+            </div>
+
+            <h3>
+                Unified Emergency
+            </h3>
+
+            <a href="tel:112">
+                112
+            </a>
+
+        </div>
+
+
+        <div class="number-card">
+
+            <div class="icon">
+                🚑
+            </div>
+
+            <h3>
+                Ambulance
+            </h3>
+
+            <a href="tel:108">
+                108
+            </a>
+
+        </div>
+
+
+    </section>
+
+
+    <!-- ================= LOCATION ================= -->
+
+    <section class="location-card">
+
+        <h3>
+            📍 Your Location
+        </h3>
+
+        <p id="locationText">
+            Location has not been requested yet.
+        </p>
+
+    </section>
+
+
+    <!-- ================= WARNING ================= -->
+
+    <div class="warning">
+
+        <strong>Important:</strong>
+
+        ArogyaBandhu's SOS button is a prototype feature.
+        It does not itself guarantee ambulance dispatch
+        or emergency-service response. In a real emergency,
+        call the appropriate emergency service directly.
+
+    </div>
+
+
+</main>
+
+
+<!-- ================= FOOTER ================= -->
+
+<footer>
+
+    <p>
+        🌿 ArogyaBandhu — Emergency Support
+    </p>
+
+    <p>
+        © 2026 ArogyaBandhu
+    </p>
+
+</footer>
+
+
+<script>
+
+
+/* =====================================================
+   ELEMENTS
+   ===================================================== */
+
+const sosButton =
+    document.getElementById("sosButton");
+
+const statusBox =
+    document.getElementById("status");
+
+const locationText =
+    document.getElementById("locationText");
+
+
+
+/* =====================================================
+   ACTIVATE SOS
+   ===================================================== */
+
+function activateSOS() {
+
+
+    /*
+     * Ask the user to confirm before activating
+     * the prototype SOS workflow.
+     */
+
+    const confirmed =
+        confirm(
+            "Are you sure you need emergency assistance?"
+        );
+
+
+    if (!confirmed) {
+
+        return;
+
+    }
+
+
+    sosButton.disabled = true;
+
+    sosButton.textContent =
+        "WAIT...";
+
+
+    showStatus(
+        "Requesting your location...",
+        "info"
+    );
+
+
+    /*
+     * Request browser location.
+     */
+
+    if (
+        !navigator.geolocation
+    ) {
+
+        locationText.textContent =
+            "Location services are not supported by this browser.";
+
+        showStatus(
+            "Location services are unavailable. Please call an emergency number directly.",
+            "error"
+        );
+
+        sosButton.disabled = false;
+
+        sosButton.textContent =
+            "SOS";
+
+        return;
+
+    }
+
+
+    navigator.geolocation.getCurrentPosition(
+
+        function(position) {
+
+            const latitude =
+                position.coords.latitude;
+
+            const longitude =
+                position.coords.longitude;
+
+
+            locationText.innerHTML =
+                "Location captured successfully.<br>" +
+                "Latitude: " +
+                latitude.toFixed(6) +
+                "<br>" +
+                "Longitude: " +
+                longitude.toFixed(6);
+
+
+            /*
+             * Prototype emergency workflow.
+             */
+
+            showStatus(
+
+                "Emergency SOS request prepared successfully. " +
+                "Your location has been captured. " +
+                "For immediate assistance, call 112 or 108 directly.",
+
+                "success"
+
+            );
+
+
+            /*
+             * We intentionally do not claim that an
+             * ambulance or ASHA worker has actually
+             * been dispatched.
+             */
+
+            sosButton.disabled = false;
+
+            sosButton.textContent =
+                "SOS";
+
+        },
+
+
+        function(error) {
+
+
+            locationText.textContent =
+                "Unable to obtain your location.";
+
+
+            let message =
+                "Location access was not available. " +
+                "Please call 112 or 108 directly for emergency help.";
+
+
+            if (
+                error.code ===
+                error.PERMISSION_DENIED
+            ) {
+
+                message =
+                    "Location permission was denied. " +
+                    "Please call 112 or 108 directly.";
+
+            }
+
+
+            showStatus(
+                message,
+                "error"
+            );
+
+
+            sosButton.disabled = false;
+
+            sosButton.textContent =
+                "SOS";
+
+        },
+
+
+        {
+            enableHighAccuracy: true,
+
+            timeout: 10000,
+
+            maximumAge: 0
+
+        }
+
+    );
+
+}
+
+
+
+/* =====================================================
+   STATUS
+   ===================================================== */
+
+function showStatus(
+    message,
+    type
+) {
+
+    statusBox.textContent =
+        message;
+
+    statusBox.className =
+        "status " + type;
+
+}
+
+</script>
+
+
+</body>
+
+</html>

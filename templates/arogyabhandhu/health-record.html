@@ -1,0 +1,1072 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Health Records | ArogyaBandhu</title>
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #f4f8f7;
+            color: #263238;
+        }
+
+        /* ================= NAVBAR ================= */
+
+        nav {
+            height: 70px;
+            background: white;
+
+            padding: 0 6%;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .logo {
+            color: #00897b;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .back {
+            color: #00695c;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        /* ================= MAIN ================= */
+
+        .container {
+            width: 90%;
+            max-width: 1100px;
+            margin: 35px auto;
+        }
+
+        .header {
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            color: #00695c;
+            font-size: 32px;
+            margin-bottom: 8px;
+        }
+
+        .header p {
+            color: #666;
+            line-height: 1.6;
+        }
+
+        /* ================= SUMMARY ================= */
+
+        .summary {
+            display: grid;
+
+            grid-template-columns:
+                repeat(auto-fit, minmax(200px, 1fr));
+
+            gap: 18px;
+
+            margin-bottom: 25px;
+        }
+
+        .summary-card {
+            background: white;
+
+            padding: 22px;
+
+            border-radius: 13px;
+
+            box-shadow:
+                0 4px 15px rgba(0,0,0,0.07);
+        }
+
+        .summary-icon {
+            font-size: 30px;
+            margin-bottom: 10px;
+        }
+
+        .summary-card h3 {
+            color: #00695c;
+            margin-bottom: 6px;
+        }
+
+        .summary-card p {
+            color: #777;
+            font-size: 14px;
+        }
+
+        /* ================= GRID ================= */
+
+        .grid {
+            display: grid;
+
+            grid-template-columns:
+                1fr 1fr;
+
+            gap: 25px;
+        }
+
+        .card {
+            background: white;
+
+            border-radius: 15px;
+
+            padding: 28px;
+
+            box-shadow:
+                0 5px 18px rgba(0,0,0,0.07);
+        }
+
+        .card h2 {
+            color: #00695c;
+            font-size: 21px;
+            margin-bottom: 20px;
+        }
+
+        /* ================= PROFILE ================= */
+
+        .profile-item {
+            display: flex;
+            justify-content: space-between;
+
+            padding: 11px 0;
+
+            border-bottom: 1px solid #eeeeee;
+
+            gap: 15px;
+        }
+
+        .profile-item:last-child {
+            border-bottom: none;
+        }
+
+        .label {
+            color: #777;
+        }
+
+        .value {
+            color: #333;
+            font-weight: bold;
+            text-align: right;
+        }
+
+        /* ================= RECORDS ================= */
+
+        .record {
+            border-left: 4px solid #00897b;
+
+            background: #f8fffd;
+
+            padding: 17px;
+
+            border-radius: 8px;
+
+            margin-bottom: 12px;
+        }
+
+        .record:last-child {
+            margin-bottom: 0;
+        }
+
+        .record h3 {
+            color: #00796b;
+            margin-bottom: 7px;
+        }
+
+        .record p {
+            color: #666;
+            font-size: 14px;
+            line-height: 1.5;
+            margin: 4px 0;
+        }
+
+        .record-date {
+            font-size: 12px !important;
+            color: #888 !important;
+        }
+
+        /* ================= ADD RECORD ================= */
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        label {
+            display: block;
+
+            margin-bottom: 7px;
+
+            color: #444;
+
+            font-weight: bold;
+        }
+
+        input,
+        select,
+        textarea {
+
+            width: 100%;
+
+            padding: 11px;
+
+            border: 1px solid #ccc;
+
+            border-radius: 8px;
+
+            outline: none;
+
+            font-size: 14px;
+        }
+
+        input:focus,
+        select:focus,
+        textarea:focus {
+            border-color: #00897b;
+        }
+
+        textarea {
+            min-height: 80px;
+            resize: vertical;
+        }
+
+        .save-btn {
+            width: 100%;
+
+            padding: 12px;
+
+            border: none;
+
+            border-radius: 8px;
+
+            background: #00897b;
+
+            color: white;
+
+            font-size: 15px;
+
+            font-weight: bold;
+
+            cursor: pointer;
+        }
+
+        .save-btn:hover {
+            background: #00695c;
+        }
+
+        /* ================= MESSAGE ================= */
+
+        .message {
+            display: none;
+
+            margin-top: 14px;
+
+            padding: 11px;
+
+            border-radius: 8px;
+
+            font-size: 14px;
+        }
+
+        .success {
+            display: block;
+
+            background: #e8f5e9;
+
+            color: #2e7d32;
+        }
+
+        .error {
+            display: block;
+
+            background: #ffebee;
+
+            color: #c62828;
+        }
+
+        /* ================= EMPTY ================= */
+
+        .empty {
+            text-align: center;
+
+            color: #888;
+
+            padding: 25px 10px;
+
+            line-height: 1.5;
+        }
+
+        /* ================= NOTICE ================= */
+
+        .notice {
+            margin-top: 25px;
+
+            background: #fff8e1;
+
+            border-left: 5px solid #ffb300;
+
+            padding: 17px;
+
+            border-radius: 8px;
+
+            color: #5d4037;
+
+            line-height: 1.6;
+        }
+
+        /* ================= MOBILE ================= */
+
+        @media (max-width: 800px) {
+
+            .grid {
+                grid-template-columns: 1fr;
+            }
+
+            .container {
+                width: 94%;
+            }
+
+            .profile-item {
+                flex-direction: column;
+                gap: 4px;
+            }
+
+            .value {
+                text-align: left;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<!-- ================= NAVBAR ================= -->
+
+<nav>
+
+    <div class="logo">
+        🌿 ArogyaBandhu
+    </div>
+
+    <a
+        href="patient-dashboard.html"
+        class="back"
+    >
+        ← Dashboard
+    </a>
+
+</nav>
+
+
+<!-- ================= MAIN ================= -->
+
+<main class="container">
+
+
+    <div class="header">
+
+        <h1>
+            📋 Digital Health Records
+        </h1>
+
+        <p>
+            Keep important health information organized
+            in one place.
+        </p>
+
+    </div>
+
+
+    <!-- ================= SUMMARY ================= -->
+
+    <section class="summary">
+
+
+        <div class="summary-card">
+
+            <div class="summary-icon">
+                ❤️
+            </div>
+
+            <h3>
+                Blood Group
+            </h3>
+
+            <p id="bloodGroupSummary">
+                Not added
+            </p>
+
+        </div>
+
+
+        <div class="summary-card">
+
+            <div class="summary-icon">
+                ⚖️
+            </div>
+
+            <h3>
+                Weight
+            </h3>
+
+            <p id="weightSummary">
+                Not added
+            </p>
+
+        </div>
+
+
+        <div class="summary-card">
+
+            <div class="summary-icon">
+                🌡️
+            </div>
+
+            <h3>
+                Latest Health Update
+            </h3>
+
+            <p id="latestSummary">
+                No updates
+            </p>
+
+        </div>
+
+
+    </section>
+
+
+    <!-- ================= MAIN GRID ================= -->
+
+    <section class="grid">
+
+
+        <!-- ================= PERSONAL HEALTH INFO ================= -->
+
+        <div class="card">
+
+            <h2>
+                👤 Personal Health Information
+            </h2>
+
+
+            <div class="profile-item">
+
+                <span class="label">
+                    Name
+                </span>
+
+                <span
+                    class="value"
+                    id="patientName"
+                >
+                    --
+                </span>
+
+            </div>
+
+
+            <div class="profile-item">
+
+                <span class="label">
+                    Email
+                </span>
+
+                <span
+                    class="value"
+                    id="patientEmail"
+                >
+                    --
+                </span>
+
+            </div>
+
+
+            <div class="profile-item">
+
+                <span class="label">
+                    Blood Group
+                </span>
+
+                <span
+                    class="value"
+                    id="bloodGroup"
+                >
+                    Not added
+                </span>
+
+            </div>
+
+
+            <div class="profile-item">
+
+                <span class="label">
+                    Age
+                </span>
+
+                <span
+                    class="value"
+                    id="age"
+                >
+                    Not added
+                </span>
+
+            </div>
+
+
+            <div class="profile-item">
+
+                <span class="label">
+                    Allergies
+                </span>
+
+                <span
+                    class="value"
+                    id="allergies"
+                >
+                    None added
+                </span>
+
+            </div>
+
+
+        </div>
+
+
+        <!-- ================= ADD RECORD ================= -->
+
+        <div class="card">
+
+            <h2>
+                ➕ Add Health Update
+            </h2>
+
+
+            <form id="recordForm">
+
+
+                <div class="form-group">
+
+                    <label for="recordType">
+                        Record Type
+                    </label>
+
+                    <select
+                        id="recordType"
+                        required
+                    >
+
+                        <option value="">
+                            Select record type
+                        </option>
+
+                        <option value="Symptoms">
+                            Symptoms
+                        </option>
+
+                        <option value="Medication">
+                            Medication
+                        </option>
+
+                        <option value="Vital Signs">
+                            Vital Signs
+                        </option>
+
+                        <option value="Doctor Visit">
+                            Doctor Visit
+                        </option>
+
+                        <option value="Other">
+                            Other
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="recordTitle">
+                        Title
+                    </label>
+
+                    <input
+                        type="text"
+                        id="recordTitle"
+                        placeholder="Example: Fever"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="recordDetails">
+                        Details
+                    </label>
+
+                    <textarea
+                        id="recordDetails"
+                        placeholder="Enter health information"
+                        required
+                    ></textarea>
+
+                </div>
+
+
+                <button
+                    type="submit"
+                    class="save-btn"
+                >
+                    Save Health Update
+                </button>
+
+
+            </form>
+
+
+            <div
+                id="message"
+                class="message"
+            ></div>
+
+
+        </div>
+
+
+    </section>
+
+
+    <!-- ================= RECORD HISTORY ================= -->
+
+    <section
+        class="card"
+        style="margin-top: 25px;"
+    >
+
+        <h2>
+            🗂️ Health Record History
+        </h2>
+
+
+        <div id="recordsList">
+
+            <div class="empty">
+                No health records have been added yet.
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- ================= NOTICE ================= -->
+
+    <div class="notice">
+
+        <strong>Privacy note:</strong>
+
+        This college-project prototype stores these
+        demo records in the browser. A production
+        healthcare system should use secure,
+        authenticated backend storage and appropriate
+        privacy and security controls.
+
+    </div>
+
+
+</main>
+
+
+<script>
+
+
+/* =====================================================
+   USER
+   ===================================================== */
+
+const storedUser =
+    localStorage.getItem(
+        "arogyabandhuUser"
+    );
+
+
+if (storedUser) {
+
+    try {
+
+        const user =
+            JSON.parse(storedUser);
+
+
+        document.getElementById(
+            "patientName"
+        ).textContent =
+            user.name || "--";
+
+
+        document.getElementById(
+            "patientEmail"
+        ).textContent =
+            user.email || "--";
+
+
+    }
+
+    catch (error) {
+
+        console.log(
+            "Unable to load user information."
+        );
+
+    }
+
+}
+
+
+
+/* =====================================================
+   STORAGE KEY
+   ===================================================== */
+
+const recordsKey =
+    "arogyabandhuHealthRecords";
+
+
+
+/* =====================================================
+   LOAD RECORDS
+   ===================================================== */
+
+function loadRecords() {
+
+
+    const records =
+        JSON.parse(
+            localStorage.getItem(
+                recordsKey
+            ) || "[]"
+        );
+
+
+    const recordsList =
+        document.getElementById(
+            "recordsList"
+        );
+
+
+    if (
+        records.length === 0
+    ) {
+
+        recordsList.innerHTML =
+            `
+            <div class="empty">
+                No health records have been added yet.
+            </div>
+            `;
+
+        document.getElementById(
+            "latestSummary"
+        ).textContent =
+            "No updates";
+
+        return;
+
+    }
+
+
+    recordsList.innerHTML =
+        "";
+
+
+    records
+        .slice()
+        .reverse()
+        .forEach(
+            function(record) {
+
+
+                const div =
+                    document.createElement(
+                        "div"
+                    );
+
+
+                div.className =
+                    "record";
+
+
+                div.innerHTML = `
+
+                    <h3>
+                        ${record.title}
+                    </h3>
+
+                    <p>
+                        <strong>
+                            Type:
+                        </strong>
+                        ${record.type}
+                    </p>
+
+                    <p>
+                        ${record.details}
+                    </p>
+
+                    <p class="record-date">
+                        Added:
+                        ${record.date}
+                    </p>
+
+                `;
+
+
+                recordsList.appendChild(
+                    div
+                );
+
+            }
+        );
+
+
+    /*
+     * Update latest summary.
+     */
+
+    document.getElementById(
+        "latestSummary"
+    ).textContent =
+        records[records.length - 1].title;
+
+
+}
+
+
+
+/* =====================================================
+   LOAD BASIC HEALTH INFO
+   ===================================================== */
+
+function loadHealthInfo() {
+
+
+    const healthInfo =
+        JSON.parse(
+            localStorage.getItem(
+                "arogyabandhuHealthInfo"
+            ) || "{}"
+        );
+
+
+    const bloodGroup =
+        healthInfo.bloodGroup ||
+        "Not added";
+
+
+    document.getElementById(
+        "bloodGroup"
+    ).textContent =
+        bloodGroup;
+
+
+    document.getElementById(
+        "bloodGroupSummary"
+    ).textContent =
+        bloodGroup;
+
+
+    document.getElementById(
+        "age"
+    ).textContent =
+        healthInfo.age ||
+        "Not added";
+
+
+    document.getElementById(
+        "allergies"
+    ).textContent =
+        healthInfo.allergies ||
+        "None added";
+
+
+    document.getElementById(
+        "weightSummary"
+    ).textContent =
+        healthInfo.weight
+        ? healthInfo.weight + " kg"
+        : "Not added";
+
+}
+
+
+
+loadHealthInfo();
+
+loadRecords();
+
+
+
+/* =====================================================
+   ADD RECORD
+   ===================================================== */
+
+document.getElementById(
+    "recordForm"
+).addEventListener(
+    "submit",
+    function(event) {
+
+        event.preventDefault();
+
+
+        const type =
+            document.getElementById(
+                "recordType"
+            ).value;
+
+
+        const title =
+            document.getElementById(
+                "recordTitle"
+            ).value
+            .trim();
+
+
+        const details =
+            document.getElementById(
+                "recordDetails"
+            ).value
+            .trim();
+
+
+        const record = {
+
+            type: type,
+
+            title: title,
+
+            details: details,
+
+            date:
+                new Date()
+                .toLocaleString()
+
+        };
+
+
+        const records =
+            JSON.parse(
+                localStorage.getItem(
+                    recordsKey
+                ) || "[]"
+            );
+
+
+        records.push(
+            record
+        );
+
+
+        localStorage.setItem(
+
+            recordsKey,
+
+            JSON.stringify(
+                records
+            )
+
+        );
+
+
+        document.getElementById(
+            "recordForm"
+        ).reset();
+
+
+        showMessage(
+            "Health update saved successfully.",
+            "success"
+        );
+
+
+        loadRecords();
+
+    }
+);
+
+
+
+/* =====================================================
+   MESSAGE
+   ===================================================== */
+
+function showMessage(
+    text,
+    type
+) {
+
+    const message =
+        document.getElementById(
+            "message"
+        );
+
+
+    message.textContent =
+        text;
+
+
+    message.className =
+        "message " + type;
+
+
+    message.style.display =
+        "block";
+
+
+    setTimeout(
+        function() {
+
+            message.style.display =
+                "none";
+
+        },
+        3500
+    );
+
+}
+
+</script>
+
+
+</body>
+
+</html>

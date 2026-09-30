@@ -1,0 +1,1339 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Pharmacy Dashboard | ArogyaBandhu</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4fbfa;
+            color: #173b3a;
+            line-height: 1.6;
+        }
+
+        /* ================= NAVBAR ================= */
+
+        nav {
+            background: #087f78;
+            color: white;
+            padding: 16px 7%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 18px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .nav-links a:hover {
+            text-decoration: underline;
+        }
+
+        .logout-btn {
+            background: #fff0f0;
+            color: #b42318;
+            border: none;
+            padding: 9px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        /* ================= MAIN ================= */
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: auto;
+            padding: 40px 0 65px;
+        }
+
+        /* ================= WELCOME ================= */
+
+        .welcome {
+            background: linear-gradient(
+                135deg,
+                #dff7f3,
+                #eefcf9
+            );
+
+            border-radius: 18px;
+            padding: 35px;
+            margin-bottom: 30px;
+        }
+
+        .welcome h1 {
+            color: #075e59;
+            margin-bottom: 8px;
+        }
+
+        .welcome p {
+            color: #536b69;
+            max-width: 800px;
+        }
+
+        /* ================= STATS ================= */
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(
+                auto-fit,
+                minmax(180px, 1fr)
+            );
+
+            gap: 18px;
+            margin-bottom: 35px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 22px;
+            border-radius: 14px;
+            border: 1px solid #d8ece9;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+
+        .stat-icon {
+            font-size: 30px;
+            margin-bottom: 7px;
+        }
+
+        .stat-number {
+            font-size: 28px;
+            font-weight: bold;
+            color: #087f78;
+        }
+
+        .stat-label {
+            color: #718482;
+            font-size: 14px;
+        }
+
+        /* ================= SECTION ================= */
+
+        .section-title {
+            margin: 30px 0 18px;
+        }
+
+        .section-title h2 {
+            color: #075e59;
+        }
+
+        /* ================= SEARCH ================= */
+
+        .search-box {
+            background: white;
+            padding: 22px;
+            border-radius: 14px;
+            border: 1px solid #d8ece9;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            margin-bottom: 25px;
+        }
+
+        .search-row {
+            display: flex;
+            gap: 12px;
+        }
+
+        .search-row input {
+            flex: 1;
+            padding: 13px;
+            border: 1px solid #c6dedb;
+            border-radius: 8px;
+            font-size: 15px;
+            outline: none;
+        }
+
+        .search-row input:focus {
+            border-color: #087f78;
+        }
+
+        .search-row button {
+            background: #087f78;
+            color: white;
+            border: none;
+            padding: 13px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        /* ================= MEDICINE GRID ================= */
+
+        .medicine-grid {
+            display: grid;
+            grid-template-columns: repeat(
+                auto-fit,
+                minmax(250px, 1fr)
+            );
+
+            gap: 20px;
+        }
+
+        .medicine-card {
+            background: white;
+            border-radius: 15px;
+            padding: 24px;
+            border: 1px solid #d8ece9;
+            box-shadow: 0 5px 18px rgba(0,0,0,0.05);
+        }
+
+        .medicine-icon {
+            font-size: 35px;
+            margin-bottom: 10px;
+        }
+
+        .medicine-card h3 {
+            color: #087f78;
+            margin-bottom: 7px;
+        }
+
+        .medicine-card p {
+            color: #607574;
+            font-size: 14px;
+            margin-bottom: 8px;
+        }
+
+        .stock {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            margin: 8px 0 15px;
+        }
+
+        .stock.available {
+            background: #e7f6ef;
+            color: #17663d;
+        }
+
+        .stock.low {
+            background: #fff4d6;
+            color: #8a6200;
+        }
+
+        .stock.out {
+            background: #fff0f0;
+            color: #b42318;
+        }
+
+        .button {
+            display: inline-block;
+            background: #087f78;
+            color: white;
+            text-decoration: none;
+            padding: 10px 16px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: bold;
+            border: none;
+            cursor: pointer;
+        }
+
+        .button:hover {
+            background: #075e59;
+        }
+
+        .button.secondary {
+            background: #e7f6f3;
+            color: #087f78;
+        }
+
+        /* ================= ORDER TABLE ================= */
+
+        .table-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            border: 1px solid #d8ece9;
+            box-shadow: 0 5px 18px rgba(0,0,0,0.05);
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 700px;
+        }
+
+        th,
+        td {
+            padding: 13px;
+            text-align: left;
+            border-bottom: 1px solid #e4eeee;
+        }
+
+        th {
+            background: #f0f8f7;
+            color: #075e59;
+        }
+
+        td {
+            color: #536b69;
+        }
+
+        .order-status {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .pending {
+            background: #fff4d6;
+            color: #8a6200;
+        }
+
+        .processing {
+            background: #eaf3ff;
+            color: #2563a8;
+        }
+
+        .ready {
+            background: #e7f6ef;
+            color: #17663d;
+        }
+
+        /* ================= PHARMACY CARDS ================= */
+
+        .pharmacy-grid {
+            display: grid;
+            grid-template-columns: repeat(
+                auto-fit,
+                minmax(260px, 1fr)
+            );
+
+            gap: 20px;
+        }
+
+        .pharmacy-card {
+            background: white;
+            border-radius: 15px;
+            padding: 24px;
+            border: 1px solid #d8ece9;
+            box-shadow: 0 5px 18px rgba(0,0,0,0.05);
+        }
+
+        .pharmacy-card h3 {
+            color: #087f78;
+            margin-bottom: 8px;
+        }
+
+        .pharmacy-card p {
+            color: #607574;
+            font-size: 14px;
+            margin-bottom: 7px;
+        }
+
+        /* ================= NOTICE ================= */
+
+        .notice {
+            margin-top: 30px;
+            background: #fff8df;
+            border-left: 5px solid #e0a800;
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        .notice h3 {
+            color: #7a5b00;
+            margin-bottom: 6px;
+        }
+
+        .notice p {
+            color: #65582d;
+        }
+
+        /* ================= FOOTER ================= */
+
+        footer {
+            background: #075e59;
+            color: white;
+            text-align: center;
+            padding: 25px 15px;
+            margin-top: 30px;
+        }
+
+        footer p {
+            margin: 5px;
+        }
+
+        /* ================= MOBILE ================= */
+
+        @media (max-width: 700px) {
+
+            .logo {
+                width: 100%;
+                text-align: center;
+            }
+
+            .nav-links {
+                justify-content: center;
+            }
+
+            .welcome {
+                padding: 25px;
+            }
+
+            .search-row {
+                flex-direction: column;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<!-- ================= NAVBAR ================= -->
+
+<nav>
+
+    <div class="logo">
+        🌿 ArogyaBandhu
+    </div>
+
+    <div class="nav-links">
+
+        <a href="pharmacy.html">
+            Dashboard
+        </a>
+
+        <a href="medicine.html">
+            Medicine
+        </a>
+
+        <a href="patient-dashboard.html">
+            Patient
+        </a>
+
+        <a href="index.html">
+            Home
+        </a>
+
+        <button
+            class="logout-btn"
+            onclick="logout()"
+        >
+            Logout
+        </button>
+
+    </div>
+
+</nav>
+
+
+<!-- ================= MAIN ================= -->
+
+<div class="container">
+
+
+    <!-- ================= WELCOME ================= -->
+
+    <section class="welcome">
+
+        <h1 id="welcomeTitle">
+            💊 Welcome, Pharmacy Partner
+        </h1>
+
+        <p>
+            Manage medicine inventory, review medicine requests,
+            and track delivery information through the
+            ArogyaBandhu prototype.
+        </p>
+
+    </section>
+
+
+    <!-- ================= STATS ================= -->
+
+    <section class="stats">
+
+
+        <div class="stat-card">
+
+            <div class="stat-icon">
+                💊
+            </div>
+
+            <div class="stat-number">
+                128
+            </div>
+
+            <div class="stat-label">
+                Medicines in Inventory
+            </div>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <div class="stat-icon">
+                📦
+            </div>
+
+            <div class="stat-number">
+                12
+            </div>
+
+            <div class="stat-label">
+                Pending Requests
+            </div>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <div class="stat-icon">
+                🚚
+            </div>
+
+            <div class="stat-number">
+                7
+            </div>
+
+            <div class="stat-label">
+                Deliveries Today
+            </div>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <div class="stat-icon">
+                ✅
+            </div>
+
+            <div class="stat-number">
+                23
+            </div>
+
+            <div class="stat-label">
+                Completed Orders
+            </div>
+
+        </div>
+
+
+    </section>
+
+
+    <!-- ================= SEARCH ================= -->
+
+    <div class="section-title">
+
+        <h2>
+            🔎 Medicine Inventory Search
+        </h2>
+
+    </div>
+
+
+    <div class="search-box">
+
+        <div class="search-row">
+
+            <input
+                type="text"
+                id="medicineSearch"
+                placeholder="Search medicine name..."
+                onkeyup="searchMedicine()"
+            >
+
+            <button
+                onclick="searchMedicine()"
+            >
+                Search
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- ================= INVENTORY ================= -->
+
+    <div class="section-title">
+
+        <h2>
+            💊 Medicine Inventory
+        </h2>
+
+    </div>
+
+
+    <section
+        class="medicine-grid"
+        id="medicineGrid"
+    >
+
+
+        <!-- Medicine 1 -->
+
+        <div
+            class="medicine-card"
+            data-name="paracetamol"
+        >
+
+            <div class="medicine-icon">
+                💊
+            </div>
+
+            <h3>
+                Paracetamol
+            </h3>
+
+            <p>
+                Commonly used medicine for pain and fever.
+            </p>
+
+            <p>
+                <strong>
+                    Stock:
+                </strong>
+                150 strips
+            </p>
+
+            <span class="stock available">
+                Available
+            </span>
+
+            <br>
+
+            <button
+                class="button"
+                onclick="showInventoryMessage('Paracetamol')"
+            >
+                Manage Stock
+            </button>
+
+        </div>
+
+
+        <!-- Medicine 2 -->
+
+        <div
+            class="medicine-card"
+            data-name="oral rehydration salts ors"
+        >
+
+            <div class="medicine-icon">
+                🧂
+            </div>
+
+            <h3>
+                Oral Rehydration Salts
+            </h3>
+
+            <p>
+                Used to help replace fluids and electrolytes
+                during dehydration.
+            </p>
+
+            <p>
+                <strong>
+                    Stock:
+                </strong>
+                80 packets
+            </p>
+
+            <span class="stock available">
+                Available
+            </span>
+
+            <br>
+
+            <button
+                class="button"
+                onclick="showInventoryMessage('Oral Rehydration Salts')"
+            >
+                Manage Stock
+            </button>
+
+        </div>
+
+
+        <!-- Medicine 3 -->
+
+        <div
+            class="medicine-card"
+            data-name="cetirizine"
+        >
+
+            <div class="medicine-icon">
+                💊
+            </div>
+
+            <h3>
+                Cetirizine
+            </h3>
+
+            <p>
+                An antihistamine commonly used for allergy symptoms.
+            </p>
+
+            <p>
+                <strong>
+                    Stock:
+                </strong>
+                18 strips
+            </p>
+
+            <span class="stock low">
+                Low Stock
+            </span>
+
+            <br>
+
+            <button
+                class="button"
+                onclick="showInventoryMessage('Cetirizine')"
+            >
+                Manage Stock
+            </button>
+
+        </div>
+
+
+        <!-- Medicine 4 -->
+
+        <div
+            class="medicine-card"
+            data-name="antiseptic solution"
+        >
+
+            <div class="medicine-icon">
+                🧴
+            </div>
+
+            <h3>
+                Antiseptic Solution
+            </h3>
+
+            <p>
+                General first-aid hygiene product.
+            </p>
+
+            <p>
+                <strong>
+                    Stock:
+                </strong>
+                32 bottles
+            </p>
+
+            <span class="stock available">
+                Available
+            </span>
+
+            <br>
+
+            <button
+                class="button"
+                onclick="showInventoryMessage('Antiseptic Solution')"
+            >
+                Manage Stock
+            </button>
+
+        </div>
+
+
+        <!-- Medicine 5 -->
+
+        <div
+            class="medicine-card"
+            data-name="amoxicillin"
+        >
+
+            <div class="medicine-icon">
+                💊
+            </div>
+
+            <h3>
+                Amoxicillin
+            </h3>
+
+            <p>
+                Prescription antibiotic. Dispensing requires
+                appropriate prescription verification.
+            </p>
+
+            <p>
+                <strong>
+                    Stock:
+                </strong>
+                10 strips
+            </p>
+
+            <span class="stock low">
+                Low Stock
+            </span>
+
+            <br>
+
+            <button
+                class="button"
+                onclick="showInventoryMessage('Amoxicillin')"
+            >
+                Manage Stock
+            </button>
+
+        </div>
+
+
+        <!-- Medicine 6 -->
+
+        <div
+            class="medicine-card"
+            data-name="vitamin tablets"
+        >
+
+            <div class="medicine-icon">
+                💊
+            </div>
+
+            <h3>
+                Vitamin Tablets
+            </h3>
+
+            <p>
+                Demonstration inventory item for the prototype.
+            </p>
+
+            <p>
+                <strong>
+                    Stock:
+                </strong>
+                0 packs
+            </p>
+
+            <span class="stock out">
+                Out of Stock
+            </span>
+
+            <br>
+
+            <button
+                class="button"
+                onclick="showInventoryMessage('Vitamin Tablets')"
+            >
+                Manage Stock
+            </button>
+
+        </div>
+
+
+    </section>
+
+
+    <!-- ================= ORDERS ================= -->
+
+    <div class="section-title">
+
+        <h2>
+            📦 Recent Medicine Requests
+        </h2>
+
+    </div>
+
+
+    <div class="table-card">
+
+        <table>
+
+            <thead>
+
+                <tr>
+
+                    <th>
+                        Request ID
+                    </th>
+
+                    <th>
+                        Patient
+                    </th>
+
+                    <th>
+                        Medicine
+                    </th>
+
+                    <th>
+                        Quantity
+                    </th>
+
+                    <th>
+                        Request Date
+                    </th>
+
+                    <th>
+                        Status
+                    </th>
+
+                </tr>
+
+            </thead>
+
+
+            <tbody id="ordersTable">
+
+
+                <tr>
+
+                    <td>
+                        AB-1001
+                    </td>
+
+                    <td>
+                        Ramesh Kumar
+                    </td>
+
+                    <td>
+                        Paracetamol
+                    </td>
+
+                    <td>
+                        2
+                    </td>
+
+                    <td>
+                        28 Sep
+                    </td>
+
+                    <td>
+
+                        <span class="order-status ready">
+                            Ready
+                        </span>
+
+                    </td>
+
+                </tr>
+
+
+                <tr>
+
+                    <td>
+                        AB-1002
+                    </td>
+
+                    <td>
+                        Sita Devi
+                    </td>
+
+                    <td>
+                        Oral Rehydration Salts
+                    </td>
+
+                    <td>
+                        5
+                    </td>
+
+                    <td>
+                        28 Sep
+                    </td>
+
+                    <td>
+
+                        <span class="order-status processing">
+                            Processing
+                        </span>
+
+                    </td>
+
+                </tr>
+
+
+                <tr>
+
+                    <td>
+                        AB-1003
+                    </td>
+
+                    <td>
+                        Lakshmi
+                    </td>
+
+                    <td>
+                        Cetirizine
+                    </td>
+
+                    <td>
+                        1
+                    </td>
+
+                    <td>
+                        29 Sep
+                    </td>
+
+                    <td>
+
+                        <span class="order-status pending">
+                            Pending
+                        </span>
+
+                    </td>
+
+                </tr>
+
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+
+    <!-- ================= PHARMACY LOCATIONS ================= -->
+
+    <div class="section-title">
+
+        <h2>
+            📍 Pharmacy Information
+        </h2>
+
+    </div>
+
+
+    <section class="pharmacy-grid">
+
+
+        <div class="pharmacy-card">
+
+            <h3>
+                Arogya Pharmacy
+            </h3>
+
+            <p>
+                📍 Community Health Area
+            </p>
+
+            <p>
+                📞 Contact available through the pharmacy system
+            </p>
+
+            <p>
+                🕒 Open during regular working hours
+            </p>
+
+            <button
+                class="button secondary"
+                onclick="showDemo('Pharmacy contact')"
+            >
+                View Details
+            </button>
+
+        </div>
+
+
+        <div class="pharmacy-card">
+
+            <h3>
+                Village Medical Store
+            </h3>
+
+            <p>
+                📍 Nearby village area
+            </p>
+
+            <p>
+                📞 Contact available through the pharmacy system
+            </p>
+
+            <p>
+                🕒 Open during regular working hours
+            </p>
+
+            <button
+                class="button secondary"
+                onclick="showDemo('Village pharmacy contact')"
+            >
+                View Details
+            </button>
+
+        </div>
+
+
+        <div class="pharmacy-card">
+
+            <h3>
+                Community Pharmacy
+            </h3>
+
+            <p>
+                📍 Primary healthcare area
+            </p>
+
+            <p>
+                📞 Contact available through the pharmacy system
+            </p>
+
+            <p>
+                🕒 Open during regular working hours
+            </p>
+
+            <button
+                class="button secondary"
+                onclick="showDemo('Community pharmacy contact')"
+            >
+                View Details
+            </button>
+
+        </div>
+
+
+    </section>
+
+
+    <!-- ================= NOTICE ================= -->
+
+    <div class="notice">
+
+        <h3>
+            ⚠️ Medicine Safety Notice
+        </h3>
+
+        <p>
+            This pharmacy module is a demonstration prototype.
+            Medicine availability, pricing, prescription verification,
+            payment, and delivery are not connected to a real pharmacy
+            system. Prescription medicines should only be dispensed
+            according to applicable professional and legal requirements.
+        </p>
+
+    </div>
+
+
+</div>
+
+
+<!-- ================= FOOTER ================= -->
+
+<footer>
+
+    <p>
+        🌿 <strong>ArogyaBandhu</strong>
+    </p>
+
+    <p>
+        AI-powered rural healthcare support platform
+    </p>
+
+    <p>
+        © 2026 ArogyaBandhu
+    </p>
+
+</footer>
+
+
+<!-- ================= JAVASCRIPT ================= -->
+
+<script>
+
+
+/* =====================================================
+   LOAD PHARMACY USER
+===================================================== */
+
+function loadPharmacyUser() {
+
+    const storedUser =
+        localStorage.getItem(
+            "arogyabandhuUser"
+        );
+
+
+    if (!storedUser) {
+
+        return;
+
+    }
+
+
+    try {
+
+        const user =
+            JSON.parse(storedUser);
+
+
+        const name =
+            user.name || "Pharmacy Partner";
+
+
+        document.getElementById(
+            "welcomeTitle"
+        ).textContent =
+            "💊 Welcome, " + name;
+
+
+    }
+
+    catch (error) {
+
+        console.log(
+            "Unable to load pharmacy user."
+        );
+
+    }
+
+}
+
+
+/* =====================================================
+   SEARCH MEDICINE
+===================================================== */
+
+function searchMedicine() {
+
+    const searchValue =
+        document.getElementById(
+            "medicineSearch"
+        ).value
+        .toLowerCase()
+        .trim();
+
+
+    const cards =
+        document.querySelectorAll(
+            ".medicine-card"
+        );
+
+
+    cards.forEach(
+        function(card) {
+
+            const medicineName =
+                card
+                .getAttribute("data-name")
+                .toLowerCase();
+
+
+            if (
+                medicineName.includes(
+                    searchValue
+                )
+            ) {
+
+                card.style.display =
+                    "block";
+
+            }
+
+            else {
+
+                card.style.display =
+                    "none";
+
+            }
+
+        }
+    );
+
+}
+
+
+/* =====================================================
+   INVENTORY MESSAGE
+===================================================== */
+
+function showInventoryMessage(
+    medicine
+) {
+
+    alert(
+        "Inventory management for " +
+        medicine +
+        " is available as a prototype action."
+    );
+
+}
+
+
+/* =====================================================
+   DEMO ACTION
+===================================================== */
+
+function showDemo(
+    feature
+) {
+
+    alert(
+        feature +
+        " is available as a prototype feature. " +
+        "Real pharmacy data can be connected to the backend later."
+    );
+
+}
+
+
+/* =====================================================
+   LOGOUT
+===================================================== */
+
+function logout() {
+
+    localStorage.removeItem(
+        "arogyabandhuUser"
+    );
+
+    window.location.href =
+        "login.html";
+
+}
+
+
+/* =====================================================
+   PAGE LOAD
+===================================================== */
+
+document.addEventListener(
+    "DOMContentLoaded",
+    loadPharmacyUser
+);
+
+
+</script>
+
+
+</body>
+</html>

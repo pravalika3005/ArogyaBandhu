@@ -1,0 +1,1207 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>ASHA Dashboard | ArogyaBandhu</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4fbfa;
+            color: #173b3a;
+            line-height: 1.6;
+        }
+
+        /* ================= NAVBAR ================= */
+
+        nav {
+            background: #087f78;
+            color: white;
+            padding: 16px 7%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 18px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .nav-links a:hover {
+            text-decoration: underline;
+        }
+
+        .logout-btn {
+            background: #fff0f0;
+            color: #b42318;
+            border: none;
+            padding: 9px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        /* ================= MAIN ================= */
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: auto;
+            padding: 40px 0 65px;
+        }
+
+        /* ================= WELCOME ================= */
+
+        .welcome {
+            background: linear-gradient(
+                135deg,
+                #dff7f3,
+                #eefcf9
+            );
+
+            border-radius: 18px;
+            padding: 35px;
+            margin-bottom: 30px;
+        }
+
+        .welcome h1 {
+            color: #075e59;
+            margin-bottom: 8px;
+        }
+
+        .welcome p {
+            color: #536b69;
+            max-width: 800px;
+        }
+
+        /* ================= STATS ================= */
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(
+                auto-fit,
+                minmax(180px, 1fr)
+            );
+
+            gap: 18px;
+            margin-bottom: 35px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 22px;
+            border-radius: 14px;
+            border: 1px solid #d8ece9;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+
+        .stat-icon {
+            font-size: 30px;
+            margin-bottom: 7px;
+        }
+
+        .stat-number {
+            font-size: 28px;
+            font-weight: bold;
+            color: #087f78;
+        }
+
+        .stat-label {
+            color: #718482;
+            font-size: 14px;
+        }
+
+        /* ================= SECTION ================= */
+
+        .section-title {
+            margin: 30px 0 18px;
+        }
+
+        .section-title h2 {
+            color: #075e59;
+        }
+
+        /* ================= SERVICE GRID ================= */
+
+        .service-grid {
+            display: grid;
+            grid-template-columns: repeat(
+                auto-fit,
+                minmax(250px, 1fr)
+            );
+
+            gap: 20px;
+        }
+
+        .service-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            border: 1px solid #d8ece9;
+            box-shadow: 0 5px 18px rgba(0,0,0,0.05);
+            transition: 0.2s;
+        }
+
+        .service-card:hover {
+            transform: translateY(-3px);
+        }
+
+        .service-icon {
+            font-size: 35px;
+            margin-bottom: 10px;
+        }
+
+        .service-card h3 {
+            color: #087f78;
+            margin-bottom: 8px;
+        }
+
+        .service-card p {
+            color: #607574;
+            font-size: 14px;
+            margin-bottom: 16px;
+        }
+
+        .button {
+            display: inline-block;
+            background: #087f78;
+            color: white;
+            text-decoration: none;
+            padding: 10px 16px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: bold;
+            border: none;
+            cursor: pointer;
+        }
+
+        .button:hover {
+            background: #075e59;
+        }
+
+        .button.secondary {
+            background: #e7f6f3;
+            color: #087f78;
+        }
+
+        /* ================= FAMILY TABLE ================= */
+
+        .table-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            border: 1px solid #d8ece9;
+            box-shadow: 0 5px 18px rgba(0,0,0,0.05);
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 750px;
+        }
+
+        th,
+        td {
+            padding: 13px;
+            text-align: left;
+            border-bottom: 1px solid #e4eeee;
+        }
+
+        th {
+            background: #f0f8f7;
+            color: #075e59;
+        }
+
+        td {
+            color: #536b69;
+        }
+
+        .status {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .status.normal {
+            background: #e7f6ef;
+            color: #17663d;
+        }
+
+        .status.followup {
+            background: #fff4d6;
+            color: #8a6200;
+        }
+
+        .status.urgent {
+            background: #fff0f0;
+            color: #b42318;
+        }
+
+        /* ================= VISIT CARD ================= */
+
+        .visit-list {
+            display: grid;
+            gap: 14px;
+        }
+
+        .visit {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+            padding: 18px;
+            background: #f7fcfb;
+            border: 1px solid #dcecea;
+            border-radius: 10px;
+        }
+
+        .visit h3 {
+            color: #087f78;
+            margin-bottom: 3px;
+        }
+
+        .visit p {
+            color: #647775;
+            font-size: 14px;
+        }
+
+        .visit-date {
+            font-weight: bold;
+            color: #075e59;
+            white-space: nowrap;
+        }
+
+        /* ================= ALERT ================= */
+
+        .alert-box {
+            margin-top: 30px;
+            background: #fff0f0;
+            border-left: 5px solid #d92d20;
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        .alert-box h3 {
+            color: #b42318;
+            margin-bottom: 6px;
+        }
+
+        .alert-box p {
+            color: #70433f;
+        }
+
+        /* ================= NOTICE ================= */
+
+        .notice {
+            margin-top: 30px;
+            background: #fff8df;
+            border-left: 5px solid #e0a800;
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        .notice h3 {
+            color: #7a5b00;
+            margin-bottom: 6px;
+        }
+
+        .notice p {
+            color: #65582d;
+        }
+
+        /* ================= FOOTER ================= */
+
+        footer {
+            background: #075e59;
+            color: white;
+            text-align: center;
+            padding: 25px 15px;
+            margin-top: 30px;
+        }
+
+        footer p {
+            margin: 5px;
+        }
+
+        /* ================= MOBILE ================= */
+
+        @media (max-width: 700px) {
+
+            .logo {
+                width: 100%;
+                text-align: center;
+            }
+
+            .nav-links {
+                justify-content: center;
+            }
+
+            .welcome {
+                padding: 25px;
+            }
+
+            .visit {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<!-- ================= NAVBAR ================= -->
+
+<nav>
+
+    <div class="logo">
+        🌿 ArogyaBandhu
+    </div>
+
+    <div class="nav-links">
+
+        <a href="asha-dashboard.html">
+            Dashboard
+        </a>
+
+        <a href="health-records.html">
+            Records
+        </a>
+
+        <a href="appointments.html">
+            Visits
+        </a>
+
+        <a href="emergency.html">
+            Emergency
+        </a>
+
+        <button
+            class="logout-btn"
+            onclick="logout()"
+        >
+            Logout
+        </button>
+
+    </div>
+
+</nav>
+
+
+<!-- ================= MAIN ================= -->
+
+<div class="container">
+
+
+    <!-- ================= WELCOME ================= -->
+
+    <section class="welcome">
+
+        <h1 id="welcomeTitle">
+            👩‍⚕️ Welcome, ASHA Worker
+        </h1>
+
+        <p>
+            Support families in your community by tracking
+            health information, coordinating visits, following
+            vaccination needs, and responding to health concerns.
+        </p>
+
+    </section>
+
+
+    <!-- ================= STATS ================= -->
+
+    <section class="stats">
+
+
+        <div class="stat-card">
+
+            <div class="stat-icon">
+                👨‍👩‍👧‍👦
+            </div>
+
+            <div class="stat-number">
+                42
+            </div>
+
+            <div class="stat-label">
+                Families Tracked
+            </div>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <div class="stat-icon">
+                🏠
+            </div>
+
+            <div class="stat-number">
+                8
+            </div>
+
+            <div class="stat-label">
+                Visits Planned
+            </div>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <div class="stat-icon">
+                💉
+            </div>
+
+            <div class="stat-number">
+                6
+            </div>
+
+            <div class="stat-label">
+                Vaccination Follow-ups
+            </div>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <div class="stat-icon">
+                ⚠️
+            </div>
+
+            <div class="stat-number">
+                2
+            </div>
+
+            <div class="stat-label">
+                Cases Requiring Follow-up
+            </div>
+
+        </div>
+
+
+    </section>
+
+
+    <!-- ================= SERVICES ================= -->
+
+    <div class="section-title">
+
+        <h2>
+            ASHA Services
+        </h2>
+
+    </div>
+
+
+    <section class="service-grid">
+
+
+        <!-- Family Tracking -->
+
+        <div class="service-card">
+
+            <div class="service-icon">
+                👨‍👩‍👧‍👦
+            </div>
+
+            <h3>
+                Family Health Tracking
+            </h3>
+
+            <p>
+                Keep track of families and identify health
+                information that may need follow-up.
+            </p>
+
+            <button
+                class="button"
+                onclick="showDemo('Family health tracking')"
+            >
+                Open Family Tracker
+            </button>
+
+        </div>
+
+
+        <!-- Health Records -->
+
+        <div class="service-card">
+
+            <div class="service-icon">
+                📋
+            </div>
+
+            <h3>
+                Health Record Updates
+            </h3>
+
+            <p>
+                Record available health information during
+                community visits.
+            </p>
+
+            <a
+                href="health-records.html"
+                class="button"
+            >
+                Update Records
+            </a>
+
+        </div>
+
+
+        <!-- Emergency -->
+
+        <div class="service-card">
+
+            <div class="service-icon">
+                🚨
+            </div>
+
+            <h3>
+                Emergency Notifications
+            </h3>
+
+            <p>
+                Open the emergency workflow when a community
+                member requires urgent support.
+            </p>
+
+            <a
+                href="emergency.html"
+                class="button"
+            >
+                Emergency Support
+            </a>
+
+        </div>
+
+
+        <!-- Vaccination -->
+
+        <div class="service-card">
+
+            <div class="service-icon">
+                💉
+            </div>
+
+            <h3>
+                Vaccination Tracker
+            </h3>
+
+            <p>
+                Keep track of vaccination follow-ups and
+                upcoming health-service needs.
+            </p>
+
+            <button
+                class="button"
+                onclick="showDemo('Vaccination tracker')"
+            >
+                Open Tracker
+            </button>
+
+        </div>
+
+
+        <!-- Pregnancy -->
+
+        <div class="service-card">
+
+            <div class="service-icon">
+                🤰
+            </div>
+
+            <h3>
+                Maternal Health Tracker
+            </h3>
+
+            <p>
+                Maintain follow-up information for pregnant
+                women and coordinate appropriate healthcare
+                visits.
+            </p>
+
+            <button
+                class="button"
+                onclick="showDemo('Maternal health tracker')"
+            >
+                Open Tracker
+            </button>
+
+        </div>
+
+
+        <!-- Visit Scheduler -->
+
+        <div class="service-card">
+
+            <div class="service-icon">
+                📅
+            </div>
+
+            <h3>
+                Village Visit Scheduler
+            </h3>
+
+            <p>
+                Organize planned household visits and community
+                health activities.
+            </p>
+
+            <button
+                class="button"
+                onclick="showDemo('Village visit scheduler')"
+            >
+                Schedule Visit
+            </button>
+
+        </div>
+
+
+    </section>
+
+
+    <!-- ================= FAMILY OVERVIEW ================= -->
+
+    <div class="section-title">
+
+        <h2>
+            👨‍👩‍👧‍👦 Family Health Overview
+        </h2>
+
+    </div>
+
+
+    <div class="table-card">
+
+        <table>
+
+            <thead>
+
+                <tr>
+
+                    <th>
+                        Family
+                    </th>
+
+                    <th>
+                        Members
+                    </th>
+
+                    <th>
+                        Last Visit
+                    </th>
+
+                    <th>
+                        Follow-up
+                    </th>
+
+                    <th>
+                        Status
+                    </th>
+
+                </tr>
+
+            </thead>
+
+
+            <tbody>
+
+
+                <tr>
+
+                    <td>
+                        Kumar Family
+                    </td>
+
+                    <td>
+                        4
+                    </td>
+
+                    <td>
+                        22 Sep
+                    </td>
+
+                    <td>
+                        General check-up
+                    </td>
+
+                    <td>
+
+                        <span class="status normal">
+                            Normal
+                        </span>
+
+                    </td>
+
+                </tr>
+
+
+                <tr>
+
+                    <td>
+                        Devi Family
+                    </td>
+
+                    <td>
+                        5
+                    </td>
+
+                    <td>
+                        20 Sep
+                    </td>
+
+                    <td>
+                        Vaccination
+                    </td>
+
+                    <td>
+
+                        <span class="status followup">
+                            Follow-up
+                        </span>
+
+                    </td>
+
+                </tr>
+
+
+                <tr>
+
+                    <td>
+                        Raju Family
+                    </td>
+
+                    <td>
+                        3
+                    </td>
+
+                    <td>
+                        18 Sep
+                    </td>
+
+                    <td>
+                        Child health
+                    </td>
+
+                    <td>
+
+                        <span class="status followup">
+                            Follow-up
+                        </span>
+
+                    </td>
+
+                </tr>
+
+
+                <tr>
+
+                    <td>
+                        Lakshmi Family
+                    </td>
+
+                    <td>
+                        6
+                    </td>
+
+                    <td>
+                        17 Sep
+                    </td>
+
+                    <td>
+                        Health concern
+                    </td>
+
+                    <td>
+
+                        <span class="status urgent">
+                            Needs Attention
+                        </span>
+
+                    </td>
+
+                </tr>
+
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+
+    <!-- ================= UPCOMING VISITS ================= -->
+
+    <div class="section-title">
+
+        <h2>
+            🏠 Upcoming Village Visits
+        </h2>
+
+    </div>
+
+
+    <div class="visit-list">
+
+
+        <div class="visit">
+
+            <div>
+
+                <h3>
+                    Village Health Visit
+                </h3>
+
+                <p>
+                    Household health follow-up and record updates
+                </p>
+
+            </div>
+
+            <div class="visit-date">
+                30 Sep
+            </div>
+
+        </div>
+
+
+        <div class="visit">
+
+            <div>
+
+                <h3>
+                    Vaccination Follow-up
+                </h3>
+
+                <p>
+                    Follow-up with families regarding scheduled
+                    vaccinations
+                </p>
+
+            </div>
+
+            <div class="visit-date">
+                02 Oct
+            </div>
+
+        </div>
+
+
+        <div class="visit">
+
+            <div>
+
+                <h3>
+                    Maternal Health Visit
+                </h3>
+
+                <p>
+                    Scheduled maternal healthcare follow-up
+                </p>
+
+            </div>
+
+            <div class="visit-date">
+                04 Oct
+            </div>
+
+        </div>
+
+
+    </div>
+
+
+    <!-- ================= ALERT ================= -->
+
+    <div class="alert-box">
+
+        <h3>
+            🚨 Community Alert
+        </h3>
+
+        <p>
+            One family in the demonstration data is marked
+            as requiring attention. In a real deployment,
+            an appropriate healthcare professional should
+            review the case and determine the required action.
+        </p>
+
+    </div>
+
+
+    <!-- ================= QUICK ACTIONS ================= -->
+
+    <div class="section-title">
+
+        <h2>
+            ⚡ Quick Actions
+        </h2>
+
+    </div>
+
+
+    <section class="service-grid">
+
+
+        <div class="service-card">
+
+            <div class="service-icon">
+                🤖
+            </div>
+
+            <h3>
+                AI Health Assistant
+            </h3>
+
+            <p>
+                Use the AI assistant for general health
+                information and guidance.
+            </p>
+
+            <a
+                href="ai-assistant.html"
+                class="button secondary"
+            >
+                Open AI Assistant
+            </a>
+
+        </div>
+
+
+        <div class="service-card">
+
+            <div class="service-icon">
+                📚
+            </div>
+
+            <h3>
+                Health Education
+            </h3>
+
+            <p>
+                Access simple health education content for
+                community awareness.
+            </p>
+
+            <a
+                href="health-tips.html"
+                class="button secondary"
+            >
+                Health Tips
+            </a>
+
+        </div>
+
+
+        <div class="service-card">
+
+            <div class="service-icon">
+                👤
+            </div>
+
+            <h3>
+                My Profile
+            </h3>
+
+            <p>
+                View your account information and preferences.
+            </p>
+
+            <a
+                href="profile.html"
+                class="button secondary"
+            >
+                My Profile
+            </a>
+
+        </div>
+
+
+    </section>
+
+
+    <!-- ================= NOTICE ================= -->
+
+    <div class="notice">
+
+        <h3>
+            ⚠️ Healthcare Safety Notice
+        </h3>
+
+        <p>
+            ArogyaBandhu is a healthcare support prototype.
+            ASHA workers should follow applicable healthcare
+            protocols and refer patients to qualified healthcare
+            professionals whenever professional evaluation is
+            required.
+        </p>
+
+    </div>
+
+
+</div>
+
+
+<!-- ================= FOOTER ================= -->
+
+<footer>
+
+    <p>
+        🌿 <strong>ArogyaBandhu</strong>
+    </p>
+
+    <p>
+        AI-powered rural healthcare support platform
+    </p>
+
+    <p>
+        © 2026 ArogyaBandhu
+    </p>
+
+</footer>
+
+
+<!-- ================= JAVASCRIPT ================= -->
+
+<script>
+
+
+/* =====================================================
+   LOAD ASHA USER
+===================================================== */
+
+function loadASHA() {
+
+    const storedUser =
+        localStorage.getItem(
+            "arogyabandhuUser"
+        );
+
+
+    if (!storedUser) {
+
+        return;
+
+    }
+
+
+    try {
+
+        const user =
+            JSON.parse(storedUser);
+
+
+        const name =
+            user.name || "ASHA Worker";
+
+
+        document.getElementById(
+            "welcomeTitle"
+        ).textContent =
+            "👩‍⚕️ Welcome, " + name;
+
+
+    }
+
+    catch (error) {
+
+        console.log(
+            "Unable to load ASHA information."
+        );
+
+    }
+
+}
+
+
+/* =====================================================
+   DEMO ACTION
+===================================================== */
+
+function showDemo(feature) {
+
+    alert(
+        feature +
+        " module is prepared as a prototype feature. " +
+        "Full backend integration can be connected later."
+    );
+
+}
+
+
+/* =====================================================
+   LOGOUT
+===================================================== */
+
+function logout() {
+
+    localStorage.removeItem(
+        "arogyabandhuUser"
+    );
+
+    window.location.href =
+        "login.html";
+
+}
+
+
+/* =====================================================
+   PAGE LOAD
+===================================================== */
+
+document.addEventListener(
+    "DOMContentLoaded",
+    loadASHA
+);
+
+
+</script>
+
+
+</body>
+</html>

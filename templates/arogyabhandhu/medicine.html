@@ -1,0 +1,1093 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Medicines | ArogyaBandhu</title>
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #f4f8f7;
+            color: #263238;
+        }
+
+        /* ================= NAVBAR ================= */
+
+        nav {
+            height: 70px;
+            background: white;
+
+            padding: 0 6%;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .logo {
+            color: #00897b;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .back {
+            color: #00695c;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        /* ================= MAIN ================= */
+
+        .container {
+            width: 90%;
+            max-width: 1150px;
+            margin: 35px auto;
+        }
+
+        .header {
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            color: #00695c;
+            font-size: 32px;
+            margin-bottom: 8px;
+        }
+
+        .header p {
+            color: #666;
+            line-height: 1.6;
+        }
+
+        /* ================= SEARCH ================= */
+
+        .search-card {
+            background: white;
+
+            padding: 25px;
+
+            border-radius: 15px;
+
+            box-shadow:
+                0 5px 18px rgba(0,0,0,0.07);
+
+            margin-bottom: 25px;
+        }
+
+        .search-row {
+            display: flex;
+            gap: 10px;
+        }
+
+        .search-row input {
+            flex: 1;
+
+            padding: 13px;
+
+            border: 1px solid #ccc;
+
+            border-radius: 8px;
+
+            outline: none;
+
+            font-size: 15px;
+        }
+
+        .search-row input:focus {
+            border-color: #00897b;
+        }
+
+        .search-btn {
+            padding: 13px 22px;
+
+            border: none;
+
+            border-radius: 8px;
+
+            background: #00897b;
+
+            color: white;
+
+            font-weight: bold;
+
+            cursor: pointer;
+        }
+
+        .search-btn:hover {
+            background: #00695c;
+        }
+
+        /* ================= MEDICINE GRID ================= */
+
+        .medicine-grid {
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(auto-fit, minmax(240px, 1fr));
+
+            gap: 20px;
+        }
+
+        .medicine-card {
+
+            background: white;
+
+            padding: 22px;
+
+            border-radius: 14px;
+
+            box-shadow:
+                0 4px 15px rgba(0,0,0,0.07);
+
+            border: 1px solid #eeeeee;
+        }
+
+        .medicine-icon {
+            font-size: 38px;
+            margin-bottom: 12px;
+        }
+
+        .medicine-card h3 {
+            color: #00796b;
+            margin-bottom: 7px;
+        }
+
+        .medicine-card p {
+            color: #666;
+            font-size: 14px;
+            line-height: 1.5;
+            margin-bottom: 8px;
+        }
+
+        .availability {
+            display: inline-block;
+
+            padding: 5px 9px;
+
+            border-radius: 15px;
+
+            background: #e8f5e9;
+
+            color: #2e7d32;
+
+            font-size: 12px;
+
+            font-weight: bold;
+        }
+
+        .unavailable {
+            background: #ffebee;
+            color: #c62828;
+        }
+
+        /* ================= PHARMACIES ================= */
+
+        .section-title {
+
+            color: #00695c;
+
+            font-size: 24px;
+
+            margin: 35px 0 20px;
+        }
+
+        .pharmacy-grid {
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(auto-fit, minmax(250px, 1fr));
+
+            gap: 20px;
+        }
+
+        .pharmacy-card {
+
+            background: white;
+
+            padding: 22px;
+
+            border-radius: 14px;
+
+            box-shadow:
+                0 4px 15px rgba(0,0,0,0.07);
+        }
+
+        .pharmacy-card h3 {
+            color: #00796b;
+            margin-bottom: 10px;
+        }
+
+        .pharmacy-card p {
+            color: #666;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .pharmacy-btn {
+
+            display: inline-block;
+
+            margin-top: 12px;
+
+            padding: 9px 15px;
+
+            background: #00897b;
+
+            color: white;
+
+            text-decoration: none;
+
+            border-radius: 7px;
+
+            font-size: 14px;
+
+            font-weight: bold;
+        }
+
+        /* ================= CART ================= */
+
+        .cart {
+
+            background: white;
+
+            margin-top: 35px;
+
+            padding: 25px;
+
+            border-radius: 15px;
+
+            box-shadow:
+                0 5px 18px rgba(0,0,0,0.07);
+        }
+
+        .cart h2 {
+            color: #00695c;
+            margin-bottom: 18px;
+        }
+
+        .cart-item {
+
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: center;
+
+            gap: 15px;
+
+            padding: 12px 0;
+
+            border-bottom: 1px solid #eeeeee;
+        }
+
+        .cart-item:last-child {
+            border-bottom: none;
+        }
+
+        .cart-item-name {
+            font-weight: bold;
+            color: #444;
+        }
+
+        .remove-btn {
+
+            border: none;
+
+            background: #ffebee;
+
+            color: #c62828;
+
+            padding: 7px 10px;
+
+            border-radius: 6px;
+
+            cursor: pointer;
+        }
+
+        .order-btn {
+
+            width: 100%;
+
+            margin-top: 20px;
+
+            padding: 13px;
+
+            border: none;
+
+            border-radius: 8px;
+
+            background: #00897b;
+
+            color: white;
+
+            font-size: 16px;
+
+            font-weight: bold;
+
+            cursor: pointer;
+        }
+
+        .order-btn:hover {
+            background: #00695c;
+        }
+
+        /* ================= NOTICE ================= */
+
+        .notice {
+
+            margin-top: 25px;
+
+            background: #fff8e1;
+
+            border-left: 5px solid #ffb300;
+
+            padding: 17px;
+
+            border-radius: 8px;
+
+            color: #5d4037;
+
+            line-height: 1.6;
+        }
+
+        /* ================= MESSAGE ================= */
+
+        .message {
+
+            display: none;
+
+            margin-top: 15px;
+
+            padding: 12px;
+
+            border-radius: 8px;
+
+            line-height: 1.5;
+        }
+
+        .success {
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+
+        .error {
+            background: #ffebee;
+            color: #c62828;
+        }
+
+        /* ================= MOBILE ================= */
+
+        @media (max-width: 650px) {
+
+            .container {
+                width: 94%;
+            }
+
+            .search-row {
+                flex-direction: column;
+            }
+
+            .search-btn {
+                width: 100%;
+            }
+
+            .cart-item {
+                align-items: flex-start;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<!-- ================= NAVBAR ================= -->
+
+<nav>
+
+    <div class="logo">
+        🌿 ArogyaBandhu
+    </div>
+
+    <a
+        href="patient-dashboard.html"
+        class="back"
+    >
+        ← Dashboard
+    </a>
+
+</nav>
+
+
+<!-- ================= MAIN ================= -->
+
+<main class="container">
+
+
+    <div class="header">
+
+        <h1>
+            💊 Medicine Support
+        </h1>
+
+        <p>
+            Search medicines and find nearby pharmacy
+            support through the ArogyaBandhu platform.
+        </p>
+
+    </div>
+
+
+    <!-- ================= SEARCH ================= -->
+
+    <section class="search-card">
+
+        <div class="search-row">
+
+            <input
+                type="text"
+                id="medicineSearch"
+                placeholder="Search for a medicine..."
+            >
+
+            <button
+                class="search-btn"
+                onclick="searchMedicine()"
+            >
+                Search
+            </button>
+
+        </div>
+
+    </section>
+
+
+    <!-- ================= MEDICINES ================= -->
+
+    <h2 class="section-title">
+        Available Medicines
+    </h2>
+
+
+    <section
+        class="medicine-grid"
+        id="medicineGrid"
+    >
+
+
+        <div
+            class="medicine-card"
+            data-name="paracetamol"
+        >
+
+            <div class="medicine-icon">
+                💊
+            </div>
+
+            <h3>
+                Paracetamol
+            </h3>
+
+            <p>
+                Commonly used for fever and mild pain.
+            </p>
+
+            <span class="availability">
+                Demo Available
+            </span>
+
+            <br>
+
+            <button
+                class="pharmacy-btn"
+                onclick="addToCart('Paracetamol')"
+            >
+                Add to Request
+            </button>
+
+        </div>
+
+
+        <div
+            class="medicine-card"
+            data-name="oral rehydration salts ors"
+        >
+
+            <div class="medicine-icon">
+                💧
+            </div>
+
+            <h3>
+                Oral Rehydration Salts
+            </h3>
+
+            <p>
+                Used to help replace fluids and electrolytes
+                during dehydration.
+            </p>
+
+            <span class="availability">
+                Demo Available
+            </span>
+
+            <br>
+
+            <button
+                class="pharmacy-btn"
+                onclick="addToCart('Oral Rehydration Salts')"
+            >
+                Add to Request
+            </button>
+
+        </div>
+
+
+        <div
+            class="medicine-card"
+            data-name="cetirizine"
+        >
+
+            <div class="medicine-icon">
+                💊
+            </div>
+
+            <h3>
+                Cetirizine
+            </h3>
+
+            <p>
+                An antihistamine commonly used for
+                allergy symptoms.
+            </p>
+
+            <span class="availability">
+                Demo Available
+            </span>
+
+            <br>
+
+            <button
+                class="pharmacy-btn"
+                onclick="addToCart('Cetirizine')"
+            >
+                Add to Request
+            </button>
+
+        </div>
+
+
+        <div
+            class="medicine-card"
+            data-name="antiseptic"
+        >
+
+            <div class="medicine-icon">
+                🧴
+            </div>
+
+            <h3>
+                Antiseptic Solution
+            </h3>
+
+            <p>
+                Used for basic wound-care hygiene.
+            </p>
+
+            <span class="availability">
+                Demo Available
+            </span>
+
+            <br>
+
+            <button
+                class="pharmacy-btn"
+                onclick="addToCart('Antiseptic Solution')"
+            >
+                Add to Request
+            </button>
+
+        </div>
+
+
+    </section>
+
+
+    <!-- ================= PHARMACIES ================= -->
+
+    <h2 class="section-title">
+        🏪 Pharmacy Support
+    </h2>
+
+
+    <section class="pharmacy-grid">
+
+
+        <div class="pharmacy-card">
+
+            <h3>
+                Arogya Pharmacy
+            </h3>
+
+            <p>
+                Nearby pharmacy support for medicine
+                availability and requests.
+            </p>
+
+            <p>
+                📍 Local Service Area
+            </p>
+
+            <a
+                href="pharmacy.html"
+                class="pharmacy-btn"
+            >
+                View Pharmacy
+            </a>
+
+        </div>
+
+
+        <div class="pharmacy-card">
+
+            <h3>
+                Community Pharmacy
+            </h3>
+
+            <p>
+                Supports medicine availability and
+                delivery coordination.
+            </p>
+
+            <p>
+                📍 Rural Service Area
+            </p>
+
+            <a
+                href="pharmacy.html"
+                class="pharmacy-btn"
+            >
+                View Pharmacy
+            </a>
+
+        </div>
+
+
+    </section>
+
+
+    <!-- ================= CART / REQUEST ================= -->
+
+    <section class="cart">
+
+        <h2>
+            🛒 Medicine Request
+        </h2>
+
+
+        <div id="cartList">
+
+            <p
+                id="emptyCart"
+                style="color:#777;"
+            >
+                No medicines added yet.
+            </p>
+
+        </div>
+
+
+        <button
+            class="order-btn"
+            onclick="submitMedicineRequest()"
+        >
+            Submit Medicine Request
+        </button>
+
+
+        <div
+            id="message"
+            class="message"
+        ></div>
+
+    </section>
+
+
+    <!-- ================= NOTICE ================= -->
+
+    <div class="notice">
+
+        <strong>Important:</strong>
+
+        This is a prototype medicine-support workflow.
+        Medicine availability, prescriptions, payments,
+        delivery and pharmacist verification would need
+        secure real-world integrations before deployment.
+        Do not use this demo as a substitute for medical
+        advice or prescription verification.
+
+    </div>
+
+
+</main>
+
+
+<script>
+
+
+/* =====================================================
+   MEDICINE DATA
+   ===================================================== */
+
+const medicineCards =
+    document.querySelectorAll(
+        ".medicine-card"
+    );
+
+
+/* =====================================================
+   SEARCH
+   ===================================================== */
+
+function searchMedicine() {
+
+    const search =
+        document.getElementById(
+            "medicineSearch"
+        ).value
+        .trim()
+        .toLowerCase();
+
+
+    medicineCards.forEach(
+        function(card) {
+
+            const name =
+                card.dataset.name
+                .toLowerCase();
+
+
+            if (
+                !search ||
+                name.includes(search)
+            ) {
+
+                card.style.display =
+                    "block";
+
+            }
+
+            else {
+
+                card.style.display =
+                    "none";
+
+            }
+
+        }
+    );
+
+}
+
+
+/* =====================================================
+   ENTER KEY SEARCH
+   ===================================================== */
+
+document.getElementById(
+    "medicineSearch"
+).addEventListener(
+    "keydown",
+    function(event) {
+
+        if (
+            event.key === "Enter"
+        ) {
+
+            searchMedicine();
+
+        }
+
+    }
+);
+
+
+/* =====================================================
+   CART
+   ===================================================== */
+
+let medicineCart =
+    JSON.parse(
+        localStorage.getItem(
+            "arogyabandhuMedicineCart"
+        ) || "[]"
+    );
+
+
+function addToCart(
+    medicineName
+) {
+
+    if (
+        !medicineCart.includes(
+            medicineName
+        )
+    ) {
+
+        medicineCart.push(
+            medicineName
+        );
+
+    }
+
+
+    saveCart();
+
+    showMessage(
+        medicineName +
+        " added to your medicine request.",
+        "success"
+    );
+
+}
+
+
+function removeFromCart(
+    medicineName
+) {
+
+    medicineCart =
+        medicineCart.filter(
+            function(item) {
+
+                return item !==
+                    medicineName;
+
+            }
+        );
+
+
+    saveCart();
+
+}
+
+
+function saveCart() {
+
+    localStorage.setItem(
+
+        "arogyabandhuMedicineCart",
+
+        JSON.stringify(
+            medicineCart
+        )
+
+    );
+
+    renderCart();
+
+}
+
+
+function renderCart() {
+
+    const cartList =
+        document.getElementById(
+            "cartList"
+        );
+
+
+    if (
+        medicineCart.length === 0
+    ) {
+
+        cartList.innerHTML =
+            `
+            <p style="color:#777;">
+                No medicines added yet.
+            </p>
+            `;
+
+        return;
+
+    }
+
+
+    cartList.innerHTML =
+        "";
+
+
+    medicineCart.forEach(
+        function(medicine) {
+
+            const item =
+                document.createElement(
+                    "div"
+                );
+
+
+            item.className =
+                "cart-item";
+
+
+            item.innerHTML = `
+
+                <span class="cart-item-name">
+                    💊 ${medicine}
+                </span>
+
+                <button
+                    class="remove-btn"
+                    onclick="removeFromCart('${medicine}')"
+                >
+                    Remove
+                </button>
+
+            `;
+
+
+            cartList.appendChild(
+                item
+            );
+
+        }
+    );
+
+}
+
+
+renderCart();
+
+
+/* =====================================================
+   SUBMIT REQUEST
+   ===================================================== */
+
+function submitMedicineRequest() {
+
+    if (
+        medicineCart.length === 0
+    ) {
+
+        showMessage(
+            "Please add at least one medicine first.",
+            "error"
+        );
+
+        return;
+
+    }
+
+
+    const request = {
+
+        medicines:
+            [...medicineCart],
+
+        date:
+            new Date()
+            .toLocaleString(),
+
+        status:
+            "Request Submitted"
+
+    };
+
+
+    localStorage.setItem(
+
+        "arogyabandhuLatestMedicineRequest",
+
+        JSON.stringify(
+            request
+        )
+
+    );
+
+
+    showMessage(
+
+        "Medicine request submitted successfully. " +
+        "The pharmacy workflow can now process your request.",
+
+        "success"
+
+    );
+
+
+    medicineCart = [];
+
+    saveCart();
+
+}
+
+
+/* =====================================================
+   MESSAGE
+   ===================================================== */
+
+function showMessage(
+    text,
+    type
+) {
+
+    const message =
+        document.getElementById(
+            "message"
+        );
+
+
+    message.textContent =
+        text;
+
+
+    message.className =
+        "message " + type;
+
+
+    message.style.display =
+        "block";
+
+
+    setTimeout(
+        function() {
+
+            message.style.display =
+                "none";
+
+        },
+        4000
+    );
+
+}
+
+</script>
+
+
+</body>
+
+</html>

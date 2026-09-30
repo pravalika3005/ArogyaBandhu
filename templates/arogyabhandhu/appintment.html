@@ -1,0 +1,1096 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Appointments | ArogyaBandhu</title>
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #f4f8f7;
+            color: #263238;
+        }
+
+        /* ================= NAVBAR ================= */
+
+        nav {
+            height: 70px;
+
+            background: white;
+
+            padding: 0 6%;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+
+            position: sticky;
+            top: 0;
+
+            z-index: 1000;
+        }
+
+        .logo {
+            color: #00897b;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .back {
+            color: #00695c;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        /* ================= MAIN ================= */
+
+        .container {
+            width: 90%;
+            max-width: 1100px;
+
+            margin: 35px auto;
+        }
+
+        .header {
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            color: #00695c;
+            font-size: 32px;
+            margin-bottom: 8px;
+        }
+
+        .header p {
+            color: #666;
+            line-height: 1.6;
+        }
+
+        /* ================= LAYOUT ================= */
+
+        .layout {
+            display: grid;
+
+            grid-template-columns:
+                1fr 1fr;
+
+            gap: 25px;
+        }
+
+        .card {
+            background: white;
+
+            border-radius: 15px;
+
+            padding: 28px;
+
+            box-shadow:
+                0 5px 18px rgba(0,0,0,0.07);
+        }
+
+        .card h2 {
+            color: #00695c;
+
+            font-size: 22px;
+
+            margin-bottom: 20px;
+        }
+
+        /* ================= FORM ================= */
+
+        .form-group {
+            margin-bottom: 17px;
+        }
+
+        label {
+            display: block;
+
+            margin-bottom: 7px;
+
+            font-weight: bold;
+
+            color: #444;
+        }
+
+        input,
+        select,
+        textarea {
+
+            width: 100%;
+
+            padding: 12px;
+
+            border: 1px solid #ccc;
+
+            border-radius: 8px;
+
+            outline: none;
+
+            font-size: 15px;
+        }
+
+        input:focus,
+        select:focus,
+        textarea:focus {
+
+            border-color: #00897b;
+        }
+
+        textarea {
+
+            min-height: 90px;
+
+            resize: vertical;
+        }
+
+        .book-btn {
+
+            width: 100%;
+
+            padding: 13px;
+
+            background: #00897b;
+
+            color: white;
+
+            border: none;
+
+            border-radius: 8px;
+
+            cursor: pointer;
+
+            font-size: 16px;
+
+            font-weight: bold;
+        }
+
+        .book-btn:hover {
+            background: #00695c;
+        }
+
+        .book-btn:disabled {
+            background: #80cbc4;
+            cursor: not-allowed;
+        }
+
+        /* ================= MESSAGE ================= */
+
+        .message {
+
+            display: none;
+
+            margin-top: 15px;
+
+            padding: 12px;
+
+            border-radius: 8px;
+
+            line-height: 1.5;
+
+        }
+
+        .success {
+
+            display: block;
+
+            background: #e8f5e9;
+
+            color: #2e7d32;
+
+            border-left: 4px solid #43a047;
+
+        }
+
+        .error {
+
+            display: block;
+
+            background: #ffebee;
+
+            color: #c62828;
+
+            border-left: 4px solid #e53935;
+
+        }
+
+        /* ================= DOCTORS ================= */
+
+        .doctor {
+
+            border: 1px solid #eeeeee;
+
+            border-radius: 12px;
+
+            padding: 18px;
+
+            margin-bottom: 15px;
+
+            cursor: pointer;
+
+            transition: 0.2s;
+        }
+
+        .doctor:hover {
+
+            border-color: #80cbc4;
+
+            background: #f7fffd;
+        }
+
+        .doctor.selected {
+
+            border: 2px solid #00897b;
+
+            background: #e0f2f1;
+        }
+
+        .doctor-header {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 12px;
+
+            margin-bottom: 8px;
+        }
+
+        .doctor-icon {
+
+            width: 45px;
+
+            height: 45px;
+
+            border-radius: 50%;
+
+            background: #e0f2f1;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            font-size: 23px;
+        }
+
+        .doctor h3 {
+
+            color: #00796b;
+
+            margin-bottom: 3px;
+        }
+
+        .doctor p {
+
+            color: #666;
+
+            font-size: 14px;
+
+            line-height: 1.5;
+        }
+
+        /* ================= APPOINTMENT LIST ================= */
+
+        .appointment-list {
+
+            margin-top: 30px;
+        }
+
+        .appointment {
+
+            border-left: 4px solid #00897b;
+
+            background: #f8fffd;
+
+            padding: 17px;
+
+            border-radius: 8px;
+
+            margin-bottom: 12px;
+        }
+
+        .appointment h3 {
+
+            color: #00695c;
+
+            margin-bottom: 7px;
+        }
+
+        .appointment p {
+
+            color: #666;
+
+            font-size: 14px;
+
+            margin: 4px 0;
+        }
+
+        .empty {
+
+            color: #777;
+
+            text-align: center;
+
+            padding: 25px;
+
+        }
+
+        /* ================= NOTICE ================= */
+
+        .notice {
+
+            background: #fff8e1;
+
+            border-left: 5px solid #ffb300;
+
+            padding: 16px;
+
+            border-radius: 8px;
+
+            margin-top: 25px;
+
+            color: #5d4037;
+
+            line-height: 1.5;
+
+        }
+
+        /* ================= MOBILE ================= */
+
+        @media (max-width: 800px) {
+
+            .layout {
+
+                grid-template-columns: 1fr;
+            }
+
+            .container {
+
+                width: 94%;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<!-- ================= NAVBAR ================= -->
+
+<nav>
+
+    <div class="logo">
+        🌿 ArogyaBandhu
+    </div>
+
+    <a
+        href="patient-dashboard.html"
+        class="back"
+    >
+        ← Dashboard
+    </a>
+
+</nav>
+
+
+<!-- ================= MAIN ================= -->
+
+<main class="container">
+
+
+    <div class="header">
+
+        <h1>
+            📅 Doctor Appointments
+        </h1>
+
+        <p>
+            Choose a healthcare professional and
+            request an appointment.
+        </p>
+
+    </div>
+
+
+    <div class="layout">
+
+
+        <!-- ================= DOCTORS ================= -->
+
+        <section class="card">
+
+            <h2>
+                👨‍⚕️ Available Doctors
+            </h2>
+
+
+            <div
+                class="doctor"
+                onclick="selectDoctor(this, 'Dr. Anjali Rao', 'General Physician')"
+            >
+
+                <div class="doctor-header">
+
+                    <div class="doctor-icon">
+                        👩‍⚕️
+                    </div>
+
+                    <div>
+
+                        <h3>
+                            Dr. Anjali Rao
+                        </h3>
+
+                        <p>
+                            General Physician
+                        </p>
+
+                    </div>
+
+                </div>
+
+                <p>
+                    General health consultations and
+                    primary healthcare support.
+                </p>
+
+            </div>
+
+
+            <div
+                class="doctor"
+                onclick="selectDoctor(this, 'Dr. Rahul Kumar', 'Family Medicine')"
+            >
+
+                <div class="doctor-header">
+
+                    <div class="doctor-icon">
+                        👨‍⚕️
+                    </div>
+
+                    <div>
+
+                        <h3>
+                            Dr. Rahul Kumar
+                        </h3>
+
+                        <p>
+                            Family Medicine
+                        </p>
+
+                    </div>
+
+                </div>
+
+                <p>
+                    Family health, preventive care and
+                    common medical concerns.
+                </p>
+
+            </div>
+
+
+            <div
+                class="doctor"
+                onclick="selectDoctor(this, 'Dr. Priya Sharma', 'Women and Child Health')"
+            >
+
+                <div class="doctor-header">
+
+                    <div class="doctor-icon">
+                        👩‍⚕️
+                    </div>
+
+                    <div>
+
+                        <h3>
+                            Dr. Priya Sharma
+                        </h3>
+
+                        <p>
+                            Women & Child Health
+                        </p>
+
+                    </div>
+
+                </div>
+
+                <p>
+                    Healthcare support for women and
+                    children.
+                </p>
+
+            </div>
+
+
+        </section>
+
+
+        <!-- ================= BOOKING FORM ================= -->
+
+        <section class="card">
+
+            <h2>
+                📋 Book Appointment
+            </h2>
+
+
+            <form id="appointmentForm">
+
+
+                <div class="form-group">
+
+                    <label for="doctor">
+                        Selected Doctor
+                    </label>
+
+                    <input
+                        type="text"
+                        id="doctor"
+                        placeholder="Select a doctor"
+                        readonly
+                        required
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="date">
+                        Appointment Date
+                    </label>
+
+                    <input
+                        type="date"
+                        id="date"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="time">
+                        Preferred Time
+                    </label>
+
+                    <select id="time" required>
+
+                        <option value="">
+                            Select time
+                        </option>
+
+                        <option value="09:00 AM">
+                            09:00 AM
+                        </option>
+
+                        <option value="10:00 AM">
+                            10:00 AM
+                        </option>
+
+                        <option value="11:00 AM">
+                            11:00 AM
+                        </option>
+
+                        <option value="02:00 PM">
+                            02:00 PM
+                        </option>
+
+                        <option value="03:00 PM">
+                            03:00 PM
+                        </option>
+
+                        <option value="04:00 PM">
+                            04:00 PM
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="type">
+                        Consultation Type
+                    </label>
+
+                    <select id="type" required>
+
+                        <option value="Video Consultation">
+                            Video Consultation
+                        </option>
+
+                        <option value="Chat Consultation">
+                            Chat Consultation
+                        </option>
+
+                        <option value="Clinic Visit">
+                            Clinic Visit
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="reason">
+                        Reason for Visit
+                    </label>
+
+                    <textarea
+                        id="reason"
+                        placeholder="Briefly describe your concern"
+                    ></textarea>
+
+                </div>
+
+
+                <button
+                    type="submit"
+                    class="book-btn"
+                    id="bookButton"
+                >
+                    Book Appointment
+                </button>
+
+
+            </form>
+
+
+            <div
+                id="message"
+                class="message"
+            ></div>
+
+
+        </section>
+
+
+    </div>
+
+
+    <!-- ================= APPOINTMENTS ================= -->
+
+    <section class="card appointment-list">
+
+        <h2>
+            📌 My Appointments
+        </h2>
+
+        <div id="appointmentsList">
+
+            <div class="empty">
+                No appointments booked yet.
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <div class="notice">
+
+        <strong>Prototype notice:</strong>
+
+        This appointment module demonstrates the
+        booking workflow. In a production system,
+        appointment confirmation would be connected
+        to verified doctor availability and a secure
+        healthcare backend.
+
+    </div>
+
+
+</main>
+
+
+<script>
+
+
+/* =====================================================
+   ELEMENTS
+   ===================================================== */
+
+const doctorInput =
+    document.getElementById("doctor");
+
+const appointmentForm =
+    document.getElementById("appointmentForm");
+
+const message =
+    document.getElementById("message");
+
+const bookButton =
+    document.getElementById("bookButton");
+
+const appointmentsList =
+    document.getElementById("appointmentsList");
+
+
+
+/* =====================================================
+   SELECT DOCTOR
+   ===================================================== */
+
+function selectDoctor(
+    element,
+    doctorName,
+    specialty
+) {
+
+
+    /*
+     * Remove selected state
+     * from all doctors.
+     */
+
+    document
+        .querySelectorAll(".doctor")
+        .forEach(
+            function(card) {
+
+                card.classList.remove(
+                    "selected"
+                );
+
+            }
+        );
+
+
+    /*
+     * Select current doctor.
+     */
+
+    element.classList.add(
+        "selected"
+    );
+
+
+    /*
+     * Put doctor name into form.
+     */
+
+    doctorInput.value =
+        doctorName + " — " + specialty;
+
+}
+
+
+
+/* =====================================================
+   SET MINIMUM DATE
+   ===================================================== */
+
+const dateInput =
+    document.getElementById("date");
+
+
+const today =
+    new Date()
+        .toISOString()
+        .split("T")[0];
+
+
+dateInput.min =
+    today;
+
+
+
+/* =====================================================
+   LOAD APPOINTMENTS
+   ===================================================== */
+
+function loadAppointments() {
+
+
+    const appointments =
+        JSON.parse(
+            localStorage.getItem(
+                "arogyabandhuAppointments"
+            ) || "[]"
+        );
+
+
+    if (
+        appointments.length === 0
+    ) {
+
+        appointmentsList.innerHTML =
+            '<div class="empty">' +
+            'No appointments booked yet.' +
+            '</div>';
+
+        return;
+
+    }
+
+
+    appointmentsList.innerHTML =
+        "";
+
+
+    appointments
+        .slice()
+        .reverse()
+        .forEach(
+            function(appointment) {
+
+
+                const div =
+                    document.createElement(
+                        "div"
+                    );
+
+
+                div.className =
+                    "appointment";
+
+
+                div.innerHTML = `
+
+                    <h3>
+                        ${appointment.doctor}
+                    </h3>
+
+                    <p>
+                        📅 ${appointment.date}
+                    </p>
+
+                    <p>
+                        🕐 ${appointment.time}
+                    </p>
+
+                    <p>
+                        💻 ${appointment.type}
+                    </p>
+
+                    <p>
+                        📝 ${appointment.reason || "General consultation"}
+                    </p>
+
+                `;
+
+
+                appointmentsList.appendChild(
+                    div
+                );
+
+            }
+        );
+
+}
+
+
+loadAppointments();
+
+
+
+/* =====================================================
+   BOOK APPOINTMENT
+   ===================================================== */
+
+appointmentForm.addEventListener(
+    "submit",
+    function(event) {
+
+        event.preventDefault();
+
+
+        const doctor =
+            doctorInput.value.trim();
+
+        const date =
+            document.getElementById(
+                "date"
+            ).value;
+
+        const time =
+            document.getElementById(
+                "time"
+            ).value;
+
+        const type =
+            document.getElementById(
+                "type"
+            ).value;
+
+        const reason =
+            document.getElementById(
+                "reason"
+            ).value.trim();
+
+
+
+        if (!doctor) {
+
+            showMessage(
+                "Please select a doctor first.",
+                "error"
+            );
+
+            return;
+
+        }
+
+
+        bookButton.disabled =
+            true;
+
+        bookButton.textContent =
+            "Booking...";
+
+
+        /*
+         * Create appointment.
+         */
+
+        const appointment = {
+
+            doctor: doctor,
+
+            date: date,
+
+            time: time,
+
+            type: type,
+
+            reason: reason
+
+        };
+
+
+        /*
+         * Store appointments locally
+         * for the prototype.
+         */
+
+        const appointments =
+            JSON.parse(
+                localStorage.getItem(
+                    "arogyabandhuAppointments"
+                ) || "[]"
+            );
+
+
+        appointments.push(
+            appointment
+        );
+
+
+        localStorage.setItem(
+
+            "arogyabandhuAppointments",
+
+            JSON.stringify(
+                appointments
+            )
+
+        );
+
+
+        showMessage(
+            "Appointment request saved successfully.",
+            "success"
+        );
+
+
+        appointmentForm.reset();
+
+
+        /*
+         * Clear selected doctor.
+         */
+
+        document
+            .querySelectorAll(".doctor")
+            .forEach(
+                function(card) {
+
+                    card.classList.remove(
+                        "selected"
+                    );
+
+                }
+            );
+
+
+        doctorInput.value =
+            "";
+
+
+        loadAppointments();
+
+
+        bookButton.disabled =
+            false;
+
+        bookButton.textContent =
+            "Book Appointment";
+
+    }
+);
+
+
+
+/* =====================================================
+   SHOW MESSAGE
+   ===================================================== */
+
+function showMessage(
+    text,
+    type
+) {
+
+    message.textContent =
+        text;
+
+    message.className =
+        "message " + type;
+
+    message.style.display =
+        "block";
+
+
+    setTimeout(
+        function() {
+
+            message.style.display =
+                "none";
+
+        },
+        4000
+    );
+
+}
+
+</script>
+
+
+</body>
+
+</html>

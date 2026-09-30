@@ -1,0 +1,546 @@
+/* =========================================
+   AROGYABANDHU - RESPONSIVE CSS
+   Mobile + Tablet + Desktop
+   ========================================= */
+
+
+/* =========================================
+   GLOBAL RESPONSIVE SETTINGS
+   ========================================= */
+
+* {
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    overflow-x: hidden;
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+}
+
+
+/* =========================================
+   DESKTOP
+   ========================================= */
+
+@media (min-width: 1200px) {
+
+    .hero h1 {
+        font-size: 60px;
+    }
+
+    .hero p {
+        font-size: 22px;
+    }
+
+    .services,
+    .about,
+    .why-choose-us,
+    .how-it-works,
+    .statistics,
+    .testimonials {
+        padding-left: 70px;
+        padding-right: 70px;
+    }
+
+}
+
+
+/* =========================================
+   LAPTOP
+   ========================================= */
+
+@media (max-width: 1199px) {
+
+    nav {
+        padding: 15px 25px;
+    }
+
+    .navbar {
+        gap: 15px;
+    }
+
+    .navbar li a {
+        font-size: 16px;
+    }
+
+    .hero h1 {
+        font-size: 48px;
+    }
+
+    .hero p {
+        font-size: 20px;
+        max-width: 700px;
+    }
+
+    .services,
+    .about,
+    .why-choose-us,
+    .how-it-works,
+    .statistics,
+    .testimonials {
+        padding: 60px 40px;
+    }
+
+}
+
+
+/* =========================================
+   TABLET
+   ========================================= */
+
+@media (max-width: 992px) {
+
+    /* Navigation */
+
+    nav {
+        padding: 15px 20px;
+    }
+
+    .brand h2 {
+        font-size: 23px;
+    }
+
+    .logo {
+        width: 65px;
+    }
+
+    .navbar {
+        gap: 12px;
+    }
+
+    .navbar li a {
+        font-size: 14px;
+    }
+
+
+    /* Hero */
+
+    .hero {
+        min-height: 80vh;
+        padding: 30px;
+    }
+
+    .hero h1 {
+        font-size: 42px;
+    }
+
+    .hero p {
+        font-size: 18px;
+        max-width: 650px;
+    }
+
+
+    /* Services */
+
+    .services {
+        padding: 60px 30px;
+    }
+
+    .services h2 {
+        font-size: 36px;
+    }
+
+    .service-container {
+        grid-template-columns: repeat(
+            2,
+            minmax(250px, 1fr)
+        );
+    }
+
+
+    /* About */
+
+    .about {
+        padding: 60px 30px;
+    }
+
+    .about-content {
+        flex-direction: column;
+    }
+
+    .about-text,
+    .about-image {
+        width: 100%;
+    }
+
+
+    /* How it works */
+
+    .how-it-works {
+        padding: 60px 30px;
+    }
+
+    .steps-container {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+
+    /* Features */
+
+    .features-container {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+
+    /* Statistics */
+
+    .stats-container {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+
+    /* Testimonials */
+
+    .testimonial-container {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+}
+
+
+/* =========================================
+   MOBILE
+   ========================================= */
+
+@media (max-width: 768px) {
+
+    /* Navigation */
+
+    nav {
+        flex-direction: column;
+        padding: 15px;
+        gap: 15px;
+    }
+
+    .brand {
+        justify-content: center;
+    }
+
+    .brand h2 {
+        font-size: 22px;
+    }
+
+    .logo {
+        width: 60px;
+    }
+
+    .navbar {
+        width: 100%;
+
+        display: flex;
+        flex-direction: column;
+
+        align-items: center;
+
+        gap: 12px;
+    }
+
+    .navbar li {
+        width: 100%;
+        text-align: center;
+    }
+
+    .navbar li a {
+        display: block;
+        padding: 8px;
+        font-size: 16px;
+    }
+
+
+    /* Hero */
+
+    .hero {
+        min-height: 75vh;
+        padding: 25px 15px;
+    }
+
+    .hero h1 {
+        font-size: 36px;
+        line-height: 1.2;
+    }
+
+    .hero p {
+        font-size: 17px;
+        line-height: 1.5;
+    }
+
+
+    /* Buttons */
+
+    .cta-buttons {
+        width: 100%;
+
+        flex-direction: column;
+
+        align-items: center;
+
+        gap: 8px;
+    }
+
+    .button {
+        width: 90%;
+        max-width: 350px;
+
+        text-align: center;
+
+        padding: 13px 20px;
+    }
+
+
+    /* Services */
+
+    .services {
+        padding: 50px 20px;
+    }
+
+    .services h2 {
+        font-size: 32px;
+    }
+
+    .service-text {
+        font-size: 16px;
+    }
+
+    .service-container {
+        grid-template-columns: 1fr;
+    }
+
+    .card {
+        width: 100%;
+    }
+
+
+    /* About */
+
+    .about {
+        padding: 50px 20px;
+    }
+
+    .about h2,
+    .about-text h2 {
+        font-size: 32px;
+    }
+
+    .about p,
+    .about-text p {
+        font-size: 16px;
+        line-height: 1.7;
+    }
+
+
+    /* How It Works */
+
+    .how-it-works {
+        padding: 50px 20px;
+    }
+
+    .how-it-works h2 {
+        font-size: 32px;
+    }
+
+    .steps-container {
+        grid-template-columns: 1fr;
+    }
+
+    .step {
+        width: 100%;
+    }
+
+
+    /* Why Choose Us */
+
+    .why-choose-us {
+        padding: 50px 20px;
+    }
+
+    .why-choose-us h2 {
+        font-size: 32px;
+    }
+
+    .features-container {
+        grid-template-columns: 1fr;
+    }
+
+
+    /* Statistics */
+
+    .statistics {
+        padding: 50px 20px;
+    }
+
+    .statistics h2 {
+        font-size: 32px;
+    }
+
+    .stats-container {
+        grid-template-columns: 1fr;
+        gap: 25px;
+    }
+
+    .stat-box h3 {
+        font-size: 40px;
+    }
+
+
+    /* Testimonials */
+
+    .testimonials {
+        padding: 50px 20px;
+    }
+
+    .testimonial-container {
+        grid-template-columns: 1fr;
+    }
+
+    .testimonial-card {
+        width: 100%;
+    }
+
+
+    /* Contact */
+
+    .contact {
+        padding: 50px 20px;
+        text-align: center;
+    }
+
+
+    /* CTA */
+
+    .cta {
+        padding: 50px 20px;
+    }
+
+    .cta h2 {
+        font-size: 30px;
+    }
+
+    .cta p {
+        font-size: 17px;
+    }
+
+
+    /* Footer */
+
+    footer {
+        padding: 40px 20px;
+    }
+
+    .footer-container {
+        flex-direction: column;
+        text-align: center;
+        align-items: center;
+    }
+
+}
+
+
+/* =========================================
+   SMALL MOBILE
+   ========================================= */
+
+@media (max-width: 480px) {
+
+    .brand h2 {
+        font-size: 19px;
+    }
+
+    .logo {
+        width: 50px;
+    }
+
+
+    .hero {
+        min-height: 70vh;
+        padding: 20px 12px;
+    }
+
+    .hero h1 {
+        font-size: 29px;
+    }
+
+    .hero p {
+        font-size: 15px;
+    }
+
+
+    .services h2,
+    .about h2,
+    .why-choose-us h2,
+    .how-it-works h2,
+    .statistics h2 {
+        font-size: 28px;
+    }
+
+
+    .card {
+        padding: 22px 18px;
+    }
+
+    .card h3 {
+        font-size: 20px;
+    }
+
+    .card p {
+        font-size: 15px;
+    }
+
+
+    .feature-card {
+        padding: 22px 18px;
+    }
+
+
+    .stat-box h3 {
+        font-size: 35px;
+    }
+
+
+    .button {
+        width: 100%;
+        max-width: 320px;
+        font-size: 14px;
+    }
+
+
+    footer {
+        font-size: 14px;
+    }
+
+}
+
+
+/* =========================================
+   VERY SMALL DEVICES
+   ========================================= */
+
+@media (max-width: 360px) {
+
+    .hero h1 {
+        font-size: 25px;
+    }
+
+    .hero p {
+        font-size: 14px;
+    }
+
+    .brand h2 {
+        font-size: 17px;
+    }
+
+    .navbar li a {
+        font-size: 14px;
+    }
+
+}

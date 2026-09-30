@@ -1,0 +1,1039 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Contact Us | ArogyaBandhu</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4fbfa;
+            color: #173b3a;
+            line-height: 1.6;
+        }
+
+        /* ================= NAVBAR ================= */
+
+        nav {
+            background: #087f78;
+            color: white;
+            padding: 16px 7%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 18px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .nav-links a:hover {
+            text-decoration: underline;
+        }
+
+        .nav-button {
+            background: white;
+            color: #087f78 !important;
+            padding: 8px 14px;
+            border-radius: 8px;
+        }
+
+        /* ================= HERO ================= */
+
+        .hero {
+            text-align: center;
+            padding: 55px 20px;
+            background: linear-gradient(
+                135deg,
+                #dff7f3,
+                #eefcf9
+            );
+        }
+
+        .hero h1 {
+            font-size: 40px;
+            color: #075e59;
+            margin-bottom: 12px;
+        }
+
+        .hero p {
+            max-width: 700px;
+            margin: auto;
+            color: #536b69;
+            font-size: 17px;
+        }
+
+        /* ================= CONTAINER ================= */
+
+        .container {
+            width: 90%;
+            max-width: 1100px;
+            margin: auto;
+            padding: 45px 0 65px;
+        }
+
+        /* ================= CONTACT GRID ================= */
+
+        .contact-grid {
+            display: grid;
+            grid-template-columns: 1fr 1.3fr;
+            gap: 25px;
+        }
+
+        /* ================= INFO ================= */
+
+        .info-card {
+            background: white;
+            padding: 30px;
+            border-radius: 16px;
+            border: 1px solid #d8ece9;
+            box-shadow: 0 6px 18px rgba(0,0,0,0.05);
+        }
+
+        .info-card h2 {
+            color: #075e59;
+            margin-bottom: 20px;
+        }
+
+        .info-item {
+            display: flex;
+            gap: 15px;
+            padding: 17px 0;
+            border-bottom: 1px solid #e5eeee;
+        }
+
+        .info-item:last-child {
+            border-bottom: none;
+        }
+
+        .info-icon {
+            font-size: 28px;
+            flex-shrink: 0;
+        }
+
+        .info-item h3 {
+            color: #087f78;
+            font-size: 17px;
+            margin-bottom: 3px;
+        }
+
+        .info-item p {
+            color: #637674;
+            font-size: 14px;
+        }
+
+        /* ================= FORM ================= */
+
+        .form-card {
+            background: white;
+            padding: 30px;
+            border-radius: 16px;
+            border: 1px solid #d8ece9;
+            box-shadow: 0 6px 18px rgba(0,0,0,0.05);
+        }
+
+        .form-card h2 {
+            color: #075e59;
+            margin-bottom: 8px;
+        }
+
+        .form-card > p {
+            color: #667c7b;
+            margin-bottom: 22px;
+            font-size: 14px;
+        }
+
+        .form-group {
+            margin-bottom: 17px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 7px;
+            font-weight: bold;
+            color: #365453;
+        }
+
+        input,
+        select,
+        textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #c6dedb;
+            border-radius: 8px;
+            font-family: Arial, sans-serif;
+            font-size: 15px;
+            outline: none;
+        }
+
+        input:focus,
+        select:focus,
+        textarea:focus {
+            border-color: #087f78;
+        }
+
+        textarea {
+            min-height: 140px;
+            resize: vertical;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 13px;
+            border: none;
+            border-radius: 8px;
+            background: #087f78;
+            color: white;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .submit-btn:hover {
+            background: #075e59;
+        }
+
+        #message {
+            display: none;
+            margin-top: 15px;
+            padding: 12px;
+            border-radius: 8px;
+            background: #e8f7ef;
+            color: #17663d;
+        }
+
+        /* ================= FAQ ================= */
+
+        .section-title {
+            text-align: center;
+            margin: 50px 0 25px;
+        }
+
+        .section-title h2 {
+            color: #075e59;
+            font-size: 29px;
+        }
+
+        .section-title p {
+            color: #667c7b;
+        }
+
+        .faq-grid {
+            display: grid;
+            grid-template-columns: repeat(
+                auto-fit,
+                minmax(270px, 1fr)
+            );
+            gap: 18px;
+        }
+
+        .faq-card {
+            background: white;
+            padding: 23px;
+            border-radius: 14px;
+            border: 1px solid #d8ece9;
+        }
+
+        .faq-card h3 {
+            color: #087f78;
+            margin-bottom: 8px;
+            font-size: 17px;
+        }
+
+        .faq-card p {
+            color: #607574;
+            font-size: 14px;
+        }
+
+        /* ================= SAFETY ================= */
+
+        .notice {
+            margin-top: 35px;
+            background: #fff8df;
+            border-left: 5px solid #e0a800;
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        .notice h3 {
+            color: #7a5b00;
+            margin-bottom: 6px;
+        }
+
+        .notice p {
+            color: #65582d;
+            font-size: 14px;
+        }
+
+        /* ================= FOOTER ================= */
+
+        footer {
+            background: #075e59;
+            color: white;
+            text-align: center;
+            padding: 28px 15px;
+        }
+
+        footer p {
+            margin: 5px;
+        }
+
+        /* ================= MOBILE ================= */
+
+        @media (max-width: 750px) {
+
+            .logo {
+                width: 100%;
+                text-align: center;
+            }
+
+            .nav-links {
+                justify-content: center;
+            }
+
+            .hero h1 {
+                font-size: 32px;
+            }
+
+            .contact-grid {
+                grid-template-columns: 1fr;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<!-- ================= NAVBAR ================= -->
+
+<nav>
+
+    <div class="logo">
+        🌿 ArogyaBandhu
+    </div>
+
+    <div class="nav-links">
+
+        <a href="index.html">
+            Home
+        </a>
+
+        <a href="about.html">
+            About
+        </a>
+
+        <a href="health-tips.html">
+            Health Tips
+        </a>
+
+        <a href="contact.html">
+            Contact
+        </a>
+
+        <a
+            href="login.html"
+            class="nav-button"
+        >
+            Login
+        </a>
+
+    </div>
+
+</nav>
+
+
+<!-- ================= HERO ================= -->
+
+<section class="hero">
+
+    <h1>
+        📞 Contact ArogyaBandhu
+    </h1>
+
+    <p>
+        Have a question, suggestion, or feedback about the
+        ArogyaBandhu platform? Send us a message.
+    </p>
+
+</section>
+
+
+<!-- ================= MAIN ================= -->
+
+<div class="container">
+
+
+    <!-- ================= CONTACT SECTION ================= -->
+
+    <div class="contact-grid">
+
+
+        <!-- CONTACT INFORMATION -->
+
+        <div class="info-card">
+
+            <h2>
+                Get in Touch
+            </h2>
+
+
+            <div class="info-item">
+
+                <div class="info-icon">
+                    📧
+                </div>
+
+                <div>
+
+                    <h3>
+                        Email
+                    </h3>
+
+                    <p>
+                        support@arogyabandhu.example
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="info-item">
+
+                <div class="info-icon">
+                    📞
+                </div>
+
+                <div>
+
+                    <h3>
+                        Support
+                    </h3>
+
+                    <p>
+                        Support contact can be connected to
+                        the project's official communication
+                        channel.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="info-item">
+
+                <div class="info-icon">
+                    📍
+                </div>
+
+                <div>
+
+                    <h3>
+                        Service Area
+                    </h3>
+
+                    <p>
+                        Designed for rural and community
+                        healthcare support.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="info-item">
+
+                <div class="info-icon">
+                    🌐
+                </div>
+
+                <div>
+
+                    <h3>
+                        Languages
+                    </h3>
+
+                    <p>
+                        English, Telugu, and Hindi interface
+                        support is planned for the prototype.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+        </div>
+
+
+        <!-- CONTACT FORM -->
+
+        <div class="form-card">
+
+            <h2>
+                Send Us a Message
+            </h2>
+
+            <p>
+                Fill in the form below. In this prototype,
+                your message is stored locally in the browser.
+            </p>
+
+
+            <form
+                id="contactForm"
+                onsubmit="submitMessage(event)"
+            >
+
+
+                <div class="form-group">
+
+                    <label for="name">
+                        Full Name
+                    </label>
+
+                    <input
+                        type="text"
+                        id="name"
+                        required
+                        placeholder="Enter your name"
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="email">
+                        Email Address
+                    </label>
+
+                    <input
+                        type="email"
+                        id="email"
+                        required
+                        placeholder="Enter your email"
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="subject">
+                        Subject
+                    </label>
+
+                    <select
+                        id="subject"
+                        required
+                    >
+
+                        <option value="">
+                            Select a subject
+                        </option>
+
+                        <option value="General Question">
+                            General Question
+                        </option>
+
+                        <option value="Feedback">
+                            Feedback
+                        </option>
+
+                        <option value="Technical Support">
+                            Technical Support
+                        </option>
+
+                        <option value="Healthcare Feature">
+                            Healthcare Feature
+                        </option>
+
+                        <option value="Other">
+                            Other
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="messageText">
+                        Message
+                    </label>
+
+                    <textarea
+                        id="messageText"
+                        required
+                        placeholder="Write your message..."
+                    ></textarea>
+
+                </div>
+
+
+                <button
+                    type="submit"
+                    class="submit-btn"
+                >
+                    Send Message
+                </button>
+
+
+                <div id="message"></div>
+
+
+            </form>
+
+        </div>
+
+
+    </div>
+
+
+    <!-- ================= FAQ ================= -->
+
+    <div class="section-title">
+
+        <h2>
+            Frequently Asked Questions
+        </h2>
+
+        <p>
+            Quick answers about the ArogyaBandhu prototype.
+        </p>
+
+    </div>
+
+
+    <div class="faq-grid">
+
+
+        <div class="faq-card">
+
+            <h3>
+                What is ArogyaBandhu?
+            </h3>
+
+            <p>
+                ArogyaBandhu is a prototype rural healthcare
+                support platform connecting patients, doctors,
+                ASHA workers, pharmacies, and healthcare resources.
+            </p>
+
+        </div>
+
+
+        <div class="faq-card">
+
+            <h3>
+                Can the AI diagnose diseases?
+            </h3>
+
+            <p>
+                No. The AI assistant is intended to provide
+                general health information and support. It should
+                not be treated as a medical diagnosis.
+            </p>
+
+        </div>
+
+
+        <div class="faq-card">
+
+            <h3>
+                Does the emergency feature dispatch an ambulance?
+            </h3>
+
+            <p>
+                The current prototype provides emergency calling
+                and location-support workflows. It is not connected
+                to a real ambulance dispatch system.
+            </p>
+
+        </div>
+
+
+        <div class="faq-card">
+
+            <h3>
+                Is this connected to real pharmacies?
+            </h3>
+
+            <p>
+                No. The pharmacy and medicine features currently
+                demonstrate the intended workflow using prototype
+                data.
+            </p>
+
+        </div>
+
+
+        <div class="faq-card">
+
+            <h3>
+                Are health records stored securely?
+            </h3>
+
+            <p>
+                The current prototype uses browser local storage
+                for demonstration. A production healthcare system
+                would require secure storage and appropriate
+                privacy controls.
+            </p>
+
+        </div>
+
+
+        <div class="faq-card">
+
+            <h3>
+                Which languages are supported?
+            </h3>
+
+            <p>
+                The prototype is designed around English, Telugu,
+                and Hindi support, including planned voice interaction.
+            </p>
+
+        </div>
+
+
+    </div>
+
+
+    <!-- ================= SAFETY NOTICE ================= -->
+
+    <div class="notice">
+
+        <h3>
+            ⚠️ Healthcare Safety Notice
+        </h3>
+
+        <p>
+            ArogyaBandhu is a demonstration prototype and is not
+            a substitute for professional medical care. For serious
+            or emergency health concerns, contact an appropriate
+            qualified healthcare professional or emergency service.
+        </p>
+
+    </div>
+
+
+</div>
+
+
+<!-- ================= FOOTER ================= -->
+
+<footer>
+
+    <p>
+        🌿 <strong>ArogyaBandhu</strong>
+    </p>
+
+    <p>
+        AI-powered rural healthcare support platform
+    </p>
+
+    <p>
+        © 2026 ArogyaBandhu
+    </p>
+
+</footer>
+
+
+<!-- ================= JAVASCRIPT ================= -->
+
+<script>
+
+
+/* =====================================================
+   LOAD USER INFORMATION
+===================================================== */
+
+function loadUserInformation() {
+
+    const storedUser =
+        localStorage.getItem(
+            "arogyabandhuUser"
+        );
+
+
+    if (!storedUser) {
+
+        return;
+
+    }
+
+
+    try {
+
+        const user =
+            JSON.parse(storedUser);
+
+
+        if (user.name) {
+
+            document.getElementById(
+                "name"
+            ).value =
+                user.name;
+
+        }
+
+
+        if (user.email) {
+
+            document.getElementById(
+                "email"
+            ).value =
+                user.email;
+
+        }
+
+    }
+
+    catch (error) {
+
+        console.log(
+            "Unable to load user information."
+        );
+
+    }
+
+}
+
+
+/* =====================================================
+   SUBMIT MESSAGE
+===================================================== */
+
+function submitMessage(event) {
+
+    event.preventDefault();
+
+
+    const name =
+        document.getElementById(
+            "name"
+        ).value.trim();
+
+
+    const email =
+        document.getElementById(
+            "email"
+        ).value.trim();
+
+
+    const subject =
+        document.getElementById(
+            "subject"
+        ).value;
+
+
+    const messageText =
+        document.getElementById(
+            "messageText"
+        ).value.trim();
+
+
+    if (
+        !name ||
+        !email ||
+        !subject ||
+        !messageText
+    ) {
+
+        showMessage(
+            "Please complete all fields.",
+            false
+        );
+
+        return;
+
+    }
+
+
+    const contactMessage = {
+
+        name: name,
+
+        email: email,
+
+        subject: subject,
+
+        message: messageText,
+
+        date:
+            new Date().toISOString()
+
+    };
+
+
+    const existingMessages =
+        localStorage.getItem(
+            "arogyabandhuContactMessages"
+        );
+
+
+    let messages = [];
+
+
+    if (existingMessages) {
+
+        try {
+
+            messages =
+                JSON.parse(
+                    existingMessages
+                );
+
+        }
+
+        catch (error) {
+
+            messages = [];
+
+        }
+
+    }
+
+
+    messages.push(
+        contactMessage
+    );
+
+
+    localStorage.setItem(
+        "arogyabandhuContactMessages",
+        JSON.stringify(messages)
+    );
+
+
+    showMessage(
+        "Your message has been saved successfully in this prototype.",
+        true
+    );
+
+
+    document.getElementById(
+        "contactForm"
+    ).reset();
+
+
+    loadUserInformation();
+
+}
+
+
+/* =====================================================
+   MESSAGE
+===================================================== */
+
+function showMessage(
+    text,
+    success
+) {
+
+    const messageBox =
+        document.getElementById(
+            "message"
+        );
+
+
+    messageBox.textContent =
+        text;
+
+
+    messageBox.style.display =
+        "block";
+
+
+    if (success) {
+
+        messageBox.style.background =
+            "#e8f7ef";
+
+        messageBox.style.color =
+            "#17663d";
+
+    }
+
+    else {
+
+        messageBox.style.background =
+            "#fff0f0";
+
+        messageBox.style.color =
+            "#b42318";
+
+    }
+
+
+    setTimeout(
+        function() {
+
+            messageBox.style.display =
+                "none";
+
+        },
+        4000
+    );
+
+}
+
+
+/* =====================================================
+   PAGE LOAD
+===================================================== */
+
+document.addEventListener(
+    "DOMContentLoaded",
+    loadUserInformation
+);
+
+
+</script>
+
+
+</body>
+</html>

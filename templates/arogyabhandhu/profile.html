@@ -1,0 +1,1129 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>My Profile | ArogyaBandhu</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4fbfa;
+            color: #173b3a;
+            line-height: 1.6;
+        }
+
+        /* ================= NAVBAR ================= */
+
+        nav {
+            background: #087f78;
+            color: white;
+            padding: 16px 7%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 18px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .nav-links a:hover {
+            text-decoration: underline;
+        }
+
+        /* ================= PAGE ================= */
+
+        .container {
+            width: 90%;
+            max-width: 1000px;
+            margin: auto;
+            padding: 45px 0 70px;
+        }
+
+        .page-title {
+            text-align: center;
+            margin-bottom: 35px;
+        }
+
+        .page-title h1 {
+            color: #075e59;
+            font-size: 36px;
+            margin-bottom: 8px;
+        }
+
+        .page-title p {
+            color: #607574;
+        }
+
+        /* ================= PROFILE HEADER ================= */
+
+        .profile-header {
+            background: white;
+            border-radius: 18px;
+            padding: 30px;
+            display: flex;
+            align-items: center;
+            gap: 25px;
+            border: 1px solid #d8ece9;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.06);
+            margin-bottom: 25px;
+        }
+
+        .avatar {
+            width: 90px;
+            height: 90px;
+            border-radius: 50%;
+            background: #dff7f3;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 42px;
+            flex-shrink: 0;
+        }
+
+        .profile-header h2 {
+            color: #075e59;
+            margin-bottom: 4px;
+        }
+
+        .profile-header p {
+            color: #667c7b;
+        }
+
+        .role-badge {
+            display: inline-block;
+            margin-top: 8px;
+            padding: 5px 12px;
+            border-radius: 20px;
+            background: #e7f6f3;
+            color: #087f78;
+            font-size: 13px;
+            font-weight: bold;
+            text-transform: capitalize;
+        }
+
+        /* ================= CARDS ================= */
+
+        .card {
+            background: white;
+            border-radius: 16px;
+            padding: 28px;
+            border: 1px solid #d8ece9;
+            box-shadow: 0 5px 18px rgba(0,0,0,0.05);
+            margin-bottom: 25px;
+        }
+
+        .card h2 {
+            color: #075e59;
+            margin-bottom: 20px;
+            font-size: 23px;
+        }
+
+        /* ================= FORM ================= */
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 18px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group.full {
+            grid-column: 1 / -1;
+        }
+
+        label {
+            margin-bottom: 7px;
+            font-weight: bold;
+            color: #365453;
+        }
+
+        input,
+        select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #c6dedb;
+            border-radius: 8px;
+            font-size: 15px;
+            outline: none;
+        }
+
+        input:focus,
+        select:focus {
+            border-color: #087f78;
+        }
+
+        input:disabled {
+            background: #f0f5f4;
+            color: #667c7b;
+        }
+
+        /* ================= BUTTONS ================= */
+
+        .button-row {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-top: 22px;
+        }
+
+        button,
+        .button {
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 15px;
+            font-weight: bold;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .primary {
+            background: #087f78;
+            color: white;
+        }
+
+        .primary:hover {
+            background: #075e59;
+        }
+
+        .secondary {
+            background: #e7f6f3;
+            color: #087f78;
+        }
+
+        .danger {
+            background: #fff0f0;
+            color: #b42318;
+        }
+
+        /* ================= INFO GRID ================= */
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(
+                auto-fit,
+                minmax(180px, 1fr)
+            );
+            gap: 15px;
+        }
+
+        .info-box {
+            background: #f5fbfa;
+            border: 1px solid #dcecea;
+            padding: 18px;
+            border-radius: 10px;
+        }
+
+        .info-box span {
+            display: block;
+            font-size: 13px;
+            color: #718482;
+            margin-bottom: 5px;
+        }
+
+        .info-box strong {
+            color: #174b48;
+        }
+
+        /* ================= MESSAGE ================= */
+
+        #message {
+            display: none;
+            margin-top: 15px;
+            padding: 12px;
+            border-radius: 8px;
+            background: #e8f7ef;
+            color: #17663d;
+        }
+
+        /* ================= PRIVACY ================= */
+
+        .privacy {
+            background: #f0f8ff;
+            border-left: 5px solid #2384c6;
+            padding: 18px;
+            border-radius: 8px;
+            color: #31566d;
+        }
+
+        /* ================= FOOTER ================= */
+
+        footer {
+            background: #075e59;
+            color: white;
+            text-align: center;
+            padding: 25px 15px;
+        }
+
+        footer p {
+            margin: 5px;
+        }
+
+        /* ================= MOBILE ================= */
+
+        @media (max-width: 700px) {
+
+            .profile-header {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .form-group.full {
+                grid-column: auto;
+            }
+
+            .page-title h1 {
+                font-size: 30px;
+            }
+
+            .nav-links {
+                justify-content: center;
+            }
+
+            .logo {
+                width: 100%;
+                text-align: center;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<!-- ================= NAVBAR ================= -->
+
+<nav>
+
+    <div class="logo">
+        🌿 ArogyaBandhu
+    </div>
+
+    <div class="nav-links">
+
+        <a href="patient-dashboard.html">
+            Dashboard
+        </a>
+
+        <a href="health-records.html">
+            Health Records
+        </a>
+
+        <a href="appointments.html">
+            Appointments
+        </a>
+
+        <a href="index.html">
+            Home
+        </a>
+
+    </div>
+
+</nav>
+
+
+<!-- ================= MAIN ================= -->
+
+<div class="container">
+
+
+    <!-- PAGE TITLE -->
+
+    <div class="page-title">
+
+        <h1>
+            👤 My Profile
+        </h1>
+
+        <p>
+            View and manage your ArogyaBandhu profile information.
+        </p>
+
+    </div>
+
+
+    <!-- PROFILE HEADER -->
+
+    <div class="profile-header">
+
+        <div class="avatar">
+            👤
+        </div>
+
+        <div>
+
+            <h2 id="displayName">
+                ArogyaBandhu User
+            </h2>
+
+            <p id="displayEmail">
+                user@example.com
+            </p>
+
+            <span
+                class="role-badge"
+                id="displayRole"
+            >
+                Patient
+            </span>
+
+        </div>
+
+    </div>
+
+
+    <!-- PERSONAL INFORMATION -->
+
+    <div class="card">
+
+        <h2>
+            Personal Information
+        </h2>
+
+        <div class="form-grid">
+
+
+            <div class="form-group">
+
+                <label for="name">
+                    Full Name
+                </label>
+
+                <input
+                    type="text"
+                    id="name"
+                    placeholder="Enter your full name"
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="email">
+                    Email Address
+                </label>
+
+                <input
+                    type="email"
+                    id="email"
+                    disabled
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="phone">
+                    Phone Number
+                </label>
+
+                <input
+                    type="tel"
+                    id="phone"
+                    placeholder="Enter phone number"
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="gender">
+                    Gender
+                </label>
+
+                <select id="gender">
+
+                    <option value="">
+                        Select gender
+                    </option>
+
+                    <option value="female">
+                        Female
+                    </option>
+
+                    <option value="male">
+                        Male
+                    </option>
+
+                    <option value="other">
+                        Other
+                    </option>
+
+                    <option value="prefer-not">
+                        Prefer not to say
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="age">
+                    Age
+                </label>
+
+                <input
+                    type="number"
+                    id="age"
+                    min="1"
+                    max="120"
+                    placeholder="Enter age"
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="language">
+                    Preferred Language
+                </label>
+
+                <select id="language">
+
+                    <option value="English">
+                        English
+                    </option>
+
+                    <option value="Telugu">
+                        Telugu
+                    </option>
+
+                    <option value="Hindi">
+                        Hindi
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <div class="form-group full">
+
+                <label for="address">
+                    Address / Village
+                </label>
+
+                <input
+                    type="text"
+                    id="address"
+                    placeholder="Enter village or address"
+                >
+
+            </div>
+
+
+        </div>
+
+
+        <div class="button-row">
+
+            <button
+                class="primary"
+                onclick="saveProfile()"
+            >
+                Save Changes
+            </button>
+
+            <button
+                class="secondary"
+                onclick="loadProfile()"
+            >
+                Reset
+            </button>
+
+        </div>
+
+
+        <div id="message"></div>
+
+    </div>
+
+
+    <!-- HEALTH INFORMATION -->
+
+    <div class="card">
+
+        <h2>
+            🩺 Health Information
+        </h2>
+
+        <div class="info-grid">
+
+
+            <div class="info-box">
+
+                <span>
+                    Blood Group
+                </span>
+
+                <strong id="bloodGroup">
+                    Not added
+                </strong>
+
+            </div>
+
+
+            <div class="info-box">
+
+                <span>
+                    Allergies
+                </span>
+
+                <strong id="allergies">
+                    Not added
+                </strong>
+
+            </div>
+
+
+            <div class="info-box">
+
+                <span>
+                    Weight
+                </span>
+
+                <strong id="weight">
+                    Not added
+                </strong>
+
+            </div>
+
+
+            <div class="info-box">
+
+                <span>
+                    Emergency Contact
+                </span>
+
+                <strong id="emergencyContact">
+                    Not added
+                </strong>
+
+            </div>
+
+
+        </div>
+
+
+        <div class="button-row">
+
+            <a
+                href="health-records.html"
+                class="button secondary"
+            >
+                Manage Health Records
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <!-- ACCOUNT -->
+
+    <div class="card">
+
+        <h2>
+            🔐 Account
+        </h2>
+
+        <div class="info-grid">
+
+            <div class="info-box">
+
+                <span>
+                    Account Role
+                </span>
+
+                <strong id="accountRole">
+                    Patient
+                </strong>
+
+            </div>
+
+
+            <div class="info-box">
+
+                <span>
+                    Login Email
+                </span>
+
+                <strong id="accountEmail">
+                    Not available
+                </strong>
+
+            </div>
+
+        </div>
+
+
+        <div class="button-row">
+
+            <button
+                class="danger"
+                onclick="logout()"
+            >
+                Logout
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- PRIVACY -->
+
+    <div class="privacy">
+
+        <strong>
+            🔒 Privacy Notice
+        </strong>
+
+        <p>
+            This prototype stores profile information in your
+            browser using local storage. A production healthcare
+            application would require secure authentication,
+            encrypted storage, access controls, and appropriate
+            privacy protections.
+        </p>
+
+    </div>
+
+
+</div>
+
+
+<!-- ================= FOOTER ================= -->
+
+<footer>
+
+    <p>
+        🌿 <strong>ArogyaBandhu</strong>
+    </p>
+
+    <p>
+        AI-powered rural healthcare support platform
+    </p>
+
+    <p>
+        © 2026 ArogyaBandhu
+    </p>
+
+</footer>
+
+
+<!-- ================= JAVASCRIPT ================= -->
+
+<script>
+
+
+/* =====================================================
+   LOAD USER FROM LOGIN
+===================================================== */
+
+function getLoggedInUser() {
+
+    const storedUser =
+        localStorage.getItem("arogyabandhuUser");
+
+    if (!storedUser) {
+
+        return null;
+
+    }
+
+    try {
+
+        return JSON.parse(storedUser);
+
+    }
+
+    catch (error) {
+
+        return null;
+
+    }
+
+}
+
+
+/* =====================================================
+   LOAD PROFILE
+===================================================== */
+
+function loadProfile() {
+
+    const user =
+        getLoggedInUser();
+
+
+    if (!user) {
+
+        document.getElementById("displayName").textContent =
+            "Guest User";
+
+        document.getElementById("displayEmail").textContent =
+            "Please login to view your profile.";
+
+        document.getElementById("displayRole").textContent =
+            "Guest";
+
+        return;
+
+    }
+
+
+    document.getElementById("displayName").textContent =
+        user.name || "ArogyaBandhu User";
+
+
+    document.getElementById("displayEmail").textContent =
+        user.email || "No email available";
+
+
+    document.getElementById("displayRole").textContent =
+        user.role || "patient";
+
+
+    document.getElementById("accountRole").textContent =
+        user.role || "patient";
+
+
+    document.getElementById("accountEmail").textContent =
+        user.email || "Not available";
+
+
+    document.getElementById("name").value =
+        user.name || "";
+
+
+    document.getElementById("email").value =
+        user.email || "";
+
+
+    /* Load saved profile information */
+
+    const savedProfile =
+        localStorage.getItem("arogyabandhuProfile");
+
+
+    if (savedProfile) {
+
+        try {
+
+            const profile =
+                JSON.parse(savedProfile);
+
+
+            document.getElementById("phone").value =
+                profile.phone || "";
+
+
+            document.getElementById("gender").value =
+                profile.gender || "";
+
+
+            document.getElementById("age").value =
+                profile.age || "";
+
+
+            document.getElementById("language").value =
+                profile.language || "English";
+
+
+            document.getElementById("address").value =
+                profile.address || "";
+
+
+        }
+
+        catch (error) {
+
+            console.log(
+                "Could not load saved profile."
+            );
+
+        }
+
+    }
+
+
+    /* Load health information */
+
+    const healthInfo =
+        localStorage.getItem(
+            "arogyabandhuHealthInfo"
+        );
+
+
+    if (healthInfo) {
+
+        try {
+
+            const health =
+                JSON.parse(healthInfo);
+
+
+            document.getElementById("bloodGroup")
+                .textContent =
+                health.bloodGroup || "Not added";
+
+
+            document.getElementById("allergies")
+                .textContent =
+                health.allergies || "Not added";
+
+
+            document.getElementById("weight")
+                .textContent =
+                health.weight
+                    ? health.weight + " kg"
+                    : "Not added";
+
+
+            document.getElementById("emergencyContact")
+                .textContent =
+                health.emergencyContact ||
+                "Not added";
+
+        }
+
+        catch (error) {
+
+            console.log(
+                "Could not load health information."
+            );
+
+        }
+
+    }
+
+}
+
+
+/* =====================================================
+   SAVE PROFILE
+===================================================== */
+
+function saveProfile() {
+
+    const user =
+        getLoggedInUser();
+
+
+    if (!user) {
+
+        showMessage(
+            "Please login before saving your profile.",
+            false
+        );
+
+        return;
+
+    }
+
+
+    const updatedName =
+        document.getElementById("name").value.trim();
+
+
+    if (!updatedName) {
+
+        showMessage(
+            "Please enter your full name.",
+            false
+        );
+
+        return;
+
+    }
+
+
+    /* Update user name */
+
+    user.name =
+        updatedName;
+
+
+    localStorage.setItem(
+        "arogyabandhuUser",
+        JSON.stringify(user)
+    );
+
+
+    /* Save additional profile information */
+
+    const profile = {
+
+        phone:
+            document.getElementById("phone").value.trim(),
+
+        gender:
+            document.getElementById("gender").value,
+
+        age:
+            document.getElementById("age").value,
+
+        language:
+            document.getElementById("language").value,
+
+        address:
+            document.getElementById("address").value.trim()
+
+    };
+
+
+    localStorage.setItem(
+        "arogyabandhuProfile",
+        JSON.stringify(profile)
+    );
+
+
+    loadProfile();
+
+
+    showMessage(
+        "Profile updated successfully.",
+        true
+    );
+
+}
+
+
+/* =====================================================
+   MESSAGE
+===================================================== */
+
+function showMessage(
+    message,
+    success
+) {
+
+    const box =
+        document.getElementById("message");
+
+
+    box.textContent =
+        message;
+
+
+    box.style.display =
+        "block";
+
+
+    if (success) {
+
+        box.style.background =
+            "#e8f7ef";
+
+        box.style.color =
+            "#17663d";
+
+    }
+
+    else {
+
+        box.style.background =
+            "#fff0f0";
+
+        box.style.color =
+            "#b42318";
+
+    }
+
+
+    setTimeout(
+        function () {
+
+            box.style.display =
+                "none";
+
+        },
+        3500
+    );
+
+}
+
+
+/* =====================================================
+   LOGOUT
+===================================================== */
+
+function logout() {
+
+    localStorage.removeItem(
+        "arogyabandhuUser"
+    );
+
+    window.location.href =
+        "login.html";
+
+}
+
+
+/* =====================================================
+   PAGE LOAD
+===================================================== */
+
+document.addEventListener(
+    "DOMContentLoaded",
+    loadProfile
+);
+
+
+</script>
+
+
+</body>
+</html>
